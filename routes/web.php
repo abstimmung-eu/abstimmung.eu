@@ -1,9 +1,18 @@
 <?php
 
+use App\Http\Controllers\IndexController;
+use App\Http\Controllers\UserVoteController;
+use App\Http\Controllers\VoteController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-Route::get('/', function () {
+Route::get('/', [IndexController::class, 'index'])->name('index');
+
+Route::get('/votes', [VoteController::class, 'index'])->name('votes');
+Route::get('/votes/{vote}', [VoteController::class, 'show'])->name('vote');
+Route::post('/votes/cast', [UserVoteController::class, 'store'])->name('vote.cast');
+
+Route::get('/home', function () {
     return Inertia::render('welcome');
 })->name('home');
 

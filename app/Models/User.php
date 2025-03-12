@@ -3,14 +3,18 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+use App\Traits\MustVerifyPhone;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
+use Illuminate\Contracts\Auth\MustVerifyEmail as MustVerifyEmailContract;
+use Illuminate\Contracts\Auth\MustVerifyPhone as MustVerifyPhoneContract;
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmailContract, MustVerifyPhoneContract
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, MustVerifyPhone;
 
     /**
      * The attributes that are mass assignable.
@@ -18,8 +22,9 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $fillable = [
-        'name',
         'email',
+        'phone',
+        'birthyear',
         'password',
     ];
 
@@ -42,7 +47,24 @@ class User extends Authenticatable
     {
         return [
             'email_verified_at' => 'datetime',
+            'phone_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    /**
+     * Get the votes a user has participated in.
+     */
+    public function voteParticipations()
+    {
+        return $this->hasMany(UserVoteParticipation::class);
+    }
+
+    /**
+     * Get the age of the user at the current date.
+     */
+    public function getAgeAttribute()
+    {
+        return $this->birthyear ? date('Y') - $this->birthyear : null;
     }
 }

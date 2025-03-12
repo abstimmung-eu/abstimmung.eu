@@ -12,6 +12,7 @@
 .env.production
 .phpactor.json
 .phpunit.result.cache
+.cursor
 Homestead.json
 Homestead.yaml
 npm-debug.log
@@ -22,3 +23,4 @@ yarn-error.log
 /.nova
 /.vscode
 /.zed
+/.pnpm-store/

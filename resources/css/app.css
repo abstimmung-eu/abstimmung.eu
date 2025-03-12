@@ -1,15 +1,58 @@
 @import 'tailwindcss';
 
-@plugin 'tailwindcss-animate';
+@font-face {
+    font-family: 'Geist';
+    src:
+        url('../fonts/webfonts/Geist-Regular.woff2') format('woff2'),
+        url('../fonts/webfonts/Geist-Regular.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+}
 
+@font-face {
+    font-family: 'Geist';
+    src:
+        url('../fonts/webfonts/Geist-Medium.woff2') format('woff2'),
+        url('../fonts/webfonts/Geist-Medium.woff') format('woff');
+    font-weight: 500;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Geist';
+    src:
+        url('../fonts/webfonts/Geist-SemiBold.woff2') format('woff2'),
+        url('../fonts/webfonts/Geist-SemiBold.woff') format('woff');
+    font-weight: 600;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Geist';
+    src:
+        url('../fonts/webfonts/Geist-Bold.woff2') format('woff2'),
+        url('../fonts/webfonts/Geist-Bold.woff') format('woff');
+    font-weight: 700;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Geist';
+    src:
+        url('../fonts/webfonts/Geist-Black.woff2') format('woff2'),
+        url('../fonts/webfonts/Geist-Black.woff') format('woff');
+    font-weight: 900;
+    font-style: normal;
+}
+
+@plugin 'tailwindcss-animate';
 @source "../views";
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 
 @custom-variant dark (&:is(.dark *));
 
 @theme {
-    --font-sans:
-        'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+    --font-sans: 'Geist', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
 
     --radius-lg: var(--radius);
     --radius-md: calc(var(--radius) - 2px);
