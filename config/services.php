@@ -35,4 +35,7 @@ return [
         ],
     ],
 
+    'sms77' => [
+        'api_key' => env('SEVEN_API_KEY')
+    ],
 ];

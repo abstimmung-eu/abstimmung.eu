@@ -1,0 +1,17 @@
+{
+    "apps": [{
+        "name": "abstimmung.eu",
+        "script": "artisan",
+        "args": ["inertia:start-ssr"],
+        "instances": "1",
+        "wait_ready": true,
+        "autorestart": false,
+        "max_restarts": 1,
+        "interpreter" : "php",
+        "watch": false,
+        "error_file": "log/err.log",
+        "out_file": "log/out.log",
+        "log_file": "log/combined.log",
+        "time": true
+    }]
+}
