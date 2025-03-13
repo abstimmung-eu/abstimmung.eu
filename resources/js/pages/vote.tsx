@@ -10,8 +10,8 @@ import AppLayout from '@/layouts/app-layout';
 import { SharedData } from '@/types';
 import { type Vote } from '@/types/vote';
 import { Head, Link, router, usePage } from '@inertiajs/react';
-import { AlertCircle, CheckCircle, ChevronLeft, Link2, Paperclip, Share2 } from 'lucide-react';
-import React, { useState } from 'react';
+import { AlertCircle, CheckCircle, ChevronLeft, Link2, Paperclip } from 'lucide-react';
+import React from 'react';
 
 // Add interface to extend the Vote type with the missing properties
 interface ExtendedVote extends Vote {
@@ -77,30 +77,6 @@ function handleVote(e: React.FormEvent<HTMLFormElement>) {
 
 export default function Vote({ vote, user_vote_participation }: VoteProps) {
     const { auth } = usePage<SharedData>().props;
-    const [showShareTooltip, setShowShareTooltip] = useState(false);
-
-    const handleShare = async () => {
-        const shareUrl = window.location.href;
-        const shareTitle = vote.title;
-        const shareText = `Schau dir diese Abstimmung an: ${vote.title}`;
-
-        if (navigator.share) {
-            try {
-                await navigator.share({
-                    title: shareTitle,
-                    text: shareText,
-                    url: shareUrl,
-                });
-            } catch (error) {
-                console.error("Error sharing:", error);
-            }
-        } else {
-            // Fallback to copy to clipboard
-            navigator.clipboard.writeText(shareUrl);
-            setShowShareTooltip(true);
-            setTimeout(() => setShowShareTooltip(false), 2000);
-        }
-    };
 
     return (
         <AppLayout>
@@ -112,26 +88,19 @@ export default function Vote({ vote, user_vote_participation }: VoteProps) {
                         Zurück zu allen Abstimmungen
                     </Link>
 
-                    <div className="grid gap-6">
+                    <div className="flex flex-col space-y-6">
                         <div className="flex flex-col gap-2">
+                            <div className="text-muted-foreground text-sm md:text-base font-medium">
+                                <time dateTime={vote.vote_date}>
+                                    {new Date(vote.vote_date).toLocaleDateString('de-DE', {
+                                        day: 'numeric',
+                                        month: 'short',
+                                        year: 'numeric',
+                                    })}
+                                </time>
+                            </div>
                             <div className="flex items-center justify-between">
-                                <h1 className="text-3xl font-bold tracking-tight">{vote.title}</h1>
-                                <Tooltip open={showShareTooltip}>
-                                    <TooltipTrigger asChild>
-                                        <Button 
-                                            variant="ghost" 
-                                            size="icon" 
-                                            onClick={handleShare}
-                                            className="ml-2"
-                                        >
-                                            <Share2 className="h-5 w-5" />
-                                            <span className="sr-only">Teilen</span>
-                                        </Button>
-                                    </TooltipTrigger>
-                                    <TooltipContent>
-                                        <p>{showShareTooltip ? 'Link kopiert!' : 'Diese Abstimmung teilen'}</p>
-                                    </TooltipContent>
-                                </Tooltip>
+                                <h1 className="text-2xl font-bold tracking-tight md:text-3xl">{vote.title}</h1>
                             </div>
                             <div className="flex flex-wrap gap-2">
                                 {vote.categories.map((category) => (
@@ -140,20 +109,10 @@ export default function Vote({ vote, user_vote_participation }: VoteProps) {
                                     </Badge>
                                 ))}
                             </div>
-                            <div className="text-muted-foreground flex flex-wrap gap-4 text-sm">
-                                <div className="flex items-center gap-1">
-                                    <span className="font-medium">Abstimmungsdatum:</span>{' '}
-                                    {new Date(vote.vote_date).toLocaleDateString('de-DE', {
-                                        day: 'numeric',
-                                        month: 'short',
-                                        year: 'numeric',
-                                    })}
-                                </div>
-                            </div>
                         </div>
                         <Card>
                             <CardHeader>
-                                <CardTitle className="text-2xl">Inhalt der Abstimmung</CardTitle>
+                                <CardTitle className="text-xl md:text-2xl">Inhalt der Abstimmung</CardTitle>
                             </CardHeader>
                             <CardContent>
                                 <div className="mb-4">
@@ -197,8 +156,8 @@ export default function Vote({ vote, user_vote_participation }: VoteProps) {
                                     )}
                                 </Accordion>
 
-                                <div className="text-muted-foreground mt-4 flex flex-row gap-2 text-sm">
-                                    <span>Quellen:</span>
+                                <div className="text-muted-foreground mt-4 flex flex-col gap-2 text-sm md:flex-row">
+                                    <span className="hidden sm:block">Quellen:</span>
                                     <span className="flex items-center gap-1">
                                         <Link2 className="h-4 w-4" />
                                         <a href={vote.url} target="_blank" rel="noopener noreferrer">
@@ -217,8 +176,8 @@ export default function Vote({ vote, user_vote_participation }: VoteProps) {
                             </CardContent>
                         </Card>
 
-                        <div className="grid gap-6 md:grid-cols-2">
-                            <Card>
+                        <div className="flex flex-col md:flex-row md:flex-wrap gap-6">
+                            <Card className="flex-1 md:basis-[calc(50%-12px)]">
                                 <CardHeader>
                                     <CardTitle className="text-xl">Abstimmungsergebnisse im Parlament</CardTitle>
                                     <CardDescription className="text-sm">Wie Abgeordnete auf diese Richtlinie abgestimmt haben</CardDescription>
@@ -286,7 +245,7 @@ export default function Vote({ vote, user_vote_participation }: VoteProps) {
                                 </CardContent>
                             </Card>
 
-                            <Card>
+                            <Card className="flex-1 md:basis-[calc(50%-12px)]">
                                 <CardHeader>
                                     <CardTitle className="text-xl">Öffentliche Meinung</CardTitle>
                                     <CardDescription className="text-sm">Wie EU-Bürger auf diese Plattform gestimmt haben</CardDescription>

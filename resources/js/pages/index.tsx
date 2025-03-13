@@ -36,13 +36,13 @@ export default function Index() {
                                     Zusammen für eine bessere Demokratie
                                 </h1>
                                 <p className="mb-6 max-w-[600px] text-white/90 md:text-xl">
-                                    Verfolge Abstimmungen im deutschen Bundestag und dem Europäischen Parlament und gib deine Stimme ab.
+                                    Verfolge Abstimmungen im deutschen Bundestag und mach deine Stimme sichtbar.
                                 </p>
 
-                                <div className="flex flex-row gap-2">
+                                <div className="flex flex-col w-full sm:flex-row gap-3 sm:gap-2">
                                     <Link
                                         href="/about"
-                                        className="group inline-flex h-11 items-center justify-center rounded-md bg-white px-5 py-2 font-medium text-blue-600 shadow-lg transition-all hover:bg-blue-50 hover:shadow-xl"
+                                        className="group inline-flex h-11 w-full sm:w-auto items-center justify-center rounded-md bg-white px-5 py-2 font-medium text-blue-600 shadow-lg transition-all hover:bg-blue-50 hover:shadow-xl"
                                     >
                                         Mehr erfahren
                                         <ChevronRight className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-0.5" />
@@ -50,7 +50,7 @@ export default function Index() {
 
                                     <Link
                                         href="/votes"
-                                        className="group inline-flex h-11 items-center justify-center rounded-md bg-white px-5 py-2 font-medium text-blue-600 shadow-lg transition-all hover:bg-blue-50 hover:shadow-xl"
+                                        className="group inline-flex h-11 w-full sm:w-auto items-center justify-center rounded-md bg-white px-5 py-2 font-medium text-blue-600 shadow-lg transition-all hover:bg-blue-50 hover:shadow-xl"
                                     >
                                         Abstimmungen anzeigen
                                         <ChevronRight className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-0.5" />
@@ -64,7 +64,7 @@ export default function Index() {
 
             {/* Feature Section */}
 
-            <section className="w-full max-w-7xl py-2 md:py-4 lg:py-16">
+            <section className="w-full max-w-7xl py-4 lg:py-16">
                 <div className="container px-4 md:px-6">
                     <div className="flex flex-col items-center justify-center space-y-4 text-center">
                         <div className="space-y-2">

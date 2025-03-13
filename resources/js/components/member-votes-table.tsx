@@ -3,7 +3,7 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { type Vote } from '@/types/vote';
-import { ChevronLeft, ChevronRight, Link2, Link2Icon, Search } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Link2, Search } from 'lucide-react';
 import { useMemo, useState } from 'react';
 
 type SortField = 'name' | 'vote_position' | 'group';
@@ -236,66 +236,59 @@ export default function VoteResults({ vote }: { vote: Vote }) {
                     </div>
                 </div>
 
-                <div className="relative w-full">
-                    <Table className="overflow-x-auto">
-                        <TableHeader>
-                            <TableRow>
-                                <TableHead className="cursor-pointer" onClick={() => handleSort('name')}>
-                                    Name {getSortIndicator('name')}
-                                </TableHead>
-                                <TableHead className="cursor-pointer" onClick={() => handleSort('group')}>
-                                    Fraktion {getSortIndicator('group')}
-                                </TableHead>
-                                <TableHead className="cursor-pointer" onClick={() => handleSort('vote_position')}>
-                                    Abstimmung {getSortIndicator('vote_position')}
-                                </TableHead>
-                            </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                            {paginatedVotes.length > 0 ? (
-                                paginatedVotes.map((memberVote) => (
-                                    <TableRow key={memberVote.id}>
-                                        <TableCell className="font-medium">
-                                            <span className="flex items-center gap-1">
-                                                {memberVote.first_name} {memberVote.last_name}
-
-                                                {memberVote.url && (
-                                                    <a href={memberVote.url} target="_blank" rel="noopener noreferrer">
-                                                        <Link2 className="h-4 w-4" />
-                                                    </a>
-                                                )}
-                                            </span>
-                                        </TableCell>
-                                        <TableCell>{memberVote.group || '–'}</TableCell>
-                                        <TableCell>
-                                            <div className="flex items-center">
-                                                {memberVote.vote_position === 'for' && (
-                                                    <span className="mr-2 h-3 w-3 rounded-full bg-green-500"></span>
-                                                )}
-                                                {memberVote.vote_position === 'against' && (
-                                                    <span className="mr-2 h-3 w-3 rounded-full bg-red-500"></span>
-                                                )}
-                                                {memberVote.vote_position === 'abstention' && (
-                                                    <span className="mr-2 h-3 w-3 rounded-full bg-gray-400"></span>
-                                                )}
-                                                {memberVote.vote_position === 'did_not_vote' && (
-                                                    <span className="mr-2 h-3 w-3 rounded-full bg-gray-300 dark:bg-gray-600"></span>
-                                                )}
-                                                {getVotePositionValue(memberVote.vote_position)}
-                                            </div>
-                                        </TableCell>
-                                    </TableRow>
-                                ))
-                            ) : (
-                                <TableRow>
-                                    <TableCell colSpan={3} className="h-24 text-center">
-                                        Keine Ergebnisse gefunden.
+                <Table>
+                    <TableHeader>
+                        <TableRow>
+                            <TableHead className="cursor-pointer" onClick={() => handleSort('name')}>
+                                Name {getSortIndicator('name')}
+                            </TableHead>
+                            <TableHead className="cursor-pointer" onClick={() => handleSort('group')}>
+                                Fraktion {getSortIndicator('group')}
+                            </TableHead>
+                            <TableHead className="cursor-pointer" onClick={() => handleSort('vote_position')}>
+                                Abstimmung {getSortIndicator('vote_position')}
+                            </TableHead>
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                        {paginatedVotes.length > 0 ? (
+                            paginatedVotes.map((memberVote) => (
+                                <TableRow key={memberVote.id}>
+                                    <TableCell className="font-medium">
+                                        <span className="flex items-center gap-1">
+                                            {memberVote.first_name} {memberVote.last_name}
+                                            {memberVote.url && (
+                                                <a href={memberVote.url} target="_blank" rel="noopener noreferrer">
+                                                    <Link2 className="h-4 w-4" />
+                                                </a>
+                                            )}
+                                        </span>
+                                    </TableCell>
+                                    <TableCell>{memberVote.group || '–'}</TableCell>
+                                    <TableCell>
+                                        <div className="flex items-center">
+                                            {memberVote.vote_position === 'for' && <span className="mr-2 h-3 w-3 rounded-full bg-green-500"></span>}
+                                            {memberVote.vote_position === 'against' && <span className="mr-2 h-3 w-3 rounded-full bg-red-500"></span>}
+                                            {memberVote.vote_position === 'abstention' && (
+                                                <span className="mr-2 h-3 w-3 rounded-full bg-gray-400"></span>
+                                            )}
+                                            {memberVote.vote_position === 'did_not_vote' && (
+                                                <span className="mr-2 h-3 w-3 rounded-full bg-gray-300 dark:bg-gray-600"></span>
+                                            )}
+                                            {getVotePositionValue(memberVote.vote_position)}
+                                        </div>
                                     </TableCell>
                                 </TableRow>
-                            )}
-                        </TableBody>
-                    </Table>
-                </div>
+                            ))
+                        ) : (
+                            <TableRow>
+                                <TableCell colSpan={3} className="h-24 text-center">
+                                    Keine Ergebnisse gefunden.
+                                </TableCell>
+                            </TableRow>
+                        )}
+                    </TableBody>
+                </Table>
 
                 {/* Pagination controls */}
                 <div className="mt-4 flex items-center justify-between">

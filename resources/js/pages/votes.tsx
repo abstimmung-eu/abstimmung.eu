@@ -7,6 +7,7 @@ import {
     PaginationNext,
     PaginationPrevious,
 } from '@/components/ui/pagination';
+import { PageHeader } from '@/components/page-header';
 import { VoteCard } from '@/components/vote-card';
 import AppLayout from '@/layouts/app-layout';
 import { type Vote } from '@/types/vote';
@@ -74,10 +75,10 @@ export default function Votes({ votes, paginator, filters = {} }: VotesProps) {
             <Head title="Abstimmungen" />
 
             <div className="container mx-auto max-w-7xl px-4 py-8">
-                <div className="mb-10 space-y-2">
-                    <h1 className="text-3xl font-semibold tracking-tight">Abstimmungen</h1>
-                    <p className="text-muted-foreground">Verfolge aktuelle Abstimmungen im Bundestag.</p>
-                </div>
+                <PageHeader 
+                    title="Abstimmungen"
+                    description="Verfolge aktuelle Abstimmungen im Bundestag."
+                />
 
                 <div className="mb-10">
                     <form onSubmit={handleSearch}>
