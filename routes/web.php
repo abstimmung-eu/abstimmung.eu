@@ -12,6 +12,10 @@ Route::get('/votes', [VoteController::class, 'index'])->name('votes');
 Route::get('/votes/{vote}', [VoteController::class, 'show'])->name('vote');
 Route::post('/votes/cast', [UserVoteController::class, 'store'])->name('vote.cast');
 
+Route::get('/about', function () {
+    return Inertia::render('about');
+})->name('about');
+
 Route::get('/home', function () {
     return Inertia::render('welcome');
 })->name('home');

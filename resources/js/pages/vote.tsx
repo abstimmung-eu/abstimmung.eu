@@ -10,14 +10,15 @@ import AppLayout from '@/layouts/app-layout';
 import { SharedData } from '@/types';
 import { type Vote } from '@/types/vote';
 import { Head, Link, router, usePage } from '@inertiajs/react';
-import { AlertCircle, CheckCircle, ChevronLeft, Link2, Paperclip } from 'lucide-react';
-import React from 'react';
+import { AlertCircle, CheckCircle, ChevronLeft, Link2, Paperclip, Share2 } from 'lucide-react';
+import React, { useState } from 'react';
 
 // Add interface to extend the Vote type with the missing properties
 interface ExtendedVote extends Vote {
     reference: string;
     arguments_for: string | null;
     arguments_against: string | null;
+    summary: string;
     age_group_stats: {
         [key: string]: {
             total: number;
@@ -76,8 +77,30 @@ function handleVote(e: React.FormEvent<HTMLFormElement>) {
 
 export default function Vote({ vote, user_vote_participation }: VoteProps) {
     const { auth } = usePage<SharedData>().props;
+    const [showShareTooltip, setShowShareTooltip] = useState(false);
 
-    console.log(user_vote_participation);
+    const handleShare = async () => {
+        const shareUrl = window.location.href;
+        const shareTitle = vote.title;
+        const shareText = `Schau dir diese Abstimmung an: ${vote.title}`;
+
+        if (navigator.share) {
+            try {
+                await navigator.share({
+                    title: shareTitle,
+                    text: shareText,
+                    url: shareUrl,
+                });
+            } catch (error) {
+                console.error("Error sharing:", error);
+            }
+        } else {
+            // Fallback to copy to clipboard
+            navigator.clipboard.writeText(shareUrl);
+            setShowShareTooltip(true);
+            setTimeout(() => setShowShareTooltip(false), 2000);
+        }
+    };
 
     return (
         <AppLayout>
@@ -91,7 +114,25 @@ export default function Vote({ vote, user_vote_participation }: VoteProps) {
 
                     <div className="grid gap-6">
                         <div className="flex flex-col gap-2">
-                            <h1 className="text-3xl font-bold tracking-tight">{vote.title}</h1>
+                            <div className="flex items-center justify-between">
+                                <h1 className="text-3xl font-bold tracking-tight">{vote.title}</h1>
+                                <Tooltip open={showShareTooltip}>
+                                    <TooltipTrigger asChild>
+                                        <Button 
+                                            variant="ghost" 
+                                            size="icon" 
+                                            onClick={handleShare}
+                                            className="ml-2"
+                                        >
+                                            <Share2 className="h-5 w-5" />
+                                            <span className="sr-only">Teilen</span>
+                                        </Button>
+                                    </TooltipTrigger>
+                                    <TooltipContent>
+                                        <p>{showShareTooltip ? 'Link kopiert!' : 'Diese Abstimmung teilen'}</p>
+                                    </TooltipContent>
+                                </Tooltip>
+                            </div>
                             <div className="flex flex-wrap gap-2">
                                 {vote.categories.map((category) => (
                                     <Badge variant="outline" className="rounded-full text-sm" key={category.id}>
@@ -115,6 +156,15 @@ export default function Vote({ vote, user_vote_participation }: VoteProps) {
                                 <CardTitle className="text-2xl">Inhalt der Abstimmung</CardTitle>
                             </CardHeader>
                             <CardContent>
+                                <div className="mb-4">
+                                    {vote.summary.split('\n').map((line, index) => (
+                                        <React.Fragment key={index}>
+                                            {line}
+                                            {index < vote.summary.split('\n').length - 1 && <br />}
+                                        </React.Fragment>
+                                    ))}
+                                </div>
+
                                 <Accordion type="multiple" className="mb-4">
                                     <AccordionItem value="description">
                                         <AccordionTrigger className="text-base">Zusammenfassung</AccordionTrigger>

@@ -29,7 +29,7 @@ export default function Index() {
 
             <section className="mt-6 flex w-full max-w-7xl items-center justify-center">
                 <div className="container px-4 md:px-8">
-                    <div className="grid items-center gap-6 rounded-lg bg-gradient-to-b from-blue-500 to-blue-800 p-6 md:p-12 shadow-lg shadow-blue-500/20 lg:grid-cols-2 lg:gap-12">
+                    <div className="grid items-center gap-6 rounded-lg bg-gradient-to-b from-blue-500 to-blue-800 p-6 shadow-lg shadow-blue-500/20 md:p-12 md:py-12 lg:grid-cols-2 lg:gap-12">
                         <div className="flex flex-col justify-center space-y-4">
                             <div className="space-y-2">
                                 <h1 className="text-3xl font-bold tracking-tighter text-white sm:text-4xl md:text-3xl">
@@ -39,16 +39,25 @@ export default function Index() {
                                     Verfolge Abstimmungen im deutschen Bundestag und dem Europäischen Parlament und gib deine Stimme ab.
                                 </p>
 
-                                <Link
-                                    href="/votes"
-                                    className="group inline-flex h-11 items-center justify-center rounded-md bg-white px-5 py-2 font-medium text-blue-600 shadow-lg transition-all hover:bg-blue-50 hover:shadow-xl"
-                                >
-                                    Abstimmungen anzeigen
-                                    <ChevronRight className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-0.5" />
-                                </Link>
+                                <div className="flex flex-row gap-2">
+                                    <Link
+                                        href="/about"
+                                        className="group inline-flex h-11 items-center justify-center rounded-md bg-white px-5 py-2 font-medium text-blue-600 shadow-lg transition-all hover:bg-blue-50 hover:shadow-xl"
+                                    >
+                                        Mehr erfahren
+                                        <ChevronRight className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+                                    </Link>
+
+                                    <Link
+                                        href="/votes"
+                                        className="group inline-flex h-11 items-center justify-center rounded-md bg-white px-5 py-2 font-medium text-blue-600 shadow-lg transition-all hover:bg-blue-50 hover:shadow-xl"
+                                    >
+                                        Abstimmungen anzeigen
+                                        <ChevronRight className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+                                    </Link>
+                                </div>
                             </div>
                         </div>
-                        i
                     </div>
                 </div>
             </section>
