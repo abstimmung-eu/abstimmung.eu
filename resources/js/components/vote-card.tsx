@@ -88,7 +88,7 @@ export function VoteCard({ vote }: VoteCardProps) {
                                 {/* Total vote count and date */}
                                 <div className="flex justify-between text-xs text-gray-500 dark:text-gray-400">
                                     <div>
-                                        {new Date(vote.vote_date).toLocaleDateString('en-GB', {
+                                        {new Date(vote.vote_date).toLocaleDateString('de-DE', {
                                             day: 'numeric',
                                             month: 'short',
                                             year: 'numeric',

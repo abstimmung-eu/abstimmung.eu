@@ -70,9 +70,39 @@ class VoteController extends Controller
         $vote->load('memberVoteStats');
         $vote->load('categories');
 
+        // Aggregate member votes by group
+        $votesByGroup = $vote->memberVotes
+            ->groupBy('group')
+            ->map(function ($groupVotes) {
+                $forCount = $groupVotes->where('vote_position', 'for')->count();
+                $againstCount = $groupVotes->where('vote_position', 'against')->count();
+                $abstentionCount = $groupVotes->where('vote_position', 'abstention')->count();
+                $didNotVoteCount = $groupVotes->where('vote_position', 'did_not_vote')->count();
+                
+                // Total of active votes (excluding did_not_vote)
+                $activeVotesTotal = $forCount + $againstCount + $abstentionCount;
+                
+                // Calculate percentages 
+                $forPercentage = $activeVotesTotal > 0 ? round(($forCount / $activeVotesTotal) * 100, 1) : 0;
+                $againstPercentage = $activeVotesTotal > 0 ? round(($againstCount / $activeVotesTotal) * 100, 1) : 0;
+                $abstentionPercentage = $activeVotesTotal > 0 ? round(($abstentionCount / $activeVotesTotal) * 100, 1) : 0;
+                
+                return [
+                    'total' => $activeVotesTotal,
+                    'for' => $forCount,
+                    'against' => $againstCount,
+                    'abstention' => $abstentionCount,
+                    'did_not_vote' => $didNotVoteCount,
+                    'for_percentage' => $forPercentage,
+                    'against_percentage' => $againstPercentage,
+                    'abstention_percentage' => $abstentionPercentage
+                ];
+            });
+
         return Inertia::render('vote', [
             'vote' => $vote,
-            'user_vote_participation' => $user_vote_participation
+            'user_vote_participation' => $user_vote_participation,
+            'votes_by_group' => $votesByGroup
         ]);
     }
 }
