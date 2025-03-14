@@ -4,14 +4,17 @@ import { Alert } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import VoteBar from '@/components/vote-bar';
 import AppLayout from '@/layouts/app-layout';
-import { loadDemographicData } from '@/lib/demographics';
+import { isDemographicDataEmpty, loadDemographicData, saveDemographicData } from '@/lib/demographics';
 import { SharedData } from '@/types';
 import { type Vote } from '@/types/vote';
 import { Head, Link, router, usePage } from '@inertiajs/react';
 import { AlertCircle, CheckCircle, ChevronLeft, Hand, Link2, Paperclip, ThumbsDown, ThumbsUp } from 'lucide-react';
-import React from 'react';
+import React, { useState } from 'react';
 
 // Add interface to extend the Vote type with the missing properties
 interface ExtendedVote extends Vote {
@@ -76,6 +79,15 @@ function handleVote(e: React.FormEvent<HTMLFormElement>) {
 
     const demographicData = loadDemographicData();
 
+    if (isDemographicDataEmpty()) {
+        // Show dialog instead of console error
+        const customEvent = new CustomEvent('open-demographic-dialog', {
+            detail: { voteUuid, votePosition }
+        });
+        document.dispatchEvent(customEvent);
+        return;
+    }
+
     router.post(
         '/votes/cast',
         {
@@ -92,12 +104,104 @@ function handleVote(e: React.FormEvent<HTMLFormElement>) {
     );
 }
 
+// Add new DemographicDialog component within the file
+function DemographicDialog() {
+    const [open, setOpen] = useState(false);
+    const [birthYear, setBirthYear] = useState<string>('');
+    const [voteData, setVoteData] = useState<{voteUuid: string, votePosition: string} | null>(null);
+
+    // Generate years for dropdown (from 1920 to current year)
+    const currentYear = new Date().getFullYear();
+    const years = Array.from({ length: currentYear - 1919 }, (_, i) => (currentYear - i).toString());
+
+    React.useEffect(() => {
+        const handleOpenDialog = (e: Event) => {
+            const customEvent = e as CustomEvent;
+            setVoteData(customEvent.detail);
+            setOpen(true);
+        };
+
+        document.addEventListener('open-demographic-dialog', handleOpenDialog);
+        return () => {
+            document.removeEventListener('open-demographic-dialog', handleOpenDialog);
+        };
+    }, []);
+
+    const handleSubmit = () => {
+        if (!birthYear || !voteData) return;
+
+        // Save the demographic data
+        saveDemographicData({ birthyear: birthYear });
+
+        // Submit the vote
+        router.post(
+            '/votes/cast',
+            {
+                vote_uuid: voteData.voteUuid,
+                vote_position: voteData.votePosition,
+                demographics: { birthyear: birthYear },
+            },
+            {
+                preserveScroll: true,
+                onSuccess: () => {
+                    router.reload({ only: ['user_vote_participation'] });
+                },
+            },
+        );
+
+        setOpen(false);
+    };
+
+    return (
+        <Dialog open={open} onOpenChange={setOpen}>
+            <DialogContent className="sm:max-w-[425px]">
+                <DialogHeader>
+                    <DialogTitle>Demografische Daten benötigt</DialogTitle>
+                    <DialogDescription>
+                        Um abzustimmen, benötigen wir einige demografische Informationen. Diese werden anonymisiert gespeichert.
+                    </DialogDescription>
+                </DialogHeader>
+
+                <div className="grid gap-4 py-4">
+                    <div className="grid grid-cols-4 items-center gap-4">
+                        <Label htmlFor="birthYear" className="text-right">
+                            Geburtsjahr
+                        </Label>
+                        <Select value={birthYear} onValueChange={setBirthYear}>
+                            <SelectTrigger className="col-span-3">
+                                <SelectValue placeholder="Bitte wählen" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                {years.map((year) => (
+                                    <SelectItem key={year} value={year}>
+                                        {year}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                    </div>
+                </div>
+
+                <DialogFooter>
+                    <Button onClick={() => setOpen(false)} variant="outline">
+                        Abbrechen
+                    </Button>
+                    <Button onClick={handleSubmit} disabled={!birthYear}>
+                        Speichern & Abstimmen
+                    </Button>
+                </DialogFooter>
+            </DialogContent>
+        </Dialog>
+    );
+}
+
 export default function Vote({ vote, user_vote_participation, user_votes_by_age_group, member_votes_by_group }: VoteProps) {
     const { auth } = usePage<SharedData>().props;
 
     return (
         <AppLayout>
             <Head title={vote.title} />
+            <DemographicDialog />
             <div className="container mx-auto max-w-7xl px-4 py-8">
                 <div className="flex flex-col space-y-8">
                     <Link href="/votes" className="text-muted-foreground hover:text-foreground flex items-center">

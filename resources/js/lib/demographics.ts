@@ -26,9 +26,21 @@ export const emptyDemographicData: DemographicData = {
 const STORAGE_KEY = 'demographics';
 
 /**
+ * Check if any demographic data is stored is empty
+ */
+export const isDemographicDataEmpty = (): boolean => {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (!stored) return true;
+
+    const data = JSON.parse(stored) as DemographicData;
+    return Object.values(data).some((value) => value === '');
+};
+
+/**
  * Save demographic data to localStorage
  */
 export const saveDemographicData = (data: DemographicData): void => {
+    data.age_group = mapBirthyearToAgeGroup(data.birthyear);
     localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
 };
 
@@ -38,15 +50,7 @@ export const saveDemographicData = (data: DemographicData): void => {
 export const loadDemographicData = (): DemographicData => {
     const stored = localStorage.getItem(STORAGE_KEY);
     if (!stored) return emptyDemographicData;
-
-    try {
-        const data = JSON.parse(stored) as DemographicData;
-        data.age_group = mapBirthyearToAgeGroup(data.birthyear);
-        return data;
-    } catch (e) {
-        console.error('Failed to parse demographic data from localStorage', e);
-        return emptyDemographicData;
-    }
+    return JSON.parse(stored) as DemographicData;
 };
 
 /**

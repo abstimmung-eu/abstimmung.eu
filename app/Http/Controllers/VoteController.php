@@ -105,7 +105,7 @@ class VoteController extends Controller
 
     private function getUserVotesByAgeGroup(Vote $vote)
     {
-        return $vote->userVotes
+        $userVotesByAgeGroup = $vote->userVotes
             ->groupBy('age_group')
             ->map(function ($groupVotes) {
                 $forCount = $groupVotes->where('vote_position', 'for')->count();
@@ -123,5 +123,7 @@ class VoteController extends Controller
                     'abstention_percentage' => $total > 0 ? round(($abstentionCount / $total) * 100, 1) : 0,
                 ];
             });
+
+        return $userVotesByAgeGroup->sortKeys();
     }
 }

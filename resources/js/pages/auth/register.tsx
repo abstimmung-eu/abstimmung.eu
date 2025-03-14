@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { type SharedData } from '@/types';
 import { 
     DemographicData, 
@@ -457,163 +458,149 @@ export default function Register() {
 
                                     <div className="grid gap-2">
                                         <Label htmlFor="birthyear">Geburtsjahr</Label>
-                                        <select
-                                            id="birthyear"
-                                            className="border-input bg-background ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring flex h-10 w-full rounded-md border px-3 py-2 text-sm file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
-                                            required
-                                            tabIndex={1}
+                                        <Select
                                             value={demographicData.birthyear}
-                                            onChange={(e) => updateDemographicData('birthyear', e.target.value)}
+                                            onValueChange={(value) => updateDemographicData('birthyear', value)}
                                             disabled={processing}
                                         >
-                                            <option value="" disabled>
-                                                Geburtsjahr auswählen
-                                            </option>
-                                            {yearOptions.map(({ value, label }) => (
-                                                <option key={value} value={value}>
-                                                    {label}
-                                                </option>
-                                            ))}
-                                        </select>
+                                            <SelectTrigger id="birthyear" className="w-full">
+                                                <SelectValue placeholder="Geburtsjahr auswählen" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                {yearOptions.map(({ value, label }) => (
+                                                    <SelectItem key={value} value={value}>
+                                                        {label}
+                                                    </SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
                                     </div>
 
                                     <div className="grid gap-2">
                                         <Label htmlFor="gender">Geschlecht</Label>
-                                        <select
-                                            id="gender"
-                                            className="border-input bg-background ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring flex h-10 w-full rounded-md border px-3 py-2 text-sm file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
-                                            required
-                                            tabIndex={2}
+                                        <Select
                                             value={demographicData.gender}
-                                            onChange={(e) => updateDemographicData('gender', e.target.value)}
+                                            onValueChange={(value) => updateDemographicData('gender', value)}
                                             disabled={processing}
                                         >
-                                            <option value="" disabled>
-                                                Geschlecht auswählen
-                                            </option>
-                                            <option value="male">Männlich</option>
-                                            <option value="female">Weiblich</option>
-                                            <option value="other">Anderes</option>
-                                        </select>
+                                            <SelectTrigger id="gender" className="w-full">
+                                                <SelectValue placeholder="Geschlecht auswählen" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectItem value="male">Männlich</SelectItem>
+                                                <SelectItem value="female">Weiblich</SelectItem>
+                                                <SelectItem value="other">Anderes</SelectItem>
+                                            </SelectContent>
+                                        </Select>
                                     </div>
 
                                     <div className="grid gap-2">
                                         <Label htmlFor="marital_status">Familienstand</Label>
-                                        <select
-                                            id="marital_status"
-                                            className="border-input bg-background ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring flex h-10 w-full rounded-md border px-3 py-2 text-sm file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
-                                            required
-                                            tabIndex={3}
+                                        <Select
                                             value={demographicData.marital_status}
-                                            onChange={(e) => updateDemographicData('marital_status', e.target.value)}
+                                            onValueChange={(value) => updateDemographicData('marital_status', value)}
                                             disabled={processing}
                                         >
-                                            <option value="" disabled>
-                                                Familienstand auswählen
-                                            </option>
-                                            <option value="single">Single</option>
-                                            <option value="married">Verheiratet</option>
-                                            <option value="divorced">Geschieden</option>
-                                            <option value="widowed">Verwitwet</option>
-                                            <option value="in_partnership">In einer Partnerschaft lebend</option>
-                                        </select>
+                                            <SelectTrigger id="marital_status" className="w-full">
+                                                <SelectValue placeholder="Familienstand auswählen" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectItem value="single">Single</SelectItem>
+                                                <SelectItem value="married">Verheiratet</SelectItem>
+                                                <SelectItem value="divorced">Geschieden</SelectItem>
+                                                <SelectItem value="widowed">Verwitwet</SelectItem>
+                                                <SelectItem value="in_partnership">In einer Partnerschaft lebend</SelectItem>
+                                            </SelectContent>
+                                        </Select>
                                     </div>
 
                                     <div className="grid gap-2">
                                         <Label htmlFor="education">Bildungsniveau</Label>
-                                        <select
-                                            id="education"
-                                            className="border-input bg-background ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring flex h-10 w-full rounded-md border px-3 py-2 text-sm file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
-                                            required
-                                            tabIndex={4}
+                                        <Select
                                             value={demographicData.education}
-                                            onChange={(e) => updateDemographicData('education', e.target.value)}
+                                            onValueChange={(value) => updateDemographicData('education', value)}
                                             disabled={processing}
                                         >
-                                            <option value="" disabled>
-                                                Bildungsniveau auswählen
-                                            </option>
-                                            <option value="none">Kein Schulabschluss</option>
-                                            <option value="primary">Hauptschulabschluss</option>
-                                            <option value="secondary">Realschulabschluss (Mittlere Reife)</option>
-                                            <option value="bachelor">Abitur (Allgemeine Hochschulreife)</option>
-                                            <option value="master">Hochschulabschluss (z. B. Bachelor, Master, Diplom)</option>
-                                        </select>
+                                            <SelectTrigger id="education" className="w-full">
+                                                <SelectValue placeholder="Bildungsniveau auswählen" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectItem value="none">Kein Schulabschluss</SelectItem>
+                                                <SelectItem value="primary">Hauptschulabschluss</SelectItem>
+                                                <SelectItem value="secondary">Realschulabschluss (Mittlere Reife)</SelectItem>
+                                                <SelectItem value="bachelor">Abitur (Allgemeine Hochschulreife)</SelectItem>
+                                                <SelectItem value="master">Hochschulabschluss (z. B. Bachelor, Master, Diplom)</SelectItem>
+                                            </SelectContent>
+                                        </Select>
                                     </div>
 
                                     <div className="grid gap-2">
                                         <Label htmlFor="profession">Berufliche Situation</Label>
-                                        <select
-                                            id="profession"
-                                            className="border-input bg-background ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring flex h-10 w-full rounded-md border px-3 py-2 text-sm file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
-                                            required
-                                            tabIndex={5}
+                                        <Select
                                             value={demographicData.profession}
-                                            onChange={(e) => updateDemographicData('profession', e.target.value)}
+                                            onValueChange={(value) => updateDemographicData('profession', value)}
                                             disabled={processing}
                                         >
-                                            <option value="" disabled>
-                                                Berufliche Situation auswählen
-                                            </option>
-                                            <option value="full-time">Vollzeitbeschäftigt</option>
-                                            <option value="part-time">Teilzeitbeschäftigt</option>
-                                            <option value="self-employed">Selbständig</option>
-                                            <option value="unemployed">Arbeitslos</option>
-                                            <option value="retired">Rentner:in</option>
-                                            <option value="student">Schüler:in, Student:in</option>
-                                            <option value="housewife">Hausfrau, Hausmann</option>
-                                            <option value="other">Andere (z.B. in Ausbildung)</option>
-                                        </select>
+                                            <SelectTrigger id="profession" className="w-full">
+                                                <SelectValue placeholder="Berufliche Situation auswählen" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectItem value="full-time">Vollzeitbeschäftigt</SelectItem>
+                                                <SelectItem value="part-time">Teilzeitbeschäftigt</SelectItem>
+                                                <SelectItem value="self-employed">Selbständig</SelectItem>
+                                                <SelectItem value="unemployed">Arbeitslos</SelectItem>
+                                                <SelectItem value="retired">Rentner:in</SelectItem>
+                                                <SelectItem value="student">Schüler:in, Student:in</SelectItem>
+                                                <SelectItem value="housewife">Hausfrau, Hausmann</SelectItem>
+                                                <SelectItem value="other">Andere (z.B. in Ausbildung)</SelectItem>
+                                            </SelectContent>
+                                        </Select>
                                     </div>
 
                                     <div className="grid gap-2">
                                         <Label htmlFor="household_size">Anzahl der Personen im Haushalt</Label>
-                                        <select
-                                            id="household_size"
-                                            className="border-input bg-background ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring flex h-10 w-full rounded-md border px-3 py-2 text-sm file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
-                                            required
-                                            tabIndex={6}
+                                        <Select
                                             value={demographicData.household_size}
-                                            onChange={(e) => updateDemographicData('household_size', e.target.value)}
+                                            onValueChange={(value) => updateDemographicData('household_size', value)}
                                             disabled={processing}
                                         >
-                                            <option value="" disabled>
-                                                Anzahl der Personen im Haushalt auswählen
-                                            </option>
-                                            <option value="1">1 Person</option>
-                                            <option value="2">2 Personen</option>
-                                            <option value="3">3 Personen</option>
-                                            <option value="4">4 Personen</option>
-                                            <option value="5">5 oder mehr Personen</option>
-                                        </select>
+                                            <SelectTrigger id="household_size" className="w-full">
+                                                <SelectValue placeholder="Anzahl der Personen im Haushalt auswählen" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectItem value="1">1 Person</SelectItem>
+                                                <SelectItem value="2">2 Personen</SelectItem>
+                                                <SelectItem value="3">3 Personen</SelectItem>
+                                                <SelectItem value="4">4 Personen</SelectItem>
+                                                <SelectItem value="5">5 oder mehr Personen</SelectItem>
+                                            </SelectContent>
+                                        </Select>
                                     </div>
 
                                     <div className="grid gap-2">
                                         <Label htmlFor="income">Haushaltsnettoeinkommen</Label>
-                                        <select
-                                            id="income"
-                                            className="border-input bg-background ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring flex h-10 w-full rounded-md border px-3 py-2 text-sm file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
-                                            required
-                                            tabIndex={7}
+                                        <Select
                                             value={demographicData.income}
-                                            onChange={(e) => updateDemographicData('income', e.target.value)}
+                                            onValueChange={(value) => updateDemographicData('income', value)}
                                             disabled={processing}
                                         >
-                                            <option value="" disabled>
-                                                Haushaltsnettoeinkommen auswählen
-                                            </option>
-                                            <option value="1">Unter 1000 €</option>
-                                            <option value="2">1000 - 1999 €</option>
-                                            <option value="3">2000 - 2999 €</option>
-                                            <option value="4">3000 - 3999 €</option>
-                                            <option value="5">4000 - 4999 €</option>
-                                            <option value="6">5000 - 5999 €</option>
-                                            <option value="7">6000 - 6999 €</option>
-                                            <option value="8">7000 - 7999 €</option>
-                                            <option value="9">8000 - 8999 €</option>
-                                            <option value="10">9000 - 9999 €</option>
-                                            <option value="11">Über 10000 €</option>
-                                        </select>
+                                            <SelectTrigger id="income" className="w-full">
+                                                <SelectValue placeholder="Haushaltsnettoeinkommen auswählen" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectItem value="1">Unter 1000 €</SelectItem>
+                                                <SelectItem value="2">1000 - 1999 €</SelectItem>
+                                                <SelectItem value="3">2000 - 2999 €</SelectItem>
+                                                <SelectItem value="4">3000 - 3999 €</SelectItem>
+                                                <SelectItem value="5">4000 - 4999 €</SelectItem>
+                                                <SelectItem value="6">5000 - 5999 €</SelectItem>
+                                                <SelectItem value="7">6000 - 6999 €</SelectItem>
+                                                <SelectItem value="8">7000 - 7999 €</SelectItem>
+                                                <SelectItem value="9">8000 - 8999 €</SelectItem>
+                                                <SelectItem value="10">9000 - 9999 €</SelectItem>
+                                                <SelectItem value="11">Über 10000 €</SelectItem>
+                                            </SelectContent>
+                                        </Select>
                                     </div>
 
                                     <div className="mt-2 flex gap-3">
