@@ -10,6 +10,6 @@ class UserVote extends Model
         'vote_uuid',
         'user_id',
         'vote_position',
-        'age_at_vote',
+        'age_group',
     ];
 }

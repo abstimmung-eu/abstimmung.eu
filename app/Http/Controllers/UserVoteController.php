@@ -17,6 +17,8 @@ class UserVoteController extends Controller
         $request->validate([
             'vote_uuid' => 'required|exists:votes,uuid',
             'vote_position' => 'required|in:for,against,abstention',
+            'demographics' => 'required|array',
+            'demographics.age_group' => 'required|string',
         ]);
 
         $vote_uuid = $request->vote_uuid;
@@ -35,7 +37,7 @@ class UserVoteController extends Controller
         UserVote::create([
             'vote_uuid' => $vote_uuid,
             'vote_position' => $vote_position,
-            'age_at_vote' => $user->age,
+            'age_group' => $request->demographics['age_group'],
         ]);
 
         // Store user vote participation

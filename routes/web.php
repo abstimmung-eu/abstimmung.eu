@@ -9,7 +9,7 @@ use Inertia\Inertia;
 Route::get('/', [IndexController::class, 'index'])->name('index');
 
 Route::get('/votes', [VoteController::class, 'index'])->name('votes');
-Route::get('/votes/{vote}', [VoteController::class, 'show'])->name('vote');
+Route::get('/votes/{vote}', [VoteController::class, 'show'])->name('vote.show');
 Route::post('/votes/cast', [UserVoteController::class, 'store'])->name('vote.cast');
 
 Route::get('/about', function () {

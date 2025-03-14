@@ -4,14 +4,14 @@ import { Alert } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import VoteBar from '@/components/vote-bar';
 import AppLayout from '@/layouts/app-layout';
+import { loadDemographicData } from '@/lib/demographics';
 import { SharedData } from '@/types';
 import { type Vote } from '@/types/vote';
 import { Head, Link, router, usePage } from '@inertiajs/react';
-import { AlertCircle, CheckCircle, ChevronLeft, Link2, Paperclip } from 'lucide-react';
+import { AlertCircle, CheckCircle, ChevronLeft, Hand, Link2, Paperclip, ThumbsDown, ThumbsUp } from 'lucide-react';
 import React from 'react';
-import VoteBar, { VoteBarData } from '@/components/vote-bar';
 
 // Add interface to extend the Vote type with the missing properties
 interface ExtendedVote extends Vote {
@@ -19,23 +19,6 @@ interface ExtendedVote extends Vote {
     arguments_for: string | null;
     arguments_against: string | null;
     summary: string;
-    age_group_stats: {
-        [key: string]: {
-            total: number;
-            yes: {
-                count: number;
-                percentage: number;
-            };
-            no: {
-                count: number;
-                percentage: number;
-            };
-            abstain: {
-                count: number;
-                percentage: number;
-            };
-        };
-    };
 }
 
 interface UserVoteParticipation {
@@ -49,7 +32,7 @@ interface UserVoteParticipation {
 export interface VoteProps {
     vote: ExtendedVote;
     user_vote_participation: UserVoteParticipation | null;
-    votes_by_group: {
+    user_votes_by_age_group: {
         [key: string]: {
             total: number;
             for: number;
@@ -58,6 +41,17 @@ export interface VoteProps {
             for_percentage?: number;
             against_percentage?: number;
             abstention_percentage?: number;
+        };
+    };
+    member_votes_by_group: {
+        [key: string]: {
+            total: number;
+            for: number;
+            against: number;
+            abstention: number;
+            for_percentage: number;
+            against_percentage: number;
+            abstention_percentage: number;
         };
     };
 }
@@ -80,13 +74,25 @@ function handleVote(e: React.FormEvent<HTMLFormElement>) {
     const voteUuid = (form.elements.namedItem('vote_uuid') as HTMLInputElement).value;
     const votePosition = (form.elements.namedItem('vote_position') as HTMLInputElement).value;
 
-    router.post('/votes/cast', {
-        vote_uuid: voteUuid,
-        vote_position: votePosition,
-    });
+    const demographicData = loadDemographicData();
+
+    router.post(
+        '/votes/cast',
+        {
+            vote_uuid: voteUuid,
+            vote_position: votePosition,
+            demographics: demographicData,
+        },
+        {
+            preserveScroll: true,
+            onSuccess: () => {
+                router.reload({ only: ['user_vote_participation'] });
+            },
+        },
+    );
 }
 
-export default function Vote({ vote, user_vote_participation, votes_by_group }: VoteProps) {
+export default function Vote({ vote, user_vote_participation, user_votes_by_age_group, member_votes_by_group }: VoteProps) {
     const { auth } = usePage<SharedData>().props;
 
     return (
@@ -196,22 +202,22 @@ export default function Vote({ vote, user_vote_participation, votes_by_group }: 
                                 <CardContent>
                                     <div className="space-y-4">
                                         <div className="flex flex-col">
-                                            <VoteBar 
+                                            <VoteBar
                                                 data={{
-                                                    label: "Gesamtergebnis",
+                                                    label: 'Gesamtergebnis',
                                                     total: vote.member_vote_stats.total_votes,
                                                     for: vote.member_vote_stats.total_yes_votes,
                                                     against: vote.member_vote_stats.total_no_votes,
                                                     abstention: vote.member_vote_stats.total_abstention_votes,
                                                     for_percentage: vote.member_vote_stats.total_yes_votes_percentage,
                                                     against_percentage: vote.member_vote_stats.total_no_votes_percentage,
-                                                    abstention_percentage: vote.member_vote_stats.total_abstention_votes_percentage
+                                                    abstention_percentage: vote.member_vote_stats.total_abstention_votes_percentage,
                                                 }}
                                             />
                                         </div>
                                     </div>
 
-                                    <div className="text-muted-foreground mt-6 flex items-center gap-2 text-sm">
+                                    <div className="text-muted-foreground mt-2 flex items-center gap-2 text-sm">
                                         <AlertCircle className="h-3 w-3" />
                                         <span>
                                             Abgegebene Stimmen: {vote.member_vote_stats.total_votes}. Nicht abgestimmt:{' '}
@@ -229,22 +235,22 @@ export default function Vote({ vote, user_vote_participation, votes_by_group }: 
                                 <CardContent>
                                     <div className="space-y-4">
                                         <div className="flex flex-col">
-                                            <VoteBar 
+                                            <VoteBar
                                                 data={{
-                                                    label: "Gesamtergebnis",
+                                                    label: 'Gesamtergebnis',
                                                     total: vote.total_user_votes,
                                                     for: vote.total_user_yes_votes,
                                                     against: vote.total_user_no_votes,
                                                     abstention: vote.total_user_abstain_votes,
                                                     for_percentage: Math.round(vote.total_user_yes_votes_percentage),
                                                     against_percentage: Math.round(vote.total_user_no_votes_percentage),
-                                                    abstention_percentage: Math.round(vote.total_user_abstain_votes_percentage)
+                                                    abstention_percentage: Math.round(vote.total_user_abstain_votes_percentage),
                                                 }}
                                             />
                                         </div>
                                     </div>
 
-                                    <div className="text-muted-foreground mt-6 flex items-center gap-2 text-sm">
+                                    <div className="text-muted-foreground mt-2 flex items-center gap-2 text-sm">
                                         <AlertCircle className="h-3 w-3" />
                                         <span>Abgegebene Stimmen: {vote.total_user_votes}</span>
                                     </div>
@@ -260,9 +266,9 @@ export default function Vote({ vote, user_vote_participation, votes_by_group }: 
                                                                 <input type="hidden" name="vote_position" value="for" />
                                                                 <Button
                                                                     variant="outline"
-                                                                    className="h-8 w-full cursor-pointer rounded-sm border-green-200 bg-white text-green-700 hover:bg-green-50 hover:text-green-800"
+                                                                    className="h-10 w-full cursor-pointer rounded-sm border-green-200 bg-green-50 text-green-700 hover:bg-green-50 hover:text-green-800"
                                                                 >
-                                                                    Dafür stimmen
+                                                                    <ThumbsUp className="mr-1 h-4 w-4" /> Dafür stimmen
                                                                 </Button>
                                                             </form>
                                                         </div>
@@ -272,9 +278,9 @@ export default function Vote({ vote, user_vote_participation, votes_by_group }: 
                                                                 <input type="hidden" name="vote_position" value="against" />
                                                                 <Button
                                                                     variant="outline"
-                                                                    className="h-8 w-full cursor-pointer rounded-sm border-red-200 bg-white text-red-700 hover:bg-red-50 hover:text-red-800"
+                                                                    className="h-10 w-full cursor-pointer rounded-sm border-red-200 bg-red-50 text-red-700 hover:bg-red-50 hover:text-red-800"
                                                                 >
-                                                                    Dagegen stimmen
+                                                                    <ThumbsDown className="mr-1 h-4 w-4" /> Dagegen stimmen
                                                                 </Button>
                                                             </form>
                                                         </div>
@@ -284,9 +290,9 @@ export default function Vote({ vote, user_vote_participation, votes_by_group }: 
                                                                 <input type="hidden" name="vote_position" value="abstention" />
                                                                 <Button
                                                                     variant="outline"
-                                                                    className="h-8 w-full cursor-pointer rounded-sm border-gray-200 bg-white text-gray-700 hover:bg-gray-50 hover:text-gray-800"
+                                                                    className="h-10 w-full cursor-pointer rounded-sm border-gray-200 bg-gray-50 text-gray-700 hover:bg-gray-50 hover:text-gray-800"
                                                                 >
-                                                                    Enthaltung
+                                                                    <Hand className="mr-1 h-4 w-4" /> Enthaltung
                                                                 </Button>
                                                             </form>
                                                         </div>
@@ -309,7 +315,7 @@ export default function Vote({ vote, user_vote_participation, votes_by_group }: 
                                     )}
 
                                     {user_vote_participation && (
-                                        <Alert variant="success" className="bg-green-50">
+                                        <Alert variant="success" className="mt-2 bg-green-50">
                                             <CheckCircle className="h-4 w-4 text-green-600" />
                                             <span>
                                                 Sie haben am{' '}
@@ -347,10 +353,10 @@ export default function Vote({ vote, user_vote_participation, votes_by_group }: 
                                                 </div>
                                             </div>
                                         </div>
-                                        {votes_by_group && (
+                                        {member_votes_by_group && (
                                             <div className="mt-3 space-y-2">
-                                                {Object.entries(votes_by_group).map(([group, votes]) => (
-                                                    <VoteBar 
+                                                {Object.entries(member_votes_by_group).map(([group, votes]) => (
+                                                    <VoteBar
                                                         key={group}
                                                         data={{
                                                             label: group,
@@ -360,7 +366,7 @@ export default function Vote({ vote, user_vote_participation, votes_by_group }: 
                                                             abstention: votes.abstention,
                                                             for_percentage: votes.for_percentage,
                                                             against_percentage: votes.against_percentage,
-                                                            abstention_percentage: votes.abstention_percentage
+                                                            abstention_percentage: votes.abstention_percentage,
                                                         }}
                                                         className="mb-3"
                                                     />
@@ -370,45 +376,38 @@ export default function Vote({ vote, user_vote_participation, votes_by_group }: 
                                     </div>
 
                                     <div className="w-1/2">
-                                        <span className="font-medium">Demografische Aufteilung</span>
-                                        {Object.entries(vote.age_group_stats).map(([ageGroupKey, ageGroup]) => (
-                                            <div key={ageGroupKey} className="flex items-center text-sm">
-                                                <div className="w-14">{AGE_GROUP_LABELS[ageGroupKey]}</div>
-                                                <div className="relative flex h-3 flex-1 items-center">
-                                                    <Tooltip>
-                                                        <TooltipTrigger asChild>
-                                                            <div className="h-4 bg-green-600" style={{ width: `${ageGroup.yes.percentage}%` }} />
-                                                        </TooltipTrigger>
-                                                        <TooltipContent>
-                                                            <p>
-                                                                Dafür: {ageGroup.yes.count} ({ageGroup.yes.percentage}%)
-                                                            </p>
-                                                        </TooltipContent>
-                                                    </Tooltip>
-                                                    <Tooltip>
-                                                        <TooltipTrigger asChild>
-                                                            <div className="h-4 bg-red-600" style={{ width: `${ageGroup.no.percentage}%` }} />
-                                                        </TooltipTrigger>
-                                                        <TooltipContent>
-                                                            <p>
-                                                                Dagegen: {ageGroup.no.count} ({ageGroup.no.percentage}%)
-                                                            </p>
-                                                        </TooltipContent>
-                                                    </Tooltip>
-                                                    <Tooltip>
-                                                        <TooltipTrigger asChild>
-                                                            <div className="h-4 bg-gray-400" style={{ width: `${ageGroup.abstain.percentage}%` }} />
-                                                        </TooltipTrigger>
-                                                        <TooltipContent>
-                                                            <p>
-                                                                Enthaltung: {ageGroup.abstain.count} ({ageGroup.abstain.percentage}%)
-                                                            </p>
-                                                        </TooltipContent>
-                                                    </Tooltip>
+                                        <div className="flex flex-col justify-between gap-4 border-b pb-4 sm:flex-row sm:items-center">
+                                            <span className="text-lg font-bold">Demografische Aufteilung</span>
+                                            <div className="flex items-center gap-4">
+                                                <div className="flex items-center gap-2">
+                                                    <div className="h-3 w-3 rounded-full bg-emerald-500"></div>
+                                                    <span className="text-sm">Dafür</span>
                                                 </div>
-                                                <div className="text-muted-foreground w-18 text-right text-xs">
-                                                    {ageGroup.total.toLocaleString('de-DE')} Stimmen
+                                                <div className="flex items-center gap-2">
+                                                    <div className="h-3 w-3 rounded-full bg-red-500"></div>
+                                                    <span className="text-sm">Dagegen</span>
                                                 </div>
+                                                <div className="flex items-center gap-2">
+                                                    <div className="h-3 w-3 rounded-full bg-gray-400"></div>
+                                                    <span className="text-sm">Enthaltung</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {Object.entries(user_votes_by_age_group).map(([ageGroupKey, ageGroup]) => (
+                                            <div key={ageGroupKey} className="mt-3 space-y-2">
+                                                <VoteBar
+                                                    data={{
+                                                        label: AGE_GROUP_LABELS[ageGroupKey],
+                                                        total: ageGroup.total,
+                                                        for: ageGroup.for,
+                                                        against: ageGroup.against,
+                                                        abstention: ageGroup.abstention,
+                                                        for_percentage: ageGroup.for_percentage,
+                                                        against_percentage: ageGroup.against_percentage,
+                                                        abstention_percentage: ageGroup.abstention_percentage,
+                                                    }}
+                                                    height="h-6"
+                                                />
                                             </div>
                                         ))}
                                     </div>
