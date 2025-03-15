@@ -419,8 +419,8 @@ export default function Vote({ vote, user_vote_participation, user_votes_by_age_
                                     )}
 
                                     {user_vote_participation && (
-                                        <Alert variant="success" className="mt-2 bg-green-50">
-                                            <CheckCircle className="h-4 w-4 text-green-600" />
+                                        <Alert variant="success" className="mt-2 bg-green-50 dark:bg-green-950/30 dark:text-gray-100">
+                                            <CheckCircle className="h-4 w-4 text-green-600 dark:text-green-400" />
                                             <span>
                                                 Sie haben am{' '}
                                                 {new Date(user_vote_participation.created_at).toLocaleDateString('de-DE', {

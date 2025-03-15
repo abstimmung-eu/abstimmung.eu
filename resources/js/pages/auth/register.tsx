@@ -27,15 +27,15 @@ type InfoAccordionProps = {
     icon?: ReactNode;
 };
 
-const InfoAccordion = ({ title, children, icon = <Info className="h-4 w-4 text-blue-600" /> }: InfoAccordionProps) => {
+const InfoAccordion = ({ title, children, icon = <Info className="h-4 w-4 text-blue-600 dark:text-blue-400" /> }: InfoAccordionProps) => {
     return (
-        <details className="group mb-2 rounded-md border border-gray-200 bg-white">
+        <details className="group mb-2 rounded-md border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
             <summary className="flex cursor-pointer items-center justify-between p-3">
-                <div className="flex items-center gap-2 text-sm text-gray-700">
+                <div className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
                     {icon}
                     <span>{title}</span>
                 </div>
-                <div className="text-gray-500">
+                <div className="text-gray-500 dark:text-gray-400">
                     <svg
                         className="h-4 w-4 rotate-0 transform transition-transform duration-200 group-open:rotate-180"
                         xmlns="http://www.w3.org/2000/svg"
@@ -50,7 +50,7 @@ const InfoAccordion = ({ title, children, icon = <Info className="h-4 w-4 text-b
                     </svg>
                 </div>
             </summary>
-            <div className="border-t border-gray-100 px-3 py-3 text-sm text-gray-700">{children}</div>
+            <div className="border-t border-gray-100 dark:border-gray-700 px-3 py-3 text-sm text-gray-700 dark:text-gray-300">{children}</div>
         </details>
     );
 };
@@ -63,13 +63,13 @@ type InfoCardProps = {
     className?: string;
 };
 
-const InfoCard = ({ title, children, icon = <Info className="h-5 w-5 text-blue-600" />, className }: InfoCardProps) => {
+const InfoCard = ({ title, children, icon = <Info className="h-5 w-5 text-blue-600 dark:text-blue-400" />, className }: InfoCardProps) => {
     return (
-        <Card className={`border-gray-200 bg-white py-2 shadow-sm ${className || ''}`}>
+        <Card className={`border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 py-2 shadow-sm ${className || ''}`}>
             <div className="space-y-5 px-6 py-4">
                 <div className="flex items-center gap-3">
                     {icon}
-                    <h3 className="text-lg font-medium text-gray-900">{title}</h3>
+                    <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100">{title}</h3>
                 </div>
                 {children}
             </div>
@@ -173,7 +173,7 @@ export default function Register() {
             <Head title="Registrieren" />
 
             {/* Left Column - Privacy Information */}
-            <div className="relative hidden h-full flex-col overflow-y-auto bg-gray-50 p-10 text-gray-800 lg:flex">
+            <div className="relative hidden h-full flex-col overflow-y-auto bg-gray-50 dark:bg-gray-900 p-10 text-gray-800 dark:text-gray-200 lg:flex">
                 <div className="absolute inset-0" />
 
                 <div className="relative z-20 flex flex-col gap-6">
@@ -183,29 +183,29 @@ export default function Register() {
                     </Link>
 
                     <div className="space-y-2">
-                        <h2 className="text-2xl font-semibold text-gray-900">Transparenz & Datenschutz</h2>
-                        <p className="text-gray-700">
+                        <h2 className="text-2xl font-semibold text-gray-900 dark:text-gray-100">Transparenz & Datenschutz</h2>
+                        <p className="text-gray-700 dark:text-gray-300">
                             Wir legen Wert auf Ihre Privatsphäre und möchten Ihnen erklären, wie wir mit Ihren Daten umgehen und warum wir bestimmte
                             Informationen abfragen.
                         </p>
                     </div>
 
-                    <InfoCard title="Warum wir fragen" icon={<Info className="h-5 w-5 text-blue-600" />}>
-                        <ol className="ml-6 list-decimal space-y-3 text-gray-700">
+                    <InfoCard title="Warum wir fragen" icon={<Info className="h-5 w-5 text-blue-600 dark:text-blue-400" />}>
+                        <ol className="ml-6 list-decimal space-y-3 text-gray-700 dark:text-gray-300">
                             <li>Um die demografische Verteilung der Bürgermeinungen zu verstehen</li>
                             <li>Um doppelte Abstimmungen zu verhindern und gleichzeitig Anonymität zu gewährleisten</li>
                             <li>Um aggregierte Statistiken über die öffentliche Meinung zu erstellen</li>
                         </ol>
                     </InfoCard>
 
-                    <InfoCard title="Wie wir Ihre Privatsphäre schützen" icon={<Lock className="h-5 w-5 text-blue-600" />}>
-                        <div className="space-y-4 text-gray-700">
+                    <InfoCard title="Wie wir Ihre Privatsphäre schützen" icon={<Lock className="h-5 w-5 text-blue-600 dark:text-blue-400" />}>
+                        <div className="space-y-4 text-gray-700 dark:text-gray-300">
                             <p>Der EU-Parlament-Abstimmungstracker speichert Ihre Daten mit strikter Trennung, um Ihre Privatsphäre zu schützen:</p>
 
-                            <div className="border-l-2 border-gray-200 pl-4">
+                            <div className="border-l-2 border-gray-200 dark:border-gray-700 pl-4">
                                 <div className="mb-1 flex items-center gap-2">
-                                    <ShieldCheck className="h-4 w-4 text-blue-600" />
-                                    <h4 className="font-medium text-gray-900">Benutzerdaten</h4>
+                                    <ShieldCheck className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+                                    <h4 className="font-medium text-gray-900 dark:text-gray-100">Benutzerdaten</h4>
                                 </div>
                                 <p>
                                     Ihre persönlichen Informationen werden getrennt von Ihren Abstimmungsaktivitäten gespeichert und nur für
@@ -213,10 +213,10 @@ export default function Register() {
                                 </p>
                             </div>
 
-                            <div className="border-l-2 border-gray-200 pl-4">
+                            <div className="border-l-2 border-gray-200 dark:border-gray-700 pl-4">
                                 <div className="mb-1 flex items-center gap-2">
-                                    <Eye className="h-4 w-4 text-blue-600" />
-                                    <h4 className="font-medium text-gray-900">Anonyme Abstimmungen</h4>
+                                    <Eye className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+                                    <h4 className="font-medium text-gray-900 dark:text-gray-100">Anonyme Abstimmungen</h4>
                                 </div>
                                 <p>
                                     Ihre Stimmen werden anonym erfasst, ohne Verbindung zu Ihren persönlichen Daten. Selbst unsere Administratoren
@@ -226,25 +226,25 @@ export default function Register() {
                         </div>
                     </InfoCard>
 
-                    <InfoCard title="DSGVO-Konformität" icon={<FileText className="h-5 w-5 text-blue-600" />} className="bg-background">
-                        <div className="space-y-4 text-gray-700">
+                    <InfoCard title="DSGVO-Konformität" icon={<FileText className="h-5 w-5 text-blue-600 dark:text-blue-400" />} className="bg-background">
+                        <div className="space-y-4 text-gray-700 dark:text-gray-300">
                             <p>Gemäß der Datenschutz-Grundverordnung (DSGVO) haben Sie folgende Rechte in Bezug auf Ihre Daten:</p>
 
                             <div className="grid gap-3">
-                                <div className="border-l-2 border-gray-200 pl-4">
-                                    <p className="font-medium text-gray-900">Recht auf Auskunft</p>
+                                <div className="border-l-2 border-gray-200 dark:border-gray-700 pl-4">
+                                    <p className="font-medium text-gray-900 dark:text-gray-100">Recht auf Auskunft</p>
                                     <p className="text-sm">Sie können jederzeit Auskunft über die von uns gespeicherten Daten anfordern.</p>
                                 </div>
 
-                                <div className="border-l-2 border-gray-200 pl-4">
-                                    <p className="font-medium text-gray-900">Recht auf Löschung</p>
+                                <div className="border-l-2 border-gray-200 dark:border-gray-700 pl-4">
+                                    <p className="font-medium text-gray-900 dark:text-gray-100">Recht auf Löschung</p>
                                     <p className="text-sm">
                                         Sie können die Löschung Ihres Kontos und aller damit verbundenen persönlichen Daten verlangen.
                                     </p>
                                 </div>
 
-                                <div className="border-l-2 border-gray-200 pl-4">
-                                    <p className="font-medium text-gray-900">Recht auf Datenübertragbarkeit</p>
+                                <div className="border-l-2 border-gray-200 dark:border-gray-700 pl-4">
+                                    <p className="font-medium text-gray-900 dark:text-gray-100">Recht auf Datenübertragbarkeit</p>
                                     <p className="text-sm">Sie können Ihre Daten in einem strukturierten, gängigen Format erhalten.</p>
                                 </div>
                             </div>
@@ -256,8 +256,8 @@ export default function Register() {
                         </div>
                     </InfoCard>
 
-                    <InfoCard title="Open Source" icon={<GitFork className="h-5 w-5 text-blue-600" />} className="bg-background mt-auto">
-                        <div className="text-gray-700">
+                    <InfoCard title="Open Source" icon={<GitFork className="h-5 w-5 text-blue-600 dark:text-blue-400" />} className="bg-background mt-auto">
+                        <div className="text-gray-700 dark:text-gray-300">
                             <p className="mb-3">
                                 Der gesamte Quellcode dieser Plattform ist öffentlich verfügbar und kann auf GitHub eingesehen werden.
                             </p>
@@ -265,7 +265,7 @@ export default function Register() {
                                 href="https://github.com/abstimmung-eu/abstimmung.eu"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="inline-flex items-center font-medium text-blue-600 hover:text-blue-700"
+                                className="inline-flex items-center font-medium text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
                             >
                                 <span>Zum Repository</span>
                                 <svg className="ml-1 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -283,15 +283,15 @@ export default function Register() {
             </div>
 
             {/* Right Column - Registration Form */}
-            <div className="w-full bg-white p-6 lg:p-12">
+            <div className="w-full bg-white dark:bg-gray-900 p-6 lg:p-12 h-full flex flex-col justify-center">
                 <div className="mx-auto flex w-full flex-col justify-center space-y-5 sm:w-[400px]">
                     <Link href={route('index')} className="relative z-20 mb-3 flex items-center justify-center lg:hidden">
-                        <AppLogoIcon className="h-8 w-8 fill-current text-blue-600" />
+                        <AppLogoIcon className="h-8 w-8 fill-current text-blue-600 dark:text-blue-400" />
                     </Link>
 
                     <div className="flex flex-col items-center justify-center gap-2 text-center md:items-start md:text-left">
-                        <h1 className="text-2xl font-semibold text-gray-900">Account erstellen</h1>
-                        <p className="text-sm text-gray-500">
+                        <h1 className="text-2xl font-semibold text-gray-900 dark:text-gray-100">Account erstellen</h1>
+                        <p className="text-sm text-gray-500 dark:text-gray-400">
                             {formStep === 1
                                 ? 'Geben Sie Ihre Details unten ein, um Ihr Konto zu erstellen'
                                 : 'Bitte füllen Sie Ihre demografischen Daten aus'}
@@ -299,24 +299,24 @@ export default function Register() {
                     </div>
 
                     {/* Mobile Privacy Information Card - More Compact */}
-                    <Card className="border border-gray-200 bg-gray-50 p-2 shadow-sm lg:hidden">
+                    <Card className="border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 p-2 shadow-sm lg:hidden">
                         <div className="p-3">
                             <div className="mb-2 flex items-center gap-2">
-                                <ShieldCheck className="h-4 w-4 text-green-600" />
-                                <h3 className="text-sm font-medium">Datenschutz-Hinweis</h3>
+                                <ShieldCheck className="h-4 w-4 text-green-600 dark:text-green-400" />
+                                <h3 className="text-sm font-medium dark:text-gray-100">Datenschutz-Hinweis</h3>
                             </div>
-                            <p className="mb-2 text-xs text-gray-600">
+                            <p className="mb-2 text-xs text-gray-600 dark:text-gray-300">
                                 Ihre persönlichen Daten werden ausschließlich für statistische Zwecke verwendet und nicht mit Ihren Abstimmungen
                                 verknüpft. Alle Stimmen sind vollständig anonym.
                             </p>
                             <details className="text-xs">
-                                <summary className="inline-flex cursor-pointer items-center p-0.5 font-medium text-blue-600 hover:underline">
+                                <summary className="inline-flex cursor-pointer items-center p-0.5 font-medium text-blue-600 dark:text-blue-400 hover:underline">
                                     Mehr erfahren
                                 </summary>
-                                <div className="mt-2 space-y-2 text-gray-600">
+                                <div className="mt-2 space-y-2 text-gray-600 dark:text-gray-300">
                                     <div>
                                         <h4 className="mb-0.5 flex items-center gap-1 font-medium">
-                                            <Info className="h-3 w-3 text-blue-600" />
+                                            <Info className="h-3 w-3 text-blue-600 dark:text-blue-400" />
                                             Warum wir fragen
                                         </h4>
                                         <ul className="ml-4 list-disc space-y-0.5">
@@ -328,7 +328,7 @@ export default function Register() {
 
                                     <div>
                                         <h4 className="mb-0.5 flex items-center gap-1 font-medium">
-                                            <FileText className="h-3 w-3 text-blue-600" />
+                                            <FileText className="h-3 w-3 text-blue-600 dark:text-blue-400" />
                                             DSGVO-Rechte
                                         </h4>
                                         <p className="mb-0.5">Sie haben das Recht auf:</p>

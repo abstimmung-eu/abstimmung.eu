@@ -35,12 +35,12 @@ export default function VoteBar({ data, className = "", showLabel = true, height
                     <div className="text-muted-foreground text-xs">{data.total} Stimmen</div>
                 </div>
             )}
-            <div className={`relative w-full overflow-hidden rounded-none bg-gray-100 ${height}`}>
+            <div className={`relative w-full overflow-hidden rounded-none bg-gray-100 dark:bg-gray-800 ${height}`}>
                 <div className="absolute inset-0 flex">
                     <Tooltip>
                         <TooltipTrigger asChild>
                             <div
-                                className="flex h-full items-center justify-center bg-green-600 text-xs font-medium text-white"
+                                className="flex h-full items-center justify-center bg-green-600 dark:bg-green-700 text-xs font-medium text-white"
                                 style={{ width: `${forPercentage}%` }}
                             >
                                 {forPercentage > 8 && `${forPercentage}%`}
@@ -55,7 +55,7 @@ export default function VoteBar({ data, className = "", showLabel = true, height
                     <Tooltip>
                         <TooltipTrigger asChild>
                             <div
-                                className="flex h-full items-center justify-center bg-red-600 text-xs font-medium text-white"
+                                className="flex h-full items-center justify-center bg-red-600 dark:bg-red-700 text-xs font-medium text-white"
                                 style={{ width: `${againstPercentage}%` }}
                             >
                                 {againstPercentage > 8 && `${againstPercentage}%`}
@@ -71,7 +71,7 @@ export default function VoteBar({ data, className = "", showLabel = true, height
                         <Tooltip>
                             <TooltipTrigger asChild>
                                 <div
-                                    className="flex h-full items-center justify-center bg-gray-400 text-xs font-medium text-white"
+                                    className="flex h-full items-center justify-center bg-gray-400 dark:bg-gray-500 text-xs font-medium text-white"
                                     style={{ width: `${abstentionPercentage}%` }}
                                 >
                                     {abstentionPercentage > 8 && `${abstentionPercentage}%`}

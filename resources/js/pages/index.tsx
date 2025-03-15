@@ -120,7 +120,7 @@ export default function Index() {
 
             {/* Recent Votes Section */}
 
-            <section className="flex w-full items-center justify-center bg-gray-100 py-4 md:py-12 lg:py-16">
+            <section className="flex w-full items-center justify-center bg-gray-100 dark:bg-gray-900 py-4 md:py-12 lg:py-16">
                 <div className="container max-w-7xl px-4 md:px-6">
                     <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-3xl">Aktuelle Abstimmungen</h2>
                     <div className="mx-auto mt-8">
