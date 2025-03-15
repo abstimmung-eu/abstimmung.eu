@@ -19,7 +19,10 @@ class VoteFactory extends Factory
         return [
             'uuid' => fake()->uuid(),
             'title' => fake()->sentence(),
+            'summary' => fake()->sentence(),
             'description' => fake()->sentence(),
+            'arguments_for' => fake()->sentence(),
+            'arguments_against' => fake()->sentence(),
             'url' => fake()->url(),
             'vote_date' => fake()->dateTimeBetween('-1 month', '+1 month'),
         ];

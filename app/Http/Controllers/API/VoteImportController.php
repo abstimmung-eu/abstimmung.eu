@@ -100,19 +100,13 @@ class VoteImportController extends Controller
      * Create a vote and its related records
      */
     private function createVote(array $voteData): Vote
-    {
-        // Create vote stats record
-        $memberVoteStats = new MemberVoteStats();
-        $memberVoteStats->save();
-
-        // Create the vote record
+    {        // Create the vote record
         $vote = new Vote();
         $vote->uuid = (string) Str::uuid();
         $vote->title = $voteData['title'];
         $vote->description = $voteData['description'];
         $vote->url = $voteData['url'];
         $vote->vote_date = $voteData['vote_date'];
-        $vote->member_vote_stats_id = $memberVoteStats->id;
 
         if (!empty($voteData['summary'])) {
             $vote->summary = $voteData['summary'];
@@ -127,6 +121,11 @@ class VoteImportController extends Controller
         }
 
         $vote->save();
+
+        // Create vote stats record
+        $memberVoteStats = new MemberVoteStats();
+        $memberVoteStats->vote_uuid = $vote->uuid;
+        $memberVoteStats->save();
 
         // Create member votes
         $this->createMemberVotes($vote, $voteData['member_votes'], $memberVoteStats);

@@ -20,7 +20,8 @@ class DatabaseSeeder extends Seeder
 
         $this->call([
             VoteSeeder::class,
-            MemberVoteSeeder::class
+            MemberVoteSeeder::class,
+            MemberVoteStatsSeeder::class
         ]);
     }
 }

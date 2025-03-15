@@ -36,7 +36,7 @@ class Vote extends Model
 
     public function memberVoteStats()
     {
-        return $this->belongsTo(MemberVoteStats::class);
+        return $this->hasOne(MemberVoteStats::class);
     }
 
     public function documents()
