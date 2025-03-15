@@ -122,10 +122,17 @@ export const isDemographicDataEmpty = (): boolean => {
 
 /**
  * Save demographic data to localStorage
+ * Accepts partial data and merges with existing data
  */
-export const saveDemographicData = (data: DemographicData): void => {
-    data.age_group = mapBirthyearToAgeGroup(data.birthyear);
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+export const saveDemographicData = (data: Partial<DemographicData>): void => {
+    const currentData = loadDemographicData();
+    const mergedData = { ...currentData, ...data };
+    
+    if (mergedData.birthyear) {
+        mergedData.age_group = mapBirthyearToAgeGroup(mergedData.birthyear);
+    }
+    
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(mergedData));
 };
 
 /**

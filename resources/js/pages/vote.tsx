@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Drawer, DrawerContent, DrawerDescription, DrawerHeader, DrawerTitle, DrawerTrigger, DrawerClose, DrawerFooter } from '@/components/ui/drawer';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import VoteBar from '@/components/vote-bar';
@@ -13,8 +14,8 @@ import { isDemographicDataEmpty, loadDemographicData, saveDemographicData } from
 import { SharedData } from '@/types';
 import { type Vote } from '@/types/vote';
 import { Head, Link, router, usePage } from '@inertiajs/react';
-import { AlertCircle, CheckCircle, ChevronLeft, Hand, Link2, Paperclip, ThumbsDown, ThumbsUp } from 'lucide-react';
-import React, { useState } from 'react';
+import { AlertCircle, CheckCircle, ChevronLeft, Hand, Link2, Paperclip, ThumbsDown, ThumbsUp, BarChart } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
 
 // Add interface to extend the Vote type with the missing properties
 interface ExtendedVote extends Vote {
@@ -195,8 +196,109 @@ function DemographicDialog() {
     );
 }
 
+// Add this hook for responsive design
+function useMediaQuery(query: string) {
+  const [matches, setMatches] = useState(false);
+
+  useEffect(() => {
+    const media = window.matchMedia(query);
+    if (media.matches !== matches) {
+      setMatches(media.matches);
+    }
+    
+    const listener = () => setMatches(media.matches);
+    window.addEventListener("resize", listener);
+    return () => window.removeEventListener("resize", listener);
+  }, [matches, query]);
+
+  return matches;
+}
+
 export default function Vote({ vote, user_vote_participation, user_votes_by_age_group, member_votes_by_group }: VoteProps) {
     const { auth } = usePage<SharedData>().props;
+    const [partyVotesOpen, setPartyVotesOpen] = useState(false);
+    const [demographicsOpen, setDemographicsOpen] = useState(false);
+    const isDesktop = useMediaQuery("(min-width: 768px)");
+
+    // Party vote results content - reused for both dialog and drawer
+    const VoteResultsByPartyContent = () => (
+        <>
+            <div className="flex items-center gap-4 border-b pb-4">
+                <div className="flex items-center gap-2">
+                    <div className="h-3 w-3 rounded-full bg-emerald-500"></div>
+                    <span className="text-sm">Dafür</span>
+                </div>
+                <div className="flex items-center gap-2">
+                    <div className="h-3 w-3 rounded-full bg-red-500"></div>
+                    <span className="text-sm">Dagegen</span>
+                </div>
+                <div className="flex items-center gap-2">
+                    <div className="h-3 w-3 rounded-full bg-gray-400"></div>
+                    <span className="text-sm">Enthaltung</span>
+                </div>
+            </div>
+            {member_votes_by_group && (
+                <div className="my-6 space-y-4">
+                    {Object.entries(member_votes_by_group).map(([group, votes]) => (
+                        <VoteBar
+                            key={group}
+                            data={{
+                                label: group,
+                                total: votes.total,
+                                for: votes.for,
+                                against: votes.against,
+                                abstention: votes.abstention,
+                                for_percentage: votes.for_percentage,
+                                against_percentage: votes.against_percentage,
+                                abstention_percentage: votes.abstention_percentage,
+                            }}
+                            className="mb-3"
+                        />
+                    ))}
+                </div>
+            )}
+        </>
+    );
+
+    // Add the missing DemographicResultsContent component
+    const DemographicResultsContent = () => (
+        <>
+            <div className="flex items-center gap-4 border-b pb-4">
+                <div className="flex items-center gap-2">
+                    <div className="h-3 w-3 rounded-full bg-emerald-500"></div>
+                    <span className="text-sm">Dafür</span>
+                </div>
+                <div className="flex items-center gap-2">
+                    <div className="h-3 w-3 rounded-full bg-red-500"></div>
+                    <span className="text-sm">Dagegen</span>
+                </div>
+                <div className="flex items-center gap-2">
+                    <div className="h-3 w-3 rounded-full bg-gray-400"></div>
+                    <span className="text-sm">Enthaltung</span>
+                </div>
+            </div>
+            {user_votes_by_age_group && (
+                <div className="my-6 space-y-4">
+                    {Object.entries(user_votes_by_age_group).map(([ageGroupKey, ageGroup]) => (
+                        <VoteBar
+                            key={ageGroupKey}
+                            data={{
+                                label: AGE_GROUP_LABELS[ageGroupKey] || ageGroupKey,
+                                total: ageGroup.total,
+                                for: ageGroup.for,
+                                against: ageGroup.against,
+                                abstention: ageGroup.abstention || 0,
+                                for_percentage: ageGroup.for_percentage || Math.round((ageGroup.for / ageGroup.total) * 100),
+                                against_percentage: ageGroup.against_percentage || Math.round((ageGroup.against / ageGroup.total) * 100),
+                                abstention_percentage: ageGroup.abstention_percentage || Math.round((ageGroup.abstention || 0) / ageGroup.total * 100),
+                            }}
+                            className="mb-3"
+                        />
+                    ))}
+                </div>
+            )}
+        </>
+    );
 
     return (
         <AppLayout>
@@ -328,6 +430,16 @@ export default function Vote({ vote, user_vote_participation, user_votes_by_age_
                                             {vote.member_vote_stats.total_did_not_vote}
                                         </span>
                                     </div>
+
+                                    {/* Button to open dialog/drawer */}
+                                    <Button 
+                                        variant="outline" 
+                                        className="mt-4" 
+                                        onClick={() => setPartyVotesOpen(true)}
+                                    >
+                                        <BarChart className="mr-2 h-4 w-4" />
+                                        Abstimmung nach Fraktion ansehen
+                                    </Button>
                                 </CardContent>
                             </Card>
 
@@ -341,7 +453,7 @@ export default function Vote({ vote, user_vote_participation, user_votes_by_age_
                                         <div className="flex flex-col">
                                             <VoteBar
                                                 data={{
-                                                    label: 'Gesamtergebnis',
+                                                    label: 'Gesamtergebnis (nicht repräsentativ)',
                                                     total: vote.total_user_votes,
                                                     for: vote.total_user_yes_votes,
                                                     against: vote.total_user_no_votes,
@@ -358,6 +470,16 @@ export default function Vote({ vote, user_vote_participation, user_votes_by_age_
                                         <AlertCircle className="h-3 w-3" />
                                         <span>Abgegebene Stimmen: {vote.total_user_votes}</span>
                                     </div>
+
+                                    {/* Button to open demographics dialog/drawer */}
+                                    <Button 
+                                        variant="outline" 
+                                        className="mt-4" 
+                                        onClick={() => setDemographicsOpen(true)}
+                                    >
+                                        <BarChart className="mr-2 h-4 w-4" />
+                                        Demografische Aufteilung ansehen
+                                    </Button>
 
                                     {auth.user && user_vote_participation === null && (
                                         <>
@@ -437,89 +559,6 @@ export default function Vote({ vote, user_vote_participation, user_votes_by_age_
                         </div>
 
                         <Card>
-                            <CardContent>
-                                <div className="flex flex-row gap-8">
-                                    <div className="w-1/2">
-                                        <div className="flex flex-col justify-between gap-4 border-b pb-4 sm:flex-row sm:items-center">
-                                            <h3 className="text-lg font-bold">Abstimmung nach Fraktion</h3>
-                                            <div className="flex items-center gap-4">
-                                                <div className="flex items-center gap-2">
-                                                    <div className="h-3 w-3 rounded-full bg-emerald-500"></div>
-                                                    <span className="text-sm">Dafür</span>
-                                                </div>
-                                                <div className="flex items-center gap-2">
-                                                    <div className="h-3 w-3 rounded-full bg-red-500"></div>
-                                                    <span className="text-sm">Dagegen</span>
-                                                </div>
-                                                <div className="flex items-center gap-2">
-                                                    <div className="h-3 w-3 rounded-full bg-gray-400"></div>
-                                                    <span className="text-sm">Enthaltung</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        {member_votes_by_group && (
-                                            <div className="mt-3 space-y-2">
-                                                {Object.entries(member_votes_by_group).map(([group, votes]) => (
-                                                    <VoteBar
-                                                        key={group}
-                                                        data={{
-                                                            label: group,
-                                                            total: votes.total,
-                                                            for: votes.for,
-                                                            against: votes.against,
-                                                            abstention: votes.abstention,
-                                                            for_percentage: votes.for_percentage,
-                                                            against_percentage: votes.against_percentage,
-                                                            abstention_percentage: votes.abstention_percentage,
-                                                        }}
-                                                        className="mb-3"
-                                                    />
-                                                ))}
-                                            </div>
-                                        )}
-                                    </div>
-
-                                    <div className="w-1/2">
-                                        <div className="flex flex-col justify-between gap-4 border-b pb-4 sm:flex-row sm:items-center">
-                                            <span className="text-lg font-bold">Demografische Aufteilung</span>
-                                            <div className="flex items-center gap-4">
-                                                <div className="flex items-center gap-2">
-                                                    <div className="h-3 w-3 rounded-full bg-emerald-500"></div>
-                                                    <span className="text-sm">Dafür</span>
-                                                </div>
-                                                <div className="flex items-center gap-2">
-                                                    <div className="h-3 w-3 rounded-full bg-red-500"></div>
-                                                    <span className="text-sm">Dagegen</span>
-                                                </div>
-                                                <div className="flex items-center gap-2">
-                                                    <div className="h-3 w-3 rounded-full bg-gray-400"></div>
-                                                    <span className="text-sm">Enthaltung</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        {Object.entries(user_votes_by_age_group).map(([ageGroupKey, ageGroup]) => (
-                                            <div key={ageGroupKey} className="mt-3 space-y-2">
-                                                <VoteBar
-                                                    data={{
-                                                        label: AGE_GROUP_LABELS[ageGroupKey],
-                                                        total: ageGroup.total,
-                                                        for: ageGroup.for,
-                                                        against: ageGroup.against,
-                                                        abstention: ageGroup.abstention,
-                                                        for_percentage: ageGroup.for_percentage,
-                                                        against_percentage: ageGroup.against_percentage,
-                                                        abstention_percentage: ageGroup.abstention_percentage,
-                                                    }}
-                                                    height="h-6"
-                                                />
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
-                            </CardContent>
-                        </Card>
-
-                        <Card>
                             <CardHeader>
                                 <CardTitle className="text-xl">Stimmen der Abgeordneten</CardTitle>
                             </CardHeader>
@@ -530,6 +569,72 @@ export default function Vote({ vote, user_vote_participation, user_votes_by_age_
                     </div>
                 </div>
             </div>
+
+            {/* Responsive dialog/drawer for party votes */}
+            {isDesktop ? (
+                <Dialog open={partyVotesOpen} onOpenChange={setPartyVotesOpen}>
+                    <DialogContent className="sm:max-w-[600px]">
+                        <DialogHeader>
+                            <DialogTitle>Abstimmung nach Fraktion</DialogTitle>
+                            <DialogDescription>Wie die verschiedenen Fraktionen abgestimmt haben</DialogDescription>
+                        </DialogHeader>
+                        <div className="px-1">
+                            <VoteResultsByPartyContent />
+                        </div>
+                        <DialogFooter>
+                            <Button onClick={() => setPartyVotesOpen(false)}>Schließen</Button>
+                        </DialogFooter>
+                    </DialogContent>
+                </Dialog>
+            ) : (
+                <Drawer open={partyVotesOpen} onOpenChange={setPartyVotesOpen}>
+                    <DrawerContent>
+                        <DrawerHeader>
+                            <DrawerTitle>Abstimmung nach Fraktion</DrawerTitle>
+                            <DrawerDescription>Wie die verschiedenen Fraktionen abgestimmt haben</DrawerDescription>
+                        </DrawerHeader>
+                        <div className="px-4">
+                            <VoteResultsByPartyContent />
+                        </div>
+                        <DrawerFooter>
+                            <Button onClick={() => setPartyVotesOpen(false)}>Schließen</Button>
+                        </DrawerFooter>
+                    </DrawerContent>
+                </Drawer>
+            )}
+            
+            {/* Responsive dialog/drawer for demographics */}
+            {isDesktop ? (
+                <Dialog open={demographicsOpen} onOpenChange={setDemographicsOpen}>
+                    <DialogContent className="sm:max-w-[600px]">
+                        <DialogHeader>
+                            <DialogTitle>Demografische Aufteilung</DialogTitle>
+                            <DialogDescription>Abstimmungsergebnisse nach Altersgruppen</DialogDescription>
+                        </DialogHeader>
+                        <div className="px-1">
+                            <DemographicResultsContent />
+                        </div>
+                        <DialogFooter>
+                            <Button onClick={() => setDemographicsOpen(false)}>Schließen</Button>
+                        </DialogFooter>
+                    </DialogContent>
+                </Dialog>
+            ) : (
+                <Drawer open={demographicsOpen} onOpenChange={setDemographicsOpen}>
+                    <DrawerContent>
+                        <DrawerHeader>
+                            <DrawerTitle>Demografische Aufteilung</DrawerTitle>
+                            <DrawerDescription>Abstimmungsergebnisse nach Altersgruppen</DrawerDescription>
+                        </DrawerHeader>
+                        <div className="px-4">
+                            <DemographicResultsContent />
+                        </div>
+                        <DrawerFooter>
+                            <Button onClick={() => setDemographicsOpen(false)}>Schließen</Button>
+                        </DrawerFooter>
+                    </DrawerContent>
+                </Drawer>
+            )}
         </AppLayout>
     );
 }
