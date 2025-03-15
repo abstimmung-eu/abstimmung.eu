@@ -9,9 +9,11 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Contracts\Auth\MustVerifyEmail as MustVerifyEmailContract;
-use App\Contracts\MustVerifyPhone as MustVerifyPhoneContract;
+use App\Contracts\Auth\MustVerifyPhone as MustVerifyPhoneContract;
 
-class User extends Authenticatable implements MustVerifyEmailContract, MustVerifyPhoneContract
+class User extends Authenticatable implements
+    MustVerifyEmailContract,
+    MustVerifyPhoneContract
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable, MustVerifyPhoneTrait;
