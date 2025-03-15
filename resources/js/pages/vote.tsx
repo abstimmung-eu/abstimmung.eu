@@ -578,7 +578,7 @@ export default function Vote({ vote, user_vote_participation, user_votes_by_age_
                             <DialogTitle>Abstimmung nach Fraktion</DialogTitle>
                             <DialogDescription>Wie die verschiedenen Fraktionen abgestimmt haben</DialogDescription>
                         </DialogHeader>
-                        <div className="px-1">
+                        <div className="px-1 overflow-y-auto max-h-[60vh]">
                             <VoteResultsByPartyContent />
                         </div>
                         <DialogFooter>
@@ -593,7 +593,7 @@ export default function Vote({ vote, user_vote_participation, user_votes_by_age_
                             <DrawerTitle>Abstimmung nach Fraktion</DrawerTitle>
                             <DrawerDescription>Wie die verschiedenen Fraktionen abgestimmt haben</DrawerDescription>
                         </DrawerHeader>
-                        <div className="px-4">
+                        <div className="px-4 overflow-y-auto max-h-[50vh]">
                             <VoteResultsByPartyContent />
                         </div>
                         <DrawerFooter>
@@ -611,7 +611,7 @@ export default function Vote({ vote, user_vote_participation, user_votes_by_age_
                             <DialogTitle>Demografische Aufteilung</DialogTitle>
                             <DialogDescription>Abstimmungsergebnisse nach Altersgruppen</DialogDescription>
                         </DialogHeader>
-                        <div className="px-1">
+                        <div className="px-1 overflow-y-auto max-h-[60vh]">
                             <DemographicResultsContent />
                         </div>
                         <DialogFooter>
@@ -626,7 +626,7 @@ export default function Vote({ vote, user_vote_participation, user_votes_by_age_
                             <DrawerTitle>Demografische Aufteilung</DrawerTitle>
                             <DrawerDescription>Abstimmungsergebnisse nach Altersgruppen</DrawerDescription>
                         </DrawerHeader>
-                        <div className="px-4">
+                        <div className="px-4 overflow-y-auto max-h-[50vh]">
                             <DemographicResultsContent />
                         </div>
                         <DrawerFooter>
