@@ -1,3 +1,87 @@
+/**
+ * Generate year options for birthyear select
+ */
+export const generateYearOptions = () => {
+    const currentYear = new Date().getFullYear();
+    return Array.from({ length: 91 }, (_, i) => currentYear - 10 - i).map((year) => ({
+        value: year.toString(),
+        label: year.toString(),
+    }));
+};
+
+export const DEMOGRAPHIC_FIELDS = [
+    {
+        label: 'Geburtsjahr',
+        key: 'birthyear',
+        options: generateYearOptions(),
+        hidden: false,
+    },
+    {
+        label: 'Alter',
+        key: 'age_group',
+        hidden: true,
+        options: []
+    },
+    {
+        label: 'Geschlecht',
+        key: 'gender',
+        options: [
+            { value: 'male', label: 'Männlich' },
+            { value: 'female', label: 'Weiblich' },
+        ],
+    },
+    {
+        label: 'Familienstand',
+        key: 'marital_status',
+        options: [
+            { value: 'single', label: 'Single' },
+            { value: 'married', label: 'Verheiratet' },
+            { value: 'divorced', label: 'Getrennt lebend' },
+            { value: 'widowed', label: 'Verwitwet' },
+        ],
+    },
+    {
+        label: 'Bildung',
+        key: 'education',
+        options: [
+            { value: 'primary', label: 'Hauptschule' },
+            { value: 'secondary', label: 'Realschule' },
+            { value: 'vocational', label: 'Fachschule' },
+            { value: 'university', label: 'Universität' },
+        ],
+    },
+    {
+        label: 'Beruf',
+        key: 'profession',
+        options: [
+            { value: 'student', label: 'Student' },
+            { value: 'employed', label: 'Angestellt' },
+            { value: 'self_employed', label: 'Selbständig' },
+            { value: 'retired', label: 'Rentner' },
+        ],
+    },
+    {
+        label: 'Haushaltsgröße',
+        key: 'household_size',
+        options: [
+            { value: '1', label: '1 Person' },
+            { value: '2', label: '2 Personen' },
+            { value: '3', label: '3 Personen' },
+            { value: '4', label: '4 Personen' },
+        ],
+    },
+    {
+        label: 'Einkommen',
+        key: 'income',
+        options: [
+            { value: '1', label: 'Unter 1000 €' },
+            { value: '2', label: '1000 - 1999 €' },
+            { value: '3', label: '2000 - 2999 €' },
+            { value: '4', label: '3000 - 3999 €' },
+        ],
+    },
+];
+
 // Type for demographic data
 export type DemographicData = {
     birthyear: string;
@@ -56,19 +140,10 @@ export const loadDemographicData = (): DemographicData => {
 /**
  * Update a single field in demographic data
  */
-export const updateDemographicField = (currentData: DemographicData, field: keyof DemographicData, value: string): DemographicData => {
-    return { ...currentData, [field]: value };
-};
-
-/**
- * Generate year options for birthyear select
- */
-export const generateYearOptions = () => {
-    const currentYear = new Date().getFullYear();
-    return Array.from({ length: 91 }, (_, i) => currentYear - 10 - i).map((year) => ({
-        value: year.toString(),
-        label: year.toString(),
-    }));
+export const updateDemographicField = (field: keyof DemographicData, value: string): void => {
+    const currentData = loadDemographicData();
+    currentData[field] = value;
+    saveDemographicData(currentData);
 };
 
 /**

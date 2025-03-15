@@ -159,7 +159,8 @@ export default function Register() {
 
     // Update demographic data handler
     const updateDemographicData = (field: keyof DemographicData, value: string) => {
-        setDemographicData((prev) => updateDemographicField(prev, field, value));
+        updateDemographicField(field, value);
+        setDemographicData((prev) => ({ ...prev, [field]: value }));
     };
 
     // Handler for the Weiter button

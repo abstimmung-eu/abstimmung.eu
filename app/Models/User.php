@@ -4,17 +4,17 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
-use App\Traits\MustVerifyPhone;
+use App\Traits\MustVerifyPhone as MustVerifyPhoneTrait;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Contracts\Auth\MustVerifyEmail as MustVerifyEmailContract;
-use Illuminate\Contracts\Auth\MustVerifyPhone as MustVerifyPhoneContract;
+use App\Contracts\MustVerifyPhone as MustVerifyPhoneContract;
 
 class User extends Authenticatable implements MustVerifyEmailContract, MustVerifyPhoneContract
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, MustVerifyPhone;
+    use HasFactory, Notifiable, MustVerifyPhoneTrait;
 
     /**
      * The attributes that are mass assignable.
