@@ -70,7 +70,7 @@ export default function Footer() {
                     <div>
                         <h3 className="mb-4 text-lg font-semibold">Kontakt</h3>
                         <ul className="space-y-2 text-sm">
-                            <li className="text-gray-300">info@euvotetracker.eu</li>
+                            <li className="text-gray-300">info@abstimmung.eu</li>
                         </ul>
                     </div>
                 </div>

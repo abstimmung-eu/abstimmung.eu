@@ -1,13 +1,14 @@
 import { type BreadcrumbItem, type SharedData } from '@/types';
 import { Transition } from '@headlessui/react';
 import { Head, Link, useForm, usePage } from '@inertiajs/react';
-import { FormEventHandler } from 'react';
+import { FormEventHandler, useState } from 'react';
 
 import DeleteUser from '@/components/delete-user';
 import HeadingSmall from '@/components/heading-small';
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot } from '@/components/ui/input-otp';
 import { Label } from '@/components/ui/label';
 import AppLayout from '@/layouts/app-layout';
 import SettingsLayout from '@/layouts/settings/layout';
@@ -25,16 +26,14 @@ interface ProfileForm {
     phone: string;
 }
 
-export default function Profile({
-    mustVerifyEmail,
-    mustVerifyPhone,
-    status,
-}: {
-    mustVerifyEmail: boolean;
-    mustVerifyPhone: boolean;
-    status?: string;
-}) {
+interface OtpForm {
+    token: string;
+}
+
+export default function Profile({ status }: { status?: string }) {
     const { auth } = usePage<SharedData>().props;
+    const [emailOtp, setEmailOtp] = useState('');
+    const [phoneOtp, setPhoneOtp] = useState('');
 
     const { data, setData, patch, errors, processing, recentlySuccessful } = useForm<Required<ProfileForm>>({
         name: auth.user.name,
@@ -42,10 +41,36 @@ export default function Profile({
         phone: auth.user.phone,
     });
 
+    const {
+        data: otpData,
+        setData: setOtpData,
+        post,
+    } = useForm<Required<OtpForm>>({
+        token: '',
+    });
+
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
 
         patch(route('profile.update'), {
+            preserveScroll: true,
+        });
+    };
+
+    const submitEmailOtp: FormEventHandler = (e) => {
+        e.preventDefault();
+        setOtpData({ token: emailOtp });
+
+        post(route('verification.email.verify', otpData), {
+            preserveScroll: true,
+        });
+    };
+
+    const submitPhoneOtp: FormEventHandler = (e) => {
+        e.preventDefault();
+
+        // Submit the phone OTP verification
+        patch(route('verification.phone.verify', otpData), {
             preserveScroll: true,
         });
     };
@@ -91,9 +116,17 @@ export default function Profile({
                             <InputError className="mt-2" message={errors.email} />
                         </div>
 
-                        {mustVerifyEmail && auth.user.email_verified_at === null && (
-                            <div>
-                                <p className="text-muted-foreground -mt-4 text-sm">
+                        {status === 'email-verified' && (
+                            <div className="mt-4 space-y-3">
+                                <div className="rounded-md border border-green-200 bg-green-50 p-3 text-sm font-medium text-green-600">
+                                    Ihre E-Mail-Adresse wurde erfolgreich verifiziert.
+                                </div>
+                            </div>
+                        )}
+
+                        {auth.user.email_verified_at === null && (
+                            <div className="rounded-lg border border-red-200 bg-red-50/50 p-4">
+                                <p className="text-sm text-red-600">
                                     Ihre E-Mail-Adresse ist nicht verifiziert.{' '}
                                     <Link
                                         href={route('verification.email.send')}
@@ -106,8 +139,39 @@ export default function Profile({
                                 </p>
 
                                 {status === 'verification-email-sent' && (
-                                    <div className="mt-2 text-sm font-medium text-green-600">
-                                        Eine neue Bestätigungsmail wurde an Ihre E-Mail-Adresse gesendet.
+                                    <div className="mt-4 space-y-3">
+                                        <div className="rounded-md border border-green-200 bg-green-50 p-3 text-sm font-medium text-green-600">
+                                            Eine neue Bestätigungsmail wurde an Ihre E-Mail-Adresse gesendet.
+                                        </div>
+                                        <Label htmlFor="email-otp" className="font-medium">
+                                            Bestätigungscode eingeben (8 Ziffern)
+                                        </Label>
+                                        <InputOTP
+                                            id="email-otp"
+                                            maxLength={8}
+                                            value={emailOtp}
+                                            onChange={setEmailOtp}
+                                            className="mb-2 justify-center"
+                                            pattern="[0-9]*"
+                                            inputMode="numeric"
+                                        >
+                                            <InputOTPGroup>
+                                                <InputOTPSlot index={0} />
+                                                <InputOTPSlot index={1} />
+                                                <InputOTPSlot index={2} />
+                                                <InputOTPSlot index={3} />
+                                            </InputOTPGroup>
+                                            <InputOTPSeparator />
+                                            <InputOTPGroup>
+                                                <InputOTPSlot index={4} />
+                                                <InputOTPSlot index={5} />
+                                                <InputOTPSlot index={6} />
+                                                <InputOTPSlot index={7} />
+                                            </InputOTPGroup>
+                                        </InputOTP>
+                                        <Button onClick={submitEmailOtp} disabled={emailOtp.length < 8} className="w-full sm:w-auto">
+                                            E-Mail-Adresse verifizieren
+                                        </Button>
                                     </div>
                                 )}
                             </div>
@@ -128,9 +192,9 @@ export default function Profile({
                             />
                         </div>
 
-                        {mustVerifyPhone && auth.user.phone_verified_at === null && (
-                            <div>
-                                <p className="text-muted-foreground -mt-4 text-sm">
+                        {auth.user.phone_verified_at === null && (
+                            <div className="rounded-lg border border-red-200 bg-red-50/50 p-4">
+                                <p className="text-sm text-red-600">
                                     Ihre Telefonnummer ist nicht verifiziert.{' '}
                                     <Link
                                         href={route('verification.phone.send')}
@@ -143,8 +207,38 @@ export default function Profile({
                                 </p>
 
                                 {status === 'verification-sms-sent' && (
-                                    <div className="mt-2 text-sm font-medium text-green-600">
-                                        Eine neue Bestätigungs-SMS wurde an Ihre Telefonnummer gesendet.
+                                    <div className="mt-4 space-y-3">
+                                        <div className="rounded-md border border-green-200 bg-green-50 p-3 text-sm font-medium text-green-600">
+                                            Eine neue Bestätigungs-SMS wurde an Ihre Telefonnummer gesendet.
+                                        </div>
+                                        <form onSubmit={submitPhoneOtp} className="mt-2 space-y-3">
+                                            <Label htmlFor="phone-otp" className="font-medium">
+                                                Bestätigungscode eingeben (8 Ziffern)
+                                            </Label>
+                                            <InputOTP
+                                                id="phone-otp"
+                                                maxLength={8}
+                                                value={phoneOtp}
+                                                onChange={setPhoneOtp}
+                                                className="mb-2 justify-center"
+                                                pattern="[0-9]*"
+                                                inputMode="numeric"
+                                            >
+                                                <InputOTPGroup>
+                                                    <InputOTPSlot index={0} />
+                                                    <InputOTPSlot index={1} />
+                                                    <InputOTPSlot index={2} />
+                                                    <InputOTPSlot index={3} />
+                                                    <InputOTPSlot index={4} />
+                                                    <InputOTPSlot index={5} />
+                                                    <InputOTPSlot index={6} />
+                                                    <InputOTPSlot index={7} />
+                                                </InputOTPGroup>
+                                            </InputOTP>
+                                            <Button type="submit" disabled={phoneOtp.length < 8} className="w-full sm:w-auto">
+                                                Telefonnummer verifizieren
+                                            </Button>
+                                        </form>
                                     </div>
                                 )}
                             </div>

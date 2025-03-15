@@ -73,7 +73,7 @@ class VoteController extends Controller
         $member_votes_by_group = $this->getMemberVotesByGroup($vote);
         $user_votes_by_age_group = $this->getUserVotesByAgeGroup($vote);
 
-        return Inertia::render('vote', [
+        return Inertia::render('vote/vote', [
             'vote' => $vote,
             'user_vote_participation' => $user_vote_participation,
             'member_votes_by_group' => $member_votes_by_group,

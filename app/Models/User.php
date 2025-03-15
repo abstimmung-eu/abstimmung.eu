@@ -10,6 +10,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Contracts\Auth\MustVerifyEmail as MustVerifyEmailContract;
 use App\Contracts\Auth\MustVerifyPhone as MustVerifyPhoneContract;
+use App\Notifications\VerifyEmailNotification;
+use Ichtrojan\Otp\Otp;
 
 class User extends Authenticatable implements
     MustVerifyEmailContract,
@@ -52,6 +54,15 @@ class User extends Authenticatable implements
             'phone_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    /**
+     * Generate and send a new OTP for email verification.
+     */
+    public function sendEmailVerificationNotification()
+    {
+        $otp = (new Otp)->generate($this->email, 'numeric', 8)->token;
+        $this->notify(new VerifyEmailNotification($otp));
     }
 
     /**
