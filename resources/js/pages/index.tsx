@@ -44,7 +44,7 @@ export default function Index() {
                                         href="/about"
                                         className="group inline-flex h-11 w-full sm:w-auto items-center justify-center rounded-md bg-white px-5 py-2 font-medium text-blue-600 shadow-lg transition-all hover:bg-blue-50 hover:shadow-xl"
                                     >
-                                        Mehr erfahren
+                                        <span className="whitespace-nowrap">Mehr erfahren</span>
                                         <ChevronRight className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-0.5" />
                                     </Link>
 
@@ -52,7 +52,7 @@ export default function Index() {
                                         href="/votes"
                                         className="group inline-flex h-11 w-full sm:w-auto items-center justify-center rounded-md bg-white px-5 py-2 font-medium text-blue-600 shadow-lg transition-all hover:bg-blue-50 hover:shadow-xl"
                                     >
-                                        Abstimmungen anzeigen
+                                        <span className="whitespace-nowrap">Abstimmungen anzeigen</span>
                                         <ChevronRight className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-0.5" />
                                     </Link>
                                 </div>

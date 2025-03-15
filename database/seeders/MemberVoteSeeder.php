@@ -19,7 +19,7 @@ class MemberVoteSeeder extends Seeder
         // For each vote, create 100 member votes
         foreach ($votes as $vote) {
             MemberVote::factory()
-                ->count(300)
+                ->count(30)
                 ->create([
                     'vote_uuid' => $vote->uuid,
                 ]);
