@@ -3,8 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use Ichtrojan\Otp\Otp;
-use Illuminate\Auth\Events\Verified;
+use App\Services\VerificationService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
@@ -20,21 +19,14 @@ class VerifyEmailController extends Controller
         }
 
         $request->validate([
-            'token' => 'required|string|numeric|digits:8',
+            'token' => 'required|string|size:8',
         ]);
 
-        $status = (new Otp)->validate($request->user()->email, $request->token);
-
-        if ($status === false) {
+        if (!(new VerificationService())->validateToken($request->user()->email, $request->token)) {
             return redirect()->intended(route('profile.edit', absolute: false))->with('status', 'email-verification-failed');
         }
 
-        if ($request->user()->markEmailAsVerified()) {
-            /** @var \Illuminate\Contracts\Auth\MustVerifyEmail $user */
-            $user = $request->user();
-
-            event(new Verified($user));
-        }
+        $request->user()->markEmailAsVerified();
 
         return redirect()->intended(route('profile.edit', absolute: false))->with('status', 'email-verified');
     }

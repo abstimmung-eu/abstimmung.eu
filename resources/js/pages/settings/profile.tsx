@@ -26,13 +26,13 @@ interface ProfileForm {
     phone: string;
 }
 
-interface OtpForm {
+interface TokenForm {
     token: string;
 }
 
 export default function Profile({ status }: { status?: string }) {
+
     const { auth } = usePage<SharedData>().props;
-    const [emailOtp, setEmailOtp] = useState('');
     const [phoneOtp, setPhoneOtp] = useState('');
 
     const { data, setData, patch, errors, processing, recentlySuccessful } = useForm<Required<ProfileForm>>({
@@ -42,10 +42,10 @@ export default function Profile({ status }: { status?: string }) {
     });
 
     const {
-        data: otpData,
-        setData: setOtpData,
+        data: tokenData,
+        setData: setTokenData,
         post,
-    } = useForm<Required<OtpForm>>({
+    } = useForm<Required<TokenForm>>({
         token: '',
     });
 
@@ -59,9 +59,9 @@ export default function Profile({ status }: { status?: string }) {
 
     const submitEmailOtp: FormEventHandler = (e) => {
         e.preventDefault();
-        setOtpData({ token: emailOtp });
+        console.log('submitEmailOtp', tokenData);
 
-        post(route('verification.email.verify', otpData), {
+        post(route('verification.email.verify'), {
             preserveScroll: true,
         });
     };
@@ -70,7 +70,7 @@ export default function Profile({ status }: { status?: string }) {
         e.preventDefault();
 
         // Submit the phone OTP verification
-        patch(route('verification.phone.verify', otpData), {
+        patch(route('verification.phone.verify', tokenData), {
             preserveScroll: true,
         });
     };
@@ -124,6 +124,14 @@ export default function Profile({ status }: { status?: string }) {
                             </div>
                         )}
 
+                        {status === 'email-verification-failed' && (
+                            <div className="mt-4 space-y-3">
+                                <div className="rounded-md border border-red-200 bg-red-50 p-3 text-sm font-medium text-red-600">
+                                    Ihre E-Mail-Adresse wurde nicht verifiziert.
+                                </div>
+                            </div>
+                        )}
+
                         {auth.user.email_verified_at === null && (
                             <div className="rounded-lg border border-red-200 bg-red-50/50 p-4">
                                 <p className="text-sm text-red-600">
@@ -149,8 +157,8 @@ export default function Profile({ status }: { status?: string }) {
                                         <InputOTP
                                             id="email-otp"
                                             maxLength={8}
-                                            value={emailOtp}
-                                            onChange={setEmailOtp}
+                                            value={tokenData.token}
+                                            onChange={(e) => setTokenData('token', e)}
                                             className="mb-2 justify-center"
                                             pattern="[0-9]*"
                                             inputMode="numeric"
@@ -169,7 +177,7 @@ export default function Profile({ status }: { status?: string }) {
                                                 <InputOTPSlot index={7} />
                                             </InputOTPGroup>
                                         </InputOTP>
-                                        <Button onClick={submitEmailOtp} disabled={emailOtp.length < 8} className="w-full sm:w-auto">
+                                        <Button onClick={submitEmailOtp} disabled={tokenData.token.length < 8} className="w-full sm:w-auto">
                                             E-Mail-Adresse verifizieren
                                         </Button>
                                     </div>
