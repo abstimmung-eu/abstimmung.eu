@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { VoteCard } from '@/components/vote-card';
 import AppLayout from '@/layouts/app-layout';
-import { type BreadcrumbItem } from '@/types';
+import { SharedData, type BreadcrumbItem } from '@/types';
 import type { Vote } from '@/types/vote';
 import { Head, Link, usePage } from '@inertiajs/react';
 import { ChartPie, ChevronRight, Newspaper, Vote as VoteIcon } from 'lucide-react';
@@ -22,6 +22,10 @@ const breadcrumbs: BreadcrumbItem[] = [
 export default function Index() {
     // Type the usePage call with the PageProps interface
     const { votes } = usePage<PageProps>().props;
+
+    const page = usePage<SharedData>();
+    const { auth } = page.props;
+
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
@@ -116,14 +120,16 @@ export default function Index() {
                             </CardContent>
                         </Card>
                     </div>
-                    <div className="mt-8 flex justify-center">
-                        <Link
-                            href="/register"
-                            className="inline-flex h-11 items-center justify-center rounded-md bg-blue-500 px-5 py-2 font-medium text-white shadow-md transition-all hover:bg-blue-600 hover:shadow-lg"
-                        >
-                            Jetzt anmelden und abstimmen
-                        </Link>
-                    </div>
+                    {!auth.user && (
+                        <div className="mt-8 flex justify-center">
+                            <Link
+                                href="/register"
+                                className="inline-flex h-11 items-center justify-center rounded-md bg-blue-500 px-5 py-2 font-medium text-white shadow-md transition-all hover:bg-blue-600 hover:shadow-lg"
+                            >
+                                Jetzt anmelden und abstimmen
+                            </Link>
+                        </div>
+                    )}
                 </div>
             </section>
 
