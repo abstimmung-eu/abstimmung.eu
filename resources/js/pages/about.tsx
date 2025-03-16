@@ -53,33 +53,28 @@ export default function About() {
             <Head title="Über uns" />
 
             <div className="container mx-auto max-w-4xl px-4 py-8">
-                <PageHeader
-                    title="Über uns"
-                />
+                <PageHeader title="Über uns" />
 
                 <div className="mb-10">
                     <div className="mt-8 mb-12">
                         <p className="mb-6 text-lg">
-                            Wir glauben, dass jede Stimme zählt. In einer Zeit, in der öffentliche Debatten oft von den lautesten Stimmen dominiert
-                            werden, haben wir eine Plattform geschaffen, mit dem Ziel ein klares, unverfälschtes Bild der gesellschaftlichen Meinung
-                            vermittelt.
+                            Wir glauben, dass politische Entscheidungen für alle nachvollziehbar sein sollten. In einer Zeit, in der politische Debatten oft in isolierten Echokammern stattfinden, möchten wir eine Plattform bieten, die mehr Transparenz schafft.
                         </p>
 
                         <p className="mb-6 text-lg">
-                            Unsere Vision ist einfach: Eine demokratische Plattform, auf der jeder Bürger seine Meinung zu wichtigen Themen äußern kann – transparent, inklusiv und ohne Verzerrung. Damit diese Vision Wirklichkeit wird, benötigen wir eine kritische Masse an Teilnehmern. Je mehr Menschen sich beteiligen, desto repräsentativer wird unser gemeinsames Meinungsbild.
+                            Unser Ziel ist es, Bürgern einen einfachen Zugang zu den namentlichen Abstimmungen im Bundestag zu ermöglichen – wer hat wie gestimmt, welche Positionen vertreten Abgeordnete und Parteien? Gleichzeitig möchten wir eine Plattform für den Austausch schaffen: Hier können Bürger ihre Meinung zu den gleichen Themen äußern und miteinander diskutieren.
                         </p>
 
                         <p className="mb-6 text-lg">
-                            Als Teilnehmer auf unserer Plattform werden Sie nicht nur Teil einer wachsenden Community, die den demokratischen Diskurs bereichert – Sie helfen aktiv dabei, diese Community zu vergrößern. Jede Person, die Sie einladen, verstärkt die Aussagekraft unserer Ergebnisse und bringt uns näher an ein wahrhaft repräsentatives Bild der Gesellschaft.
+                            Uns ist bewusst, dass unsere Umfragen nicht repräsentativ sind, da nur jene teilnehmen, die sich aktiv dazu entscheiden. Dennoch glauben wir, dass es einen Unterschied machen kann, wenn mehr Menschen sich engagieren und aktiv ihre Meinung einbringen. Daher liegt unser Fokus darauf, einen Raum für informierte Diskussionen zu bieten – einen Ort, an dem Menschen sich mit politischen Entscheidungen auseinandersetzen, unterschiedliche Perspektiven kennenlernen und ihre Gedanken teilen können.
                         </p>
 
                         <p className="mb-6 text-lg">
-                            Warum sollten Sie mitmachen? Weil gemeinsam unsere Stimmen stärker sind. Weil Demokratie davon lebt, dass Menschen sich
-                            beteiligen. Und weil Ihre Meinung wirklich zählt – nicht nur als einzelne Stimme, sondern als wichtiger Teil unserer Gesellschaft, das wir sichtbar machen wollen.
+                            Warum sollten Sie mitmachen? Weil Demokratie vom Austausch lebt. Weil es wichtig ist, zu verstehen, wie politische Entscheidungen getroffen werden. Und weil Ihre Meinung zählt – nicht als statistische Erhebung, sondern als Teil eines offenen Dialogs, der uns alle weiterbringt.
                         </p>
 
                         <p className="text-lg">
-                            Machen Sie mit. Stimmen Sie ab. Laden Sie Freunde, Familie und Kollegen ein. Teilen Sie unsere Plattform in Ihren Netzwerken. Nur gemeinsam können wir eine Bewegung schaffen, die groß genug ist, um Transparenz und echte Repräsentation in den Mittelpunkt zu stellen und Gehör zu finden.
+                            Informieren Sie sich. Diskutieren Sie mit. Teilen Sie Ihre Gedanken und bringen Sie neue Perspektiven ein. Gemeinsam können wir eine Plattform schaffen, die politische Prozesse verständlicher macht und den Dialog zwischen Bürgern stärkt.
                         </p>
                     </div>
 
