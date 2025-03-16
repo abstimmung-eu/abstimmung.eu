@@ -1,6 +1,6 @@
 import { Head, Link, useForm, usePage } from '@inertiajs/react';
-import { CheckCircle2, Eye, FileText, GitFork, Info, LoaderCircle, Lock, ShieldCheck, XCircle } from 'lucide-react';
-import { FormEventHandler, ReactNode, useEffect, useState } from 'react';
+import { Eye, FileText, GitFork, Info, LoaderCircle, Lock, ShieldCheck } from 'lucide-react';
+import { FormEventHandler, ReactNode, useState } from 'react';
 
 import AppLogoIcon from '@/components/app-logo-icon';
 import InputError from '@/components/input-error';
@@ -10,15 +10,8 @@ import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { getDemographicFields, DemographicData, emptyDemographicData, saveDemographicData, updateDemographicField } from '@/lib/demographics';
 import { type SharedData } from '@/types';
-import { 
-    DemographicData, 
-    emptyDemographicData, 
-    saveDemographicData, 
-    loadDemographicData,
-    updateDemographicField,
-    generateYearOptions 
-} from '@/lib/demographics';
 
 // Info Accordion Component
 type InfoAccordionProps = {
@@ -29,7 +22,7 @@ type InfoAccordionProps = {
 
 const InfoAccordion = ({ title, children, icon = <Info className="h-4 w-4 text-blue-600 dark:text-blue-400" /> }: InfoAccordionProps) => {
     return (
-        <details className="group mb-2 rounded-md border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
+        <details className="group mb-2 rounded-md border border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-800">
             <summary className="flex cursor-pointer items-center justify-between p-3">
                 <div className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
                     {icon}
@@ -50,7 +43,7 @@ const InfoAccordion = ({ title, children, icon = <Info className="h-4 w-4 text-b
                     </svg>
                 </div>
             </summary>
-            <div className="border-t border-gray-100 dark:border-gray-700 px-3 py-3 text-sm text-gray-700 dark:text-gray-300">{children}</div>
+            <div className="border-t border-gray-100 px-3 py-3 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">{children}</div>
         </details>
     );
 };
@@ -65,7 +58,7 @@ type InfoCardProps = {
 
 const InfoCard = ({ title, children, icon = <Info className="h-5 w-5 text-blue-600 dark:text-blue-400" />, className }: InfoCardProps) => {
     return (
-        <Card className={`border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 py-2 shadow-sm ${className || ''}`}>
+        <Card className={`border-gray-200 bg-white py-2 shadow-sm dark:border-gray-700 dark:bg-gray-800 ${className || ''}`}>
             <div className="space-y-5 px-6 py-4">
                 <div className="flex items-center gap-3">
                     {icon}
@@ -87,12 +80,7 @@ type RegisterForm = {
 export default function Register() {
     // Add state to track form step
     const [formStep, setFormStep] = useState(1);
-    
-    // Add validation states
-    const [isPhoneValid, setIsPhoneValid] = useState<boolean | null>(null);
-    const [isPasswordValid, setIsPasswordValid] = useState<boolean | null>(null);
-    const [phoneTouched, setPhoneTouched] = useState(false);
-    
+
     // Modified form data to exclude demographic fields
     const { data, setData, post, processing, errors, reset } = useForm<Required<RegisterForm>>({
         email: '',
@@ -106,51 +94,9 @@ export default function Register() {
 
     const { name } = usePage<SharedData>().props;
 
-    // Generate year options for birthyear select
-    const yearOptions = generateYearOptions();
-
-    // Add state to track password match status
-    const [passwordsMatch, setPasswordsMatch] = useState<boolean | null>(null);
-    // Add state to track if password confirmation field has been blurred
-    const [confirmationTouched, setConfirmationTouched] = useState(false);
-
-    // Check password match whenever either password field changes
-    useEffect(() => {
-        if (data.password_confirmation === '') {
-            setPasswordsMatch(null);
-        } else if (data.password === '') {
-            setPasswordsMatch(false);
-        } else {
-            setPasswordsMatch(data.password === data.password_confirmation);
-        }
-    }, [data.password, data.password_confirmation]);
-
-    // Validate German phone number
-    useEffect(() => {
-        if (data.phone === '') {
-            setIsPhoneValid(null);
-            return;
-        }
-        
-        // German mobile number validation regex
-        // Accepts formats like: +49151xxxxxxx, +49 151 xxxx xxxx, 0151xxxxxxx, etc.
-        const germanMobileRegex = /^(\+49|0)[1][5-7][0-9]\s?[0-9\s]{7,10}$/;
-        setIsPhoneValid(germanMobileRegex.test(data.phone));
-    }, [data.phone]);
-
-    // Validate password length
-    useEffect(() => {
-        if (data.password === '') {
-            setIsPasswordValid(null);
-            return;
-        }
-        
-        setIsPasswordValid(data.password.length >= 8);
-    }, [data.password]);
-
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
-        setFormStep(1)
+        setFormStep(1);
         saveDemographicData(demographicData);
         post(route('register'), {
             onFinish: () => reset('password', 'password_confirmation'),
@@ -173,7 +119,7 @@ export default function Register() {
             <Head title="Registrieren" />
 
             {/* Left Column - Privacy Information */}
-            <div className="relative hidden h-full flex-col overflow-y-auto bg-gray-50 dark:bg-gray-900 p-10 text-gray-800 dark:text-gray-200 lg:flex">
+            <div className="relative hidden h-full flex-col overflow-y-auto bg-gray-50 p-10 text-gray-800 lg:flex dark:bg-gray-900 dark:text-gray-200">
                 <div className="absolute inset-0" />
 
                 <div className="relative z-20 flex flex-col gap-6">
@@ -202,7 +148,7 @@ export default function Register() {
                         <div className="space-y-4 text-gray-700 dark:text-gray-300">
                             <p>Der EU-Parlament-Abstimmungstracker speichert Ihre Daten mit strikter Trennung, um Ihre Privatsphäre zu schützen:</p>
 
-                            <div className="border-l-2 border-gray-200 dark:border-gray-700 pl-4">
+                            <div className="border-l-2 border-gray-200 pl-4 dark:border-gray-700">
                                 <div className="mb-1 flex items-center gap-2">
                                     <ShieldCheck className="h-4 w-4 text-blue-600 dark:text-blue-400" />
                                     <h4 className="font-medium text-gray-900 dark:text-gray-100">Benutzerdaten</h4>
@@ -213,7 +159,7 @@ export default function Register() {
                                 </p>
                             </div>
 
-                            <div className="border-l-2 border-gray-200 dark:border-gray-700 pl-4">
+                            <div className="border-l-2 border-gray-200 pl-4 dark:border-gray-700">
                                 <div className="mb-1 flex items-center gap-2">
                                     <Eye className="h-4 w-4 text-blue-600 dark:text-blue-400" />
                                     <h4 className="font-medium text-gray-900 dark:text-gray-100">Anonyme Abstimmungen</h4>
@@ -226,24 +172,28 @@ export default function Register() {
                         </div>
                     </InfoCard>
 
-                    <InfoCard title="DSGVO-Konformität" icon={<FileText className="h-5 w-5 text-blue-600 dark:text-blue-400" />} className="bg-background">
+                    <InfoCard
+                        title="DSGVO-Konformität"
+                        icon={<FileText className="h-5 w-5 text-blue-600 dark:text-blue-400" />}
+                        className="bg-background"
+                    >
                         <div className="space-y-4 text-gray-700 dark:text-gray-300">
                             <p>Gemäß der Datenschutz-Grundverordnung (DSGVO) haben Sie folgende Rechte in Bezug auf Ihre Daten:</p>
 
                             <div className="grid gap-3">
-                                <div className="border-l-2 border-gray-200 dark:border-gray-700 pl-4">
+                                <div className="border-l-2 border-gray-200 pl-4 dark:border-gray-700">
                                     <p className="font-medium text-gray-900 dark:text-gray-100">Recht auf Auskunft</p>
                                     <p className="text-sm">Sie können jederzeit Auskunft über die von uns gespeicherten Daten anfordern.</p>
                                 </div>
 
-                                <div className="border-l-2 border-gray-200 dark:border-gray-700 pl-4">
+                                <div className="border-l-2 border-gray-200 pl-4 dark:border-gray-700">
                                     <p className="font-medium text-gray-900 dark:text-gray-100">Recht auf Löschung</p>
                                     <p className="text-sm">
                                         Sie können die Löschung Ihres Kontos und aller damit verbundenen persönlichen Daten verlangen.
                                     </p>
                                 </div>
 
-                                <div className="border-l-2 border-gray-200 dark:border-gray-700 pl-4">
+                                <div className="border-l-2 border-gray-200 pl-4 dark:border-gray-700">
                                     <p className="font-medium text-gray-900 dark:text-gray-100">Recht auf Datenübertragbarkeit</p>
                                     <p className="text-sm">Sie können Ihre Daten in einem strukturierten, gängigen Format erhalten.</p>
                                 </div>
@@ -256,7 +206,11 @@ export default function Register() {
                         </div>
                     </InfoCard>
 
-                    <InfoCard title="Open Source" icon={<GitFork className="h-5 w-5 text-blue-600 dark:text-blue-400" />} className="bg-background mt-auto">
+                    <InfoCard
+                        title="Open Source"
+                        icon={<GitFork className="h-5 w-5 text-blue-600 dark:text-blue-400" />}
+                        className="bg-background mt-auto"
+                    >
                         <div className="text-gray-700 dark:text-gray-300">
                             <p className="mb-3">
                                 Der gesamte Quellcode dieser Plattform ist öffentlich verfügbar und kann auf GitHub eingesehen werden.
@@ -283,7 +237,7 @@ export default function Register() {
             </div>
 
             {/* Right Column - Registration Form */}
-            <div className="w-full bg-white dark:bg-gray-900 p-6 lg:p-12 h-full flex flex-col justify-center">
+            <div className="flex h-full w-full flex-col justify-center bg-white p-6 lg:p-12 dark:bg-gray-900">
                 <div className="mx-auto flex w-full flex-col justify-center space-y-5 sm:w-[400px]">
                     <Link href={route('index')} className="relative z-20 mb-3 flex items-center justify-center lg:hidden">
                         <AppLogoIcon className="h-8 w-8 fill-current text-blue-600 dark:text-blue-400" />
@@ -299,7 +253,7 @@ export default function Register() {
                     </div>
 
                     {/* Mobile Privacy Information Card - More Compact */}
-                    <Card className="border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 p-2 shadow-sm lg:hidden">
+                    <Card className="border border-gray-200 bg-gray-50 p-2 shadow-sm lg:hidden dark:border-gray-700 dark:bg-gray-800">
                         <div className="p-3">
                             <div className="mb-2 flex items-center gap-2">
                                 <ShieldCheck className="h-4 w-4 text-green-600 dark:text-green-400" />
@@ -310,7 +264,7 @@ export default function Register() {
                                 verknüpft. Alle Stimmen sind vollständig anonym.
                             </p>
                             <details className="text-xs">
-                                <summary className="inline-flex cursor-pointer items-center p-0.5 font-medium text-blue-600 dark:text-blue-400 hover:underline">
+                                <summary className="inline-flex cursor-pointer items-center p-0.5 font-medium text-blue-600 hover:underline dark:text-blue-400">
                                     Mehr erfahren
                                 </summary>
                                 <div className="mt-2 space-y-2 text-gray-600 dark:text-gray-300">
@@ -435,10 +389,9 @@ export default function Register() {
                                             } else {
                                                 // Trigger HTML5 validation
                                                 form?.reportValidity();
-                                                
+
                                                 // Custom check for password match
-                                                if (data.password !== data.password_confirmation && 
-                                                    data.password_confirmation !== '') {
+                                                if (data.password !== data.password_confirmation && data.password_confirmation !== '') {
                                                     alert('Passwörter stimmen nicht überein');
                                                 }
                                             }
@@ -457,152 +410,27 @@ export default function Register() {
                                         </p>
                                     </InfoAccordion>
 
-                                    <div className="grid gap-2">
-                                        <Label htmlFor="birthyear">Geburtsjahr</Label>
-                                        <Select
-                                            value={demographicData.birthyear}
-                                            onValueChange={(value) => updateDemographicData('birthyear', value)}
-                                            disabled={processing}
-                                        >
-                                            <SelectTrigger id="birthyear" className="w-full">
-                                                <SelectValue placeholder="Geburtsjahr auswählen" />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                {yearOptions.map(({ value, label }) => (
-                                                    <SelectItem key={value} value={value}>
-                                                        {label}
-                                                    </SelectItem>
-                                                ))}
-                                            </SelectContent>
-                                        </Select>
-                                    </div>
-
-                                    <div className="grid gap-2">
-                                        <Label htmlFor="gender">Geschlecht</Label>
-                                        <Select
-                                            value={demographicData.gender}
-                                            onValueChange={(value) => updateDemographicData('gender', value)}
-                                            disabled={processing}
-                                        >
-                                            <SelectTrigger id="gender" className="w-full">
-                                                <SelectValue placeholder="Geschlecht auswählen" />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                <SelectItem value="male">Männlich</SelectItem>
-                                                <SelectItem value="female">Weiblich</SelectItem>
-                                                <SelectItem value="other">Anderes</SelectItem>
-                                            </SelectContent>
-                                        </Select>
-                                    </div>
-
-                                    <div className="grid gap-2">
-                                        <Label htmlFor="marital_status">Familienstand</Label>
-                                        <Select
-                                            value={demographicData.marital_status}
-                                            onValueChange={(value) => updateDemographicData('marital_status', value)}
-                                            disabled={processing}
-                                        >
-                                            <SelectTrigger id="marital_status" className="w-full">
-                                                <SelectValue placeholder="Familienstand auswählen" />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                <SelectItem value="single">Single</SelectItem>
-                                                <SelectItem value="married">Verheiratet</SelectItem>
-                                                <SelectItem value="divorced">Geschieden</SelectItem>
-                                                <SelectItem value="widowed">Verwitwet</SelectItem>
-                                                <SelectItem value="in_partnership">In einer Partnerschaft lebend</SelectItem>
-                                            </SelectContent>
-                                        </Select>
-                                    </div>
-
-                                    <div className="grid gap-2">
-                                        <Label htmlFor="education">Bildungsniveau</Label>
-                                        <Select
-                                            value={demographicData.education}
-                                            onValueChange={(value) => updateDemographicData('education', value)}
-                                            disabled={processing}
-                                        >
-                                            <SelectTrigger id="education" className="w-full">
-                                                <SelectValue placeholder="Bildungsniveau auswählen" />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                <SelectItem value="none">Kein Schulabschluss</SelectItem>
-                                                <SelectItem value="primary">Hauptschulabschluss</SelectItem>
-                                                <SelectItem value="secondary">Realschulabschluss (Mittlere Reife)</SelectItem>
-                                                <SelectItem value="bachelor">Abitur (Allgemeine Hochschulreife)</SelectItem>
-                                                <SelectItem value="master">Hochschulabschluss (z. B. Bachelor, Master, Diplom)</SelectItem>
-                                            </SelectContent>
-                                        </Select>
-                                    </div>
-
-                                    <div className="grid gap-2">
-                                        <Label htmlFor="profession">Berufliche Situation</Label>
-                                        <Select
-                                            value={demographicData.profession}
-                                            onValueChange={(value) => updateDemographicData('profession', value)}
-                                            disabled={processing}
-                                        >
-                                            <SelectTrigger id="profession" className="w-full">
-                                                <SelectValue placeholder="Berufliche Situation auswählen" />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                <SelectItem value="full-time">Vollzeitbeschäftigt</SelectItem>
-                                                <SelectItem value="part-time">Teilzeitbeschäftigt</SelectItem>
-                                                <SelectItem value="self-employed">Selbständig</SelectItem>
-                                                <SelectItem value="unemployed">Arbeitslos</SelectItem>
-                                                <SelectItem value="retired">Rentner:in</SelectItem>
-                                                <SelectItem value="student">Schüler:in, Student:in</SelectItem>
-                                                <SelectItem value="housewife">Hausfrau, Hausmann</SelectItem>
-                                                <SelectItem value="other">Andere (z.B. in Ausbildung)</SelectItem>
-                                            </SelectContent>
-                                        </Select>
-                                    </div>
-
-                                    <div className="grid gap-2">
-                                        <Label htmlFor="household_size">Anzahl der Personen im Haushalt</Label>
-                                        <Select
-                                            value={demographicData.household_size}
-                                            onValueChange={(value) => updateDemographicData('household_size', value)}
-                                            disabled={processing}
-                                        >
-                                            <SelectTrigger id="household_size" className="w-full">
-                                                <SelectValue placeholder="Anzahl der Personen im Haushalt auswählen" />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                <SelectItem value="1">1 Person</SelectItem>
-                                                <SelectItem value="2">2 Personen</SelectItem>
-                                                <SelectItem value="3">3 Personen</SelectItem>
-                                                <SelectItem value="4">4 Personen</SelectItem>
-                                                <SelectItem value="5">5 oder mehr Personen</SelectItem>
-                                            </SelectContent>
-                                        </Select>
-                                    </div>
-
-                                    <div className="grid gap-2">
-                                        <Label htmlFor="income">Haushaltsnettoeinkommen</Label>
-                                        <Select
-                                            value={demographicData.income}
-                                            onValueChange={(value) => updateDemographicData('income', value)}
-                                            disabled={processing}
-                                        >
-                                            <SelectTrigger id="income" className="w-full">
-                                                <SelectValue placeholder="Haushaltsnettoeinkommen auswählen" />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                <SelectItem value="1">Unter 1000 €</SelectItem>
-                                                <SelectItem value="2">1000 - 1999 €</SelectItem>
-                                                <SelectItem value="3">2000 - 2999 €</SelectItem>
-                                                <SelectItem value="4">3000 - 3999 €</SelectItem>
-                                                <SelectItem value="5">4000 - 4999 €</SelectItem>
-                                                <SelectItem value="6">5000 - 5999 €</SelectItem>
-                                                <SelectItem value="7">6000 - 6999 €</SelectItem>
-                                                <SelectItem value="8">7000 - 7999 €</SelectItem>
-                                                <SelectItem value="9">8000 - 8999 €</SelectItem>
-                                                <SelectItem value="10">9000 - 9999 €</SelectItem>
-                                                <SelectItem value="11">Über 10000 €</SelectItem>
-                                            </SelectContent>
-                                        </Select>
-                                    </div>
+                                    {getDemographicFields().map((field) => (
+                                        <div key={field.key} className="grid gap-2">
+                                            <Label htmlFor={field.key}>{field.label}</Label>
+                                            <Select
+                                                value={demographicData[field.key as keyof DemographicData]}
+                                                onValueChange={(value) => updateDemographicData(field.key as keyof DemographicData, value)}
+                                                disabled={processing}
+                                            >
+                                                <SelectTrigger id={field.key} className="w-full">
+                                                    <SelectValue placeholder={`${field.label} auswählen`} />
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    {field.options.map((option) => (
+                                                        <SelectItem key={option.value} value={option.value}>
+                                                            {option.label}
+                                                        </SelectItem>
+                                                    ))}
+                                                </SelectContent>
+                                            </Select>
+                                        </div>
+                                    ))}
 
                                     <div className="mt-2 flex gap-3">
                                         <Button
