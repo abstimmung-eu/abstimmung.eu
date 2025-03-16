@@ -2,19 +2,15 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { saveDemographicData } from '@/lib/demographics';
+import { DemographicData, getDemographicFields, loadDemographicData, saveDemographicData } from '@/lib/demographics';
 import { router } from '@inertiajs/react';
 import React, { useState } from 'react';
 
 // Add new DemographicDialog component within the file
 export default function DemographicInputDialog() {
     const [open, setOpen] = useState(false);
-    const [birthYear, setBirthYear] = useState<string>('');
+    const [demographicData, setDemographicData] = useState<DemographicData>(loadDemographicData());
     const [voteData, setVoteData] = useState<{ voteId: number; votePosition: string } | null>(null);
-
-    // Generate years for dropdown (from 1920 to current year)
-    const currentYear = new Date().getFullYear();
-    const years = Array.from({ length: currentYear - 1919 }, (_, i) => (currentYear - i).toString());
 
     React.useEffect(() => {
         const handleOpenDialog = (e: Event) => {
@@ -29,11 +25,19 @@ export default function DemographicInputDialog() {
         };
     }, []);
 
+    const updateField = (field: keyof DemographicData, value: string) => {
+        setDemographicData((prev) => ({ ...prev, [field]: value }));
+    };
+
     const handleSubmit = () => {
-        if (!birthYear || !voteData) return;
+        if (!voteData) return;
+
+        // Check if at least one demographic field is filled
+        const hasData = Object.values(demographicData).some((value) => value !== '');
+        if (!hasData) return;
 
         // Save the demographic data
-        saveDemographicData({ birthyear: birthYear });
+        saveDemographicData(demographicData);
 
         // Submit the vote
         router.post(
@@ -41,7 +45,7 @@ export default function DemographicInputDialog() {
             {
                 vote_id: voteData.voteId,
                 vote_position: voteData.votePosition,
-                demographics: { birthyear: birthYear },
+                demographics: loadDemographicData(),
             },
             {
                 preserveScroll: true,
@@ -54,6 +58,11 @@ export default function DemographicInputDialog() {
         setOpen(false);
     };
 
+    // Check if all demographic fields have data
+    const isFormValid = getDemographicFields().every(
+        (field) => demographicData[field.key as keyof DemographicData] && demographicData[field.key as keyof DemographicData] !== '',
+    );
+
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogContent className="sm:max-w-[425px]">
@@ -65,30 +74,33 @@ export default function DemographicInputDialog() {
                 </DialogHeader>
 
                 <div className="grid gap-4 py-4">
-                    <div className="grid grid-cols-4 items-center gap-4">
-                        <Label htmlFor="birthYear" className="text-right">
-                            Geburtsjahr
-                        </Label>
-                        <Select value={birthYear} onValueChange={setBirthYear}>
-                            <SelectTrigger className="col-span-3">
-                                <SelectValue placeholder="Bitte wählen" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                {years.map((year) => (
-                                    <SelectItem key={year} value={year}>
-                                        {year}
-                                    </SelectItem>
-                                ))}
-                            </SelectContent>
-                        </Select>
-                    </div>
+                    {getDemographicFields().map((field) => (
+                        <div key={field.key} className="grid gap-2">
+                            <Label htmlFor={field.key}>{field.label}</Label>
+                            <Select
+                                value={demographicData[field.key as keyof DemographicData]}
+                                onValueChange={(value) => updateField(field.key as keyof DemographicData, value)}
+                            >
+                                <SelectTrigger id={field.key}>
+                                    <SelectValue placeholder={`Bitte wählen`} />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {field.options.map((option) => (
+                                        <SelectItem key={option.value} value={option.value}>
+                                            {option.label}
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                        </div>
+                    ))}
                 </div>
 
                 <DialogFooter>
                     <Button onClick={() => setOpen(false)} variant="outline">
                         Abbrechen
                     </Button>
-                    <Button onClick={handleSubmit} disabled={!birthYear}>
+                    <Button onClick={handleSubmit} disabled={!isFormValid}>
                         Speichern & Abstimmen
                     </Button>
                 </DialogFooter>

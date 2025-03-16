@@ -384,8 +384,8 @@ export default function Vote({ vote, user_vote_participation, user_votes_by_age_
                                         </Button>
                                     ) : (
                                         <p className="text-muted-foreground mt-2 text-sm">
-                                            Es sind zu wenig Stimmen abgegeben worden, um eine demografische Aufteilung anzuzeigen.
-                                            Sobald mehr Stimmen abgegeben worden sind, wird diese Information hier angezeigt.
+                                            Es sind zu wenig Stimmen abgegeben worden, um eine demografische Aufteilung anzuzeigen. Sobald mehr
+                                            Stimmen abgegeben worden sind, wird diese Information hier angezeigt.
                                         </p>
                                     )}
 
