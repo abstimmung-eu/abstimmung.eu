@@ -21,7 +21,7 @@ class MemberVoteSeeder extends Seeder
             MemberVote::factory()
                 ->count(30)
                 ->create([
-                    'vote_uuid' => $vote->uuid,
+                    'vote_id' => $vote->id,
                 ]);
         }
     }

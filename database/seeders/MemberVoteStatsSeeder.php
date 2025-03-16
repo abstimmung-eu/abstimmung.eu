@@ -26,7 +26,7 @@ class MemberVoteStatsSeeder extends Seeder
         foreach ($votes as $vote) {
             // Use the factory to create stats for each vote
             MemberVoteStats::factory()->create([
-                'vote_uuid' => $vote->uuid
+                'vote_id' => $vote->id
             ]);
         }
 

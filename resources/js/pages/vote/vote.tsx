@@ -5,17 +5,17 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Drawer, DrawerContent, DrawerDescription, DrawerHeader, DrawerTitle, DrawerTrigger, DrawerClose, DrawerFooter } from '@/components/ui/drawer';
-import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Drawer, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import VoteBar from '@/components/vote-bar';
 import AppLayout from '@/layouts/app-layout';
-import { isDemographicDataEmpty, loadDemographicData, saveDemographicData } from '@/lib/demographics';
+import { isDemographicDataEmpty, loadDemographicData } from '@/lib/demographics';
 import { SharedData } from '@/types';
 import { type Vote } from '@/types/vote';
 import { Head, Link, router, usePage } from '@inertiajs/react';
-import { AlertCircle, CheckCircle, ChevronLeft, Hand, Link2, Paperclip, ThumbsDown, ThumbsUp, BarChart } from 'lucide-react';
-import React, { useState, useEffect } from 'react';
+import { AlertCircle, BarChart, CheckCircle, ChevronLeft, Hand, Link2, Paperclip, ThumbsDown, ThumbsUp } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import VoteComments from './comments';
+import DemographicInputDialog from './demographics-input';
 
 // Add interface to extend the Vote type with the missing properties
 interface ExtendedVote extends Vote {
@@ -27,7 +27,7 @@ interface ExtendedVote extends Vote {
 
 interface UserVoteParticipation {
     id: number;
-    vote_uuid: string;
+    vote_id: number;
     user_id: number;
     created_at: string;
     updated_at: string;
@@ -75,24 +75,23 @@ function handleVote(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
     const form = e.currentTarget as HTMLFormElement;
-    const voteUuid = (form.elements.namedItem('vote_uuid') as HTMLInputElement).value;
+    const voteId = (form.elements.namedItem('vote_id') as HTMLInputElement).value;
     const votePosition = (form.elements.namedItem('vote_position') as HTMLInputElement).value;
 
     const demographicData = loadDemographicData();
 
     if (isDemographicDataEmpty()) {
-        // Show dialog instead of console error
-        const customEvent = new CustomEvent('open-demographic-dialog', {
-            detail: { voteUuid, votePosition }
+        const demographicDialogEvent = new CustomEvent('open-demographic-dialog', {
+            detail: { voteId, votePosition },
         });
-        document.dispatchEvent(customEvent);
+        document.dispatchEvent(demographicDialogEvent);
         return;
     }
 
     router.post(
         '/votes/cast',
         {
-            vote_uuid: voteUuid,
+            vote_id: voteId,
             vote_position: votePosition,
             demographics: demographicData,
         },
@@ -102,97 +101,6 @@ function handleVote(e: React.FormEvent<HTMLFormElement>) {
                 router.reload({ only: ['user_vote_participation'] });
             },
         },
-    );
-}
-
-// Add new DemographicDialog component within the file
-function DemographicDialog() {
-    const [open, setOpen] = useState(false);
-    const [birthYear, setBirthYear] = useState<string>('');
-    const [voteData, setVoteData] = useState<{ voteUuid: string, votePosition: string } | null>(null);
-
-    // Generate years for dropdown (from 1920 to current year)
-    const currentYear = new Date().getFullYear();
-    const years = Array.from({ length: currentYear - 1919 }, (_, i) => (currentYear - i).toString());
-
-    React.useEffect(() => {
-        const handleOpenDialog = (e: Event) => {
-            const customEvent = e as CustomEvent;
-            setVoteData(customEvent.detail);
-            setOpen(true);
-        };
-
-        document.addEventListener('open-demographic-dialog', handleOpenDialog);
-        return () => {
-            document.removeEventListener('open-demographic-dialog', handleOpenDialog);
-        };
-    }, []);
-
-    const handleSubmit = () => {
-        if (!birthYear || !voteData) return;
-
-        // Save the demographic data
-        saveDemographicData({ birthyear: birthYear });
-
-        // Submit the vote
-        router.post(
-            '/votes/cast',
-            {
-                vote_uuid: voteData.voteUuid,
-                vote_position: voteData.votePosition,
-                demographics: { birthyear: birthYear },
-            },
-            {
-                preserveScroll: true,
-                onSuccess: () => {
-                    router.reload({ only: ['user_vote_participation'] });
-                },
-            },
-        );
-
-        setOpen(false);
-    };
-
-    return (
-        <Dialog open={open} onOpenChange={setOpen}>
-            <DialogContent className="sm:max-w-[425px]">
-                <DialogHeader>
-                    <DialogTitle>Demografische Daten benötigt</DialogTitle>
-                    <DialogDescription>
-                        Um abzustimmen, benötigen wir einige demografische Informationen. Diese werden anonymisiert gespeichert.
-                    </DialogDescription>
-                </DialogHeader>
-
-                <div className="grid gap-4 py-4">
-                    <div className="grid grid-cols-4 items-center gap-4">
-                        <Label htmlFor="birthYear" className="text-right">
-                            Geburtsjahr
-                        </Label>
-                        <Select value={birthYear} onValueChange={setBirthYear}>
-                            <SelectTrigger className="col-span-3">
-                                <SelectValue placeholder="Bitte wählen" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                {years.map((year) => (
-                                    <SelectItem key={year} value={year}>
-                                        {year}
-                                    </SelectItem>
-                                ))}
-                            </SelectContent>
-                        </Select>
-                    </div>
-                </div>
-
-                <DialogFooter>
-                    <Button onClick={() => setOpen(false)} variant="outline">
-                        Abbrechen
-                    </Button>
-                    <Button onClick={handleSubmit} disabled={!birthYear}>
-                        Speichern & Abstimmen
-                    </Button>
-                </DialogFooter>
-            </DialogContent>
-        </Dialog>
     );
 }
 
@@ -207,8 +115,8 @@ function useMediaQuery(query: string) {
         }
 
         const listener = () => setMatches(media.matches);
-        window.addEventListener("resize", listener);
-        return () => window.removeEventListener("resize", listener);
+        window.addEventListener('resize', listener);
+        return () => window.removeEventListener('resize', listener);
     }, [matches, query]);
 
     return matches;
@@ -218,7 +126,7 @@ export default function Vote({ vote, user_vote_participation, user_votes_by_age_
     const { auth } = usePage<SharedData>().props;
     const [partyVotesOpen, setPartyVotesOpen] = useState(false);
     const [demographicsOpen, setDemographicsOpen] = useState(false);
-    const isDesktop = useMediaQuery("(min-width: 768px)");
+    const isDesktop = useMediaQuery('(min-width: 768px)');
 
     // Party vote results content - reused for both dialog and drawer
     const VoteResultsByPartyContent = () => (
@@ -290,7 +198,8 @@ export default function Vote({ vote, user_vote_participation, user_votes_by_age_
                                 abstention: ageGroup.abstention || 0,
                                 for_percentage: ageGroup.for_percentage || Math.round((ageGroup.for / ageGroup.total) * 100),
                                 against_percentage: ageGroup.against_percentage || Math.round((ageGroup.against / ageGroup.total) * 100),
-                                abstention_percentage: ageGroup.abstention_percentage || Math.round((ageGroup.abstention || 0) / ageGroup.total * 100),
+                                abstention_percentage:
+                                    ageGroup.abstention_percentage || Math.round(((ageGroup.abstention || 0) / ageGroup.total) * 100),
                             }}
                             className="mb-3"
                         />
@@ -303,7 +212,7 @@ export default function Vote({ vote, user_vote_participation, user_votes_by_age_
     return (
         <AppLayout>
             <Head title={vote.title} />
-            <DemographicDialog />
+            <DemographicInputDialog />
             <div className="container mx-auto max-w-7xl px-4 py-8">
                 <div className="flex flex-col space-y-8">
                     <Link href="/votes" className="text-muted-foreground hover:text-foreground flex items-center">
@@ -432,11 +341,7 @@ export default function Vote({ vote, user_vote_participation, user_votes_by_age_
                                     </div>
 
                                     {/* Button to open dialog/drawer */}
-                                    <Button
-                                        variant="outline"
-                                        className="mt-4"
-                                        onClick={() => setPartyVotesOpen(true)}
-                                    >
+                                    <Button variant="outline" className="mt-4" onClick={() => setPartyVotesOpen(true)}>
                                         <BarChart className="mr-2 h-4 w-4" />
                                         Abstimmung nach Fraktion ansehen
                                     </Button>
@@ -472,14 +377,17 @@ export default function Vote({ vote, user_vote_participation, user_votes_by_age_
                                     </div>
 
                                     {/* Button to open demographics dialog/drawer */}
-                                    <Button
-                                        variant="outline"
-                                        className="mt-4"
-                                        onClick={() => setDemographicsOpen(true)}
-                                    >
-                                        <BarChart className="mr-2 h-4 w-4" />
-                                        Demografische Aufteilung ansehen
-                                    </Button>
+                                    {user_votes_by_age_group !== null ? (
+                                        <Button variant="outline" className="mt-4" onClick={() => setDemographicsOpen(true)}>
+                                            <BarChart className="mr-2 h-4 w-4" />
+                                            Demografische Aufteilung ansehen
+                                        </Button>
+                                    ) : (
+                                        <p className="text-muted-foreground mt-2 text-sm">
+                                            Es sind zu wenig Stimmen abgegeben worden, um eine demografische Aufteilung anzuzeigen. Teilnehmen Sie an
+                                            mehr Abstimmungen, um eine demografische Aufteilung zu sehen.
+                                        </p>
+                                    )}
 
                                     {auth.user && user_vote_participation === null && (
                                         <>
@@ -488,7 +396,7 @@ export default function Vote({ vote, user_vote_participation, user_votes_by_age_
                                                     <div className="grid grid-cols-3 gap-2">
                                                         <div className="w-full">
                                                             <form onSubmit={handleVote} className="w-full">
-                                                                <input type="hidden" name="vote_uuid" value={vote.uuid} />
+                                                                <input type="hidden" name="vote_id" value={vote.id} />
                                                                 <input type="hidden" name="vote_position" value="for" />
                                                                 <Button
                                                                     variant="outline"
@@ -500,7 +408,7 @@ export default function Vote({ vote, user_vote_participation, user_votes_by_age_
                                                         </div>
                                                         <div className="w-full">
                                                             <form onSubmit={handleVote} className="w-full">
-                                                                <input type="hidden" name="vote_uuid" value={vote.uuid} />
+                                                                <input type="hidden" name="vote_id" value={vote.id} />
                                                                 <input type="hidden" name="vote_position" value="against" />
                                                                 <Button
                                                                     variant="outline"
@@ -512,7 +420,7 @@ export default function Vote({ vote, user_vote_participation, user_votes_by_age_
                                                         </div>
                                                         <div className="w-full">
                                                             <form onSubmit={handleVote} className="w-full">
-                                                                <input type="hidden" name="vote_uuid" value={vote.uuid} />
+                                                                <input type="hidden" name="vote_id" value={vote.id} />
                                                                 <input type="hidden" name="vote_position" value="abstention" />
                                                                 <Button
                                                                     variant="outline"
@@ -566,6 +474,8 @@ export default function Vote({ vote, user_vote_participation, user_votes_by_age_
                                 <VoteResults vote={vote} />
                             </CardContent>
                         </Card>
+
+                        <VoteComments vote={vote} />
                     </div>
                 </div>
             </div>
@@ -578,7 +488,7 @@ export default function Vote({ vote, user_vote_participation, user_votes_by_age_
                             <DialogTitle>Abstimmung nach Fraktion</DialogTitle>
                             <DialogDescription>Wie die verschiedenen Fraktionen abgestimmt haben</DialogDescription>
                         </DialogHeader>
-                        <div className="px-1 overflow-y-auto max-h-[60vh]">
+                        <div className="max-h-[60vh] overflow-y-auto px-1">
                             <VoteResultsByPartyContent />
                         </div>
                         <DialogFooter>
@@ -593,7 +503,7 @@ export default function Vote({ vote, user_vote_participation, user_votes_by_age_
                             <DrawerTitle>Abstimmung nach Fraktion</DrawerTitle>
                             <DrawerDescription>Wie die verschiedenen Fraktionen abgestimmt haben</DrawerDescription>
                         </DrawerHeader>
-                        <div className="px-4 overflow-y-auto max-h-[50vh]">
+                        <div className="max-h-[50vh] overflow-y-auto px-4">
                             <VoteResultsByPartyContent />
                         </div>
                         <DrawerFooter>
@@ -611,7 +521,7 @@ export default function Vote({ vote, user_vote_participation, user_votes_by_age_
                             <DialogTitle>Demografische Aufteilung</DialogTitle>
                             <DialogDescription>Abstimmungsergebnisse nach Altersgruppen</DialogDescription>
                         </DialogHeader>
-                        <div className="px-1 overflow-y-auto max-h-[60vh]">
+                        <div className="max-h-[60vh] overflow-y-auto px-1">
                             <DemographicResultsContent />
                         </div>
                         <DialogFooter>
@@ -626,7 +536,7 @@ export default function Vote({ vote, user_vote_participation, user_votes_by_age_
                             <DrawerTitle>Demografische Aufteilung</DrawerTitle>
                             <DrawerDescription>Abstimmungsergebnisse nach Altersgruppen</DrawerDescription>
                         </DrawerHeader>
-                        <div className="px-4 overflow-y-auto max-h-[50vh]">
+                        <div className="max-h-[50vh] overflow-y-auto px-4">
                             <DemographicResultsContent />
                         </div>
                         <DrawerFooter>

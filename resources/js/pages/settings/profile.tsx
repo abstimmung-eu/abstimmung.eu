@@ -21,7 +21,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 interface ProfileForm {
-    name: string;
+    username: string;
     email: string;
     phone: string;
 }
@@ -36,7 +36,7 @@ export default function Profile({ status }: { status?: string }) {
     const [phoneOtp, setPhoneOtp] = useState('');
 
     const { data, setData, patch, errors, processing, recentlySuccessful } = useForm<Required<ProfileForm>>({
-        name: auth.user.name,
+        username: auth.user.username,
         email: auth.user.email,
         phone: auth.user.phone,
     });
@@ -81,22 +81,22 @@ export default function Profile({ status }: { status?: string }) {
 
             <SettingsLayout>
                 <div className="space-y-6">
-                    <HeadingSmall title="Profilinformationen" description="Aktualisieren Sie Ihren Namen und Ihre E-Mail-Adresse" />
+                    <HeadingSmall title="Profilinformationen" description="Aktualisieren Sie Ihre Benutzerinformationen" />
 
                     <form onSubmit={submit} className="space-y-6">
                         <div className="grid gap-2">
-                            <Label htmlFor="name">Name (optional)</Label>
+                            <Label htmlFor="username">Benutzername</Label>
 
                             <Input
-                                id="name"
+                                id="username"
                                 className="mt-1 block w-full"
-                                value={data.name}
-                                onChange={(e) => setData('name', e.target.value)}
-                                autoComplete="name"
-                                placeholder="Name"
+                                value={data.username}
+                                onChange={(e) => setData('username', e.target.value)}
+                                autoComplete="username"
+                                placeholder="Benutzername"
                             />
 
-                            <InputError className="mt-2" message={errors.name} />
+                            <InputError className="mt-2" message={errors.username} />
                         </div>
 
                         <div className="grid gap-2">

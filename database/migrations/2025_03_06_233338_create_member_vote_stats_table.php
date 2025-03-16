@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('member_vote_stats', function (Blueprint $table) {
             $table->id();
-            $table->foreignUuid('vote_uuid')->references('uuid')->on('votes');
+            $table->foreignId('vote_id')->references('id')->on('votes');
             $table->integer('total_votes')->default(0);
             $table->integer('total_yes_votes')->default(0);
             $table->integer('total_no_votes')->default(0);

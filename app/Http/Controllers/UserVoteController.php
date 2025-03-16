@@ -15,17 +15,17 @@ class UserVoteController extends Controller
         if (!$user) return redirect()->back()->with('error', 'Sie müssen sich anmelden, um abzustimmen.');
 
         $request->validate([
-            'vote_uuid' => 'required|exists:votes,uuid',
+            'vote_id' => 'required|exists:votes,id',
             'vote_position' => 'required|in:for,against,abstention',
             'demographics' => 'required|array',
             'demographics.age_group' => 'required|string',
         ]);
 
-        $vote_uuid = $request->vote_uuid;
+        $vote_id = $request->vote_id;
         $vote_position = $request->vote_position;
 
         // Check if user has already participated in this vote
-        $existingParticipation = UserVoteParticipation::where('vote_uuid', $vote_uuid)
+        $existingParticipation = UserVoteParticipation::where('vote_id', $vote_id)
             ->where('user_id', $user->id)
             ->exists();
 
@@ -35,14 +35,14 @@ class UserVoteController extends Controller
 
         // Store anonymous user vote
         UserVote::create([
-            'vote_uuid' => $vote_uuid,
+            'vote_id' => $vote_id,
             'vote_position' => $vote_position,
             'age_group' => $request->demographics['age_group'],
         ]);
 
         // Store user vote participation
         UserVoteParticipation::create([
-            'vote_uuid' => $vote_uuid,
+            'vote_id' => $vote_id,
             'user_id' => Auth::id(),
         ]);
 

@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('user_vote_participations', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreignUuid('vote_uuid')->references('uuid')->on('votes')->onDelete('cascade');
+            $table->foreignId('vote_id')->references('id')->on('votes')->onDelete('cascade');
             $table->timestamps();
         });
     }

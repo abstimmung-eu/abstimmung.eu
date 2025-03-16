@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('vote_vote_category', function (Blueprint $table) {
             $table->id();
-            $table->foreignUuid('vote_uuid')->references('uuid')->on('votes')->onDelete('cascade');
+            $table->foreignId('vote_id')->references('id')->on('votes')->onDelete('cascade');
             $table->foreignId('vote_category_id')->references('id')->on('vote_categories')->onDelete('cascade');
             $table->timestamps();
         });

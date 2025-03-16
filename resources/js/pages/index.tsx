@@ -135,7 +135,7 @@ export default function Index() {
                     <div className="mx-auto mt-8">
                         <div className="grid gap-6">
                             {votes.map((vote) => (
-                                <VoteCard key={vote.uuid} vote={vote} />
+                                <VoteCard key={vote.id} vote={vote} />
                             ))}
                         </div>
                     </div>

@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('user_votes', function (Blueprint $table) {
             $table->id();
             // Vote
-            $table->foreignUuid('vote_uuid')->references('uuid')->on('votes');
+            $table->foreignId('vote_id')->references('id')->on('votes');
             $table->enum('vote_position', ['for', 'against', 'abstention', 'did_not_vote']);
             // Demographics
             $table->enum('age_group', [

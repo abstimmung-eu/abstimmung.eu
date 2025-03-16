@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('member_votes', function (Blueprint $table) {
             $table->id();
-            $table->foreignUuid('vote_uuid')->references('uuid')->on('votes');
+            $table->foreignId('vote_id')->references('id')->on('votes');
             $table->string('first_name');
             $table->string('last_name');
             $table->string('group');

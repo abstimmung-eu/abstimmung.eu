@@ -15,7 +15,7 @@ class MemberVoteStats extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'vote_uuid',
+        'vote_id',
         'total_votes',
         'total_yes_votes',
         'total_no_votes',
@@ -31,6 +31,6 @@ class MemberVoteStats extends Model
      */
     public function vote()
     {
-        return $this->belongsTo(Vote::class, 'vote_uuid', 'uuid');
+        return $this->belongsTo(Vote::class, 'vote_id', 'id');
     }
 }

@@ -42,7 +42,7 @@ class VoteImportController extends Controller
 
                 // Add to results
                 $results[] = [
-                    'id' => $vote->uuid,
+                    'id' => $vote->id,
                     'title' => $vote->title,
                     'member_votes_count' => count($voteData['member_votes'])
                 ];
@@ -102,7 +102,6 @@ class VoteImportController extends Controller
     private function createVote(array $voteData): Vote
     {        // Create the vote record
         $vote = new Vote();
-        $vote->uuid = (string) Str::uuid();
         $vote->title = $voteData['title'];
         $vote->description = $voteData['description'];
         $vote->url = $voteData['url'];
@@ -124,7 +123,7 @@ class VoteImportController extends Controller
 
         // Create vote stats record
         $memberVoteStats = new MemberVoteStats();
-        $memberVoteStats->vote_uuid = $vote->uuid;
+        $memberVoteStats->vote_id = $vote->id;
         $memberVoteStats->save();
 
         // Create member votes
@@ -168,7 +167,7 @@ class VoteImportController extends Controller
 
             // Create member vote record
             $memberVote = new MemberVote();
-            $memberVote->vote_uuid = $vote->uuid;
+            $memberVote->vote_id = $vote->id;
             $memberVote->first_name = $memberVoteData['first_name'];
             $memberVote->last_name = $memberVoteData['last_name'];
             $memberVote->group = $memberVoteData['group'];
@@ -230,7 +229,7 @@ class VoteImportController extends Controller
     {
         foreach ($documentsData as $documentData) {
             $document = new VoteDocument();
-            $document->vote_uuid = $vote->uuid;
+            $document->vote_id = $vote->id;
             $document->title = $documentData['title'];
             $document->filename = $documentData['filename'];
             $document->url = $documentData['url'];
@@ -254,7 +253,7 @@ class VoteImportController extends Controller
         $stats->total_votes = 0;
 
         // Get all member votes for this vote
-        $memberVotes = MemberVote::where('vote_uuid', $vote->uuid)->get();
+        $memberVotes = MemberVote::where('vote_id', $vote->id)->get();
 
         // Update stats based on member votes
         foreach ($memberVotes as $memberVote) {

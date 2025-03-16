@@ -13,7 +13,7 @@ export interface UserVoteResults extends VoteResults {
 }
 
 export interface Vote {
-    uuid: string;
+    id: number;
     title: string;
     description: string;
     vote_date: string;
@@ -47,6 +47,20 @@ export interface Vote {
         id: number | string;
         name: string;
     }[];
+    comments: VoteComment[];
+}
+
+export interface VoteComment {
+    id: number;
+    vote_id: number;
+    parent_id: number | null;
+    comment: string;
+    created_at: string;
+    updated_at: string;
+    commentator: {
+        id: number;
+        username: string;
+    };
 }
 
 export interface MemberVoteStats {
@@ -62,7 +76,7 @@ export interface MemberVoteStats {
 
 export interface MemberVote {
     id: number;
-    vote_uuid: string;
+    vote_id: number;
     first_name: string;
     last_name: string;
     vote_position: string;
@@ -74,7 +88,7 @@ export interface MemberVote {
 
 export interface UserVote {
     id: number;
-    vote_uuid: string;
+    vote_id: number;
     vote_position: string;
     created_at: string;
     updated_at: string;
@@ -82,7 +96,7 @@ export interface UserVote {
 
 export interface VoteDocument {
     id: number;
-    vote_uuid: string;
+    vote_id: number;
     title: string;
     filename: string;
     url: string;

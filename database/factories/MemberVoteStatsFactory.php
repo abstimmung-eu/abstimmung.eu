@@ -30,7 +30,7 @@ class MemberVoteStatsFactory extends Factory
         $abstentionPercentage = round(($totalAbstentionVotes / $totalVotesExcludingAbsent) * 100);
 
         return [
-            'vote_uuid' => Vote::factory(),
+            'vote_id' => Vote::factory(),
             'total_votes' => $totalVotes,
             'total_yes_votes' => $totalYesVotes,
             'total_no_votes' => $totalNoVotes,

@@ -18,9 +18,7 @@ class MemberVoteFactory extends Factory
     public function definition(): array
     {
         return [
-            'vote_uuid' => function () {
-                return Vote::factory()->create()->uuid;
-            },
+            'vote_id' => Vote::factory(),
             'first_name' => fake()->firstName(),
             'last_name' => fake()->lastName(),
             'group' => fake()->randomElement(['CDU/CSU', 'SPD', 'GRÜNE', 'FDP', 'LINKE', 'AfD']),

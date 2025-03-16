@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('vote_documents', function (Blueprint $table) {
             $table->id();
-            $table->foreignUuid('vote_uuid')->references('uuid')->on('votes')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreignId('vote_id')->references('id')->on('votes')->onUpdate('cascade')->onDelete('cascade');
             $table->string('title');
             $table->string('filename');
             $table->string('url');

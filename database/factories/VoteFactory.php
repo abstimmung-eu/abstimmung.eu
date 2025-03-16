@@ -17,7 +17,6 @@ class VoteFactory extends Factory
     public function definition(): array
     {
         return [
-            'uuid' => fake()->uuid(),
             'title' => fake()->sentence(),
             'summary' => fake()->sentence(),
             'description' => fake()->sentence(),

@@ -12,10 +12,12 @@ use Illuminate\Contracts\Auth\MustVerifyEmail as MustVerifyEmailContract;
 use App\Contracts\Auth\MustVerifyPhone as MustVerifyPhoneContract;
 use App\Notifications\VerifyEmailNotification;
 use App\Services\VerificationService;
+use BeyondCode\Comments\Contracts\Commentator;
 
 class User extends Authenticatable implements
     MustVerifyEmailContract,
-    MustVerifyPhoneContract
+    MustVerifyPhoneContract,
+    Commentator
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable, MustVerifyPhoneTrait;
@@ -26,6 +28,7 @@ class User extends Authenticatable implements
      * @var list<string>
      */
     protected $fillable = [
+        'username',
         'email',
         'phone',
         'birthyear',
@@ -75,10 +78,12 @@ class User extends Authenticatable implements
     }
 
     /**
-     * Get the age of the user at the current date.
+     * Check if a comment for a specific model needs to be approved.
+     * @param mixed $model
+     * @return bool
      */
-    public function getAgeAttribute()
+    public function needsCommentApproval($model): bool
     {
-        return $this->birthyear ? date('Y') - $this->birthyear : null;
+        return false;
     }
 }

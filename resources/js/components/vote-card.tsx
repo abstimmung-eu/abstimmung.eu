@@ -10,7 +10,7 @@ interface VoteCardProps {
 
 export function VoteCard({ vote }: VoteCardProps) {
     return (
-        <Link href={`/votes/${vote.uuid}`} className="group block focus:outline-none">
+        <Link href={`/votes/${vote.id}`} className="group block focus:outline-none">
             <Card className="overflow-hidden rounded-sm border-1 bg-white py-0 transition-all duration-200 hover:shadow-md dark:bg-gray-800">
                 <div className="flex flex-col md:flex-row">
                     {/* Left section - Main vote info */}
@@ -94,9 +94,7 @@ export function VoteCard({ vote }: VoteCardProps) {
                                             year: 'numeric',
                                         })}
                                     </div>
-                                    <div>
-                                        Gesamtstimmen: {vote.member_vote_stats.total_votes}
-                                    </div>
+                                    <div>Gesamtstimmen: {vote.member_vote_stats.total_votes}</div>
                                 </div>
                             </div>
                         </div>

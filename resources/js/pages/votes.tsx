@@ -132,7 +132,7 @@ export default function Votes({ votes, paginator, filters = {} }: VotesProps) {
                 <div className="space-y-8">
                     <div className="grid gap-4">
                         {votes?.data?.length > 0 
-                            ? votes.data.map((vote) => <VoteCard key={vote.uuid} vote={vote} />)
+                            ? votes.data.map((vote) => <VoteCard key={vote.id} vote={vote} />)
                             : <div className="rounded-lg border border-dashed p-10 text-center">
                                 <p className="text-muted-foreground mb-3">Keine Abstimmungen gefunden.</p>
                                 {filters.search && (

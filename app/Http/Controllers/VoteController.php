@@ -61,7 +61,7 @@ class VoteController extends Controller
         $user_vote_participation = null;
 
         if ($user) {
-            $user_vote_participation = $user->voteParticipations->where('vote_uuid', $vote->uuid)->first();
+            $user_vote_participation = $user->voteParticipations->where('vote_id', $vote->id)->first();
         }
 
         $vote->load('memberVotes');
@@ -69,9 +69,16 @@ class VoteController extends Controller
         $vote->load('documents');
         $vote->load('memberVoteStats');
         $vote->load('categories');
+        $vote->load('comments');
+        $vote->comments->load(['commentator:id,username']);
 
         $member_votes_by_group = $this->getMemberVotesByGroup($vote);
-        $user_votes_by_age_group = $this->getUserVotesByAgeGroup($vote);
+
+        if ($vote->userVotes->count() > 10) {
+            $user_votes_by_age_group = $this->getUserVotesByAgeGroup($vote);
+        } else {
+            $user_votes_by_age_group = null;
+        }
 
         return Inertia::render('vote/vote', [
             'vote' => $vote,
