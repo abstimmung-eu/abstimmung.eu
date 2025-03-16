@@ -12,7 +12,7 @@ export default function Footer() {
                 <div className="grid grid-cols-1 gap-8 md:grid-cols-4">
                     <div>
                         <h3 className="mb-4 text-lg font-semibold">{name}</h3>
-                        <p className="text-sm text-gray-300">Mach deine Stimme sichtbar</p>
+                        <p className="text-sm text-gray-300">Machen Sie Ihre Stimme sichtbar</p>
                     </div>
 
                     <div>
