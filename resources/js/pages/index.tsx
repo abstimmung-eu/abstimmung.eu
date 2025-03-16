@@ -41,18 +41,18 @@ export default function Index() {
 
                                 <div className="flex flex-col w-full sm:flex-row gap-3 sm:gap-2">
                                     <Link
-                                        href="/about"
-                                        className="group inline-flex h-11 w-full sm:w-auto items-center justify-center rounded-md bg-white px-5 py-2 font-medium text-blue-600 shadow-lg transition-all hover:bg-blue-50 hover:shadow-xl"
-                                    >
-                                        <span className="whitespace-nowrap">Mehr erfahren</span>
-                                        <ChevronRight className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-0.5" />
-                                    </Link>
-
-                                    <Link
                                         href="/votes"
                                         className="group inline-flex h-11 w-full sm:w-auto items-center justify-center rounded-md bg-white px-5 py-2 font-medium text-blue-600 shadow-lg transition-all hover:bg-blue-50 hover:shadow-xl"
                                     >
                                         <span className="whitespace-nowrap">Abstimmungen anzeigen</span>
+                                        <ChevronRight className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+                                    </Link>
+
+                                    <Link
+                                        href="/about"
+                                        className="group inline-flex h-11 w-full sm:w-auto items-center justify-center rounded-md bg-white px-5 py-2 font-medium text-blue-600 shadow-lg transition-all hover:bg-blue-50 hover:shadow-xl"
+                                    >
+                                        <span className="whitespace-nowrap">Mehr erfahren</span>
                                         <ChevronRight className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-0.5" />
                                     </Link>
                                 </div>
@@ -68,7 +68,7 @@ export default function Index() {
                 <div className="container px-4 md:px-6">
                     <div className="flex flex-col items-center justify-center space-y-4 text-center">
                         <div className="space-y-2">
-                            <h2 className="md:text:3xl text-3xl font-bold tracking-tighter sm:text-4xl">Wie es funktioniert</h2>
+                            <h2 className="md:text:3xl text-3xl font-bold tracking-tighter">Wie es funktioniert</h2>
                             <p className="text-muted-foreground max-w-[900px] md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
                                 Hier kannst du Abstimmungen verfolgen und deine Meinung anonym und sicher abgeben.
                             </p>
@@ -111,7 +111,7 @@ export default function Index() {
                                 </div>
                             </CardHeader>
                             <CardContent>
-                                <p>Vergleichen Sie die Ergebnisse des Bundestags mit der öffentlichen Meinung.</p>
+                                <p>Vergleiche die Ergebnisse des Bundestags mit den Stimmen auf dieser Plattform.</p>
                             </CardContent>
                         </Card>
                     </div>
