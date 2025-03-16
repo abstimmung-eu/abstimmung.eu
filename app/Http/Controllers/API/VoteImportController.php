@@ -85,6 +85,7 @@ class VoteImportController extends Controller
             'votes.*.member_votes.*.first_name' => 'required|string',
             'votes.*.member_votes.*.last_name' => 'required|string',
             'votes.*.member_votes.*.group' => 'required|string',
+            'votes.*.member_votes.*.state' => 'required|string',
             'votes.*.member_votes.*.vote_position' => 'required|string|in:for,against,abstention,did_not_vote',
             'votes.*.member_votes.*.url' => 'nullable|string',
             'votes.*.documents' => 'nullable|array',
@@ -171,6 +172,7 @@ class VoteImportController extends Controller
             $memberVote->first_name = $memberVoteData['first_name'];
             $memberVote->last_name = $memberVoteData['last_name'];
             $memberVote->group = $memberVoteData['group'];
+            $memberVote->state = $memberVoteData['state'];
             $memberVote->vote_position = $memberVoteData['vote_position'];
 
             if (!empty($memberVoteData['url'])) {

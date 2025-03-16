@@ -6,7 +6,7 @@ import { type Vote } from '@/types/vote';
 import { ChevronLeft, ChevronRight, Link2, Search } from 'lucide-react';
 import { useMemo, useState } from 'react';
 
-type SortField = 'name' | 'vote_position' | 'group';
+type SortField = 'name' | 'vote_position' | 'group' | 'state';
 type SortOrder = 'asc' | 'desc';
 
 export default function VoteResults({ vote }: { vote: Vote }) {
@@ -18,6 +18,7 @@ export default function VoteResults({ vote }: { vote: Vote }) {
     const [nameFilter, setNameFilter] = useState('');
     const [positionFilter, setPositionFilter] = useState('all');
     const [groupFilter, setGroupFilter] = useState('all');
+    const [stateFilter, setStateFilter] = useState('all');
 
     // Pagination state
     const [currentPage, setCurrentPage] = useState(1);
@@ -30,6 +31,15 @@ export default function VoteResults({ vote }: { vote: Vote }) {
             .filter((group, index, self) => group && self.indexOf(group) === index)
             .sort();
         return groups;
+    }, [vote.member_votes]);
+
+    // Add this after the uniqueGroups definition
+    const uniqueStates = useMemo(() => {
+        const states = vote.member_votes
+            .map((mv) => mv.state)
+            .filter((state, index, self) => state && self.indexOf(state) === index)
+            .sort();
+        return states;
     }, [vote.member_votes]);
 
     // Toggle sort order or change sort field
@@ -94,13 +104,17 @@ export default function VoteResults({ vote }: { vote: Vote }) {
                 const groupA = (a.group || '').toLowerCase();
                 const groupB = (b.group || '').toLowerCase();
                 comparison = groupA.localeCompare(groupB);
+            } else if (sortField === 'state') {
+                const stateA = (a.state || '').toLowerCase();
+                const stateB = (b.state || '').toLowerCase();
+                comparison = stateA.localeCompare(stateB);
             }
 
             return sortOrder === 'asc' ? comparison : -comparison;
         });
 
         return result;
-    }, [vote.member_votes, nameFilter, positionFilter, groupFilter, sortField, sortOrder]);
+    }, [vote.member_votes, nameFilter, positionFilter, groupFilter, stateFilter, sortField, sortOrder]);
 
     // Calculate pagination values
     const totalItems = filteredAndSortedVotes.length;
@@ -131,7 +145,7 @@ export default function VoteResults({ vote }: { vote: Vote }) {
     };
 
     // Check if any filters are active
-    const filtersActive = nameFilter || positionFilter !== 'all' || groupFilter !== 'all';
+    const filtersActive = nameFilter || positionFilter !== 'all' || groupFilter !== 'all' || stateFilter !== 'all';
 
     return (
         <div className="bg-white dark:border-gray-800 dark:bg-gray-800">
@@ -166,7 +180,7 @@ export default function VoteResults({ vote }: { vote: Vote }) {
                                     <SelectValue placeholder="Abstimmung" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value="all">Alle</SelectItem>
+                                    <SelectItem value="all">Alle Stimmen</SelectItem>
                                     <SelectItem value="for">Dafür</SelectItem>
                                     <SelectItem value="against">Gegen</SelectItem>
                                     <SelectItem value="abstention">Enthaltung</SelectItem>
@@ -197,6 +211,28 @@ export default function VoteResults({ vote }: { vote: Vote }) {
                             </Select>
                         </div>
 
+                        <div className="w-full md:w-auto">
+                            <Select
+                                value={stateFilter}
+                                onValueChange={(value) => {
+                                    setStateFilter(value);
+                                    setCurrentPage(1); // Reset to first page on filter change
+                                }}
+                            >
+                                <SelectTrigger className="w-full md:w-[180px]">
+                                    <SelectValue placeholder="Bundesland" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="all">Alle Bundesländer</SelectItem>
+                                    {uniqueStates.map((state) => (
+                                        <SelectItem key={state} value={state}>
+                                            {state}
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                        </div>
+
                         {filtersActive && (
                             <Button
                                 variant="outline"
@@ -205,6 +241,7 @@ export default function VoteResults({ vote }: { vote: Vote }) {
                                     setNameFilter('');
                                     setPositionFilter('all');
                                     setGroupFilter('all');
+                                    setStateFilter('all');
                                     setCurrentPage(1); // Reset to first page
                                 }}
                             >
@@ -248,6 +285,9 @@ export default function VoteResults({ vote }: { vote: Vote }) {
                             <TableHead className="cursor-pointer" onClick={() => handleSort('vote_position')}>
                                 Abstimmung {getSortIndicator('vote_position')}
                             </TableHead>
+                            <TableHead className="cursor-pointer" onClick={() => handleSort('state')}>
+                                Bundesland {getSortIndicator('state')}
+                            </TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -278,11 +318,12 @@ export default function VoteResults({ vote }: { vote: Vote }) {
                                             {getVotePositionValue(memberVote.vote_position)}
                                         </div>
                                     </TableCell>
+                                    <TableCell>{memberVote.state || '–'}</TableCell>
                                 </TableRow>
                             ))
                         ) : (
                             <TableRow>
-                                <TableCell colSpan={3} className="h-24 text-center">
+                                <TableCell colSpan={4} className="h-24 text-center">
                                     Keine Ergebnisse gefunden.
                                 </TableCell>
                             </TableRow>

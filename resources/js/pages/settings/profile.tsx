@@ -31,7 +31,6 @@ interface TokenForm {
 }
 
 export default function Profile({ status }: { status?: string }) {
-
     const { auth } = usePage<SharedData>().props;
     const [phoneOtp, setPhoneOtp] = useState('');
 
@@ -237,6 +236,9 @@ export default function Profile({ status }: { status?: string }) {
                                                     <InputOTPSlot index={1} />
                                                     <InputOTPSlot index={2} />
                                                     <InputOTPSlot index={3} />
+                                                </InputOTPGroup>
+                                                <InputOTPSeparator />
+                                                <InputOTPGroup>
                                                     <InputOTPSlot index={4} />
                                                     <InputOTPSlot index={5} />
                                                     <InputOTPSlot index={6} />

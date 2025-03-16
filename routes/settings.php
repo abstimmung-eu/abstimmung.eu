@@ -19,8 +19,6 @@ Route::middleware('auth')->group(function () {
     Route::get('settings/demographics', [DemographicsController::class, 'edit'])->name('demographics.edit');
     Route::patch('settings/demographics', [DemographicsController::class, 'update'])->name('demographics.update');
 
-
-
     Route::get('settings/appearance', function () {
         return Inertia::render('settings/appearance');
     })->name('appearance');

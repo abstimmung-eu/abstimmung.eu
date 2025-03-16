@@ -81,6 +81,7 @@ export interface MemberVote {
     last_name: string;
     vote_position: string;
     group: string;
+    state: string;
     url: string;
     created_at: string;
     updated_at: string;

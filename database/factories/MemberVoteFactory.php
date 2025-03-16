@@ -22,9 +22,12 @@ class MemberVoteFactory extends Factory
             'first_name' => fake()->firstName(),
             'last_name' => fake()->lastName(),
             'group' => fake()->randomElement(['CDU/CSU', 'SPD', 'GRÜNE', 'FDP', 'LINKE', 'AfD']),
+            'state' => fake()->randomElement(['Baden-Württemberg', 'Bayern', 'Berlin', 'Brandenburg', 'Bremen', 'Hamburg', 'Hessen', 'Mecklenburg-Vorpommern', 'Niedersachsen', 'Nordrhein-Westfalen', 'Rheinland-Pfalz', 'Saarland', 'Sachsen', 'Sachsen-Anhalt', 'Schleswig-Holstein', 'Thüringen']),
             'vote_position' => fake()->randomElement([
-                'for', 'for', 'for',
-                'against', 
+                'for',
+                'for',
+                'for',
+                'against',
                 'abstention',
                 'did_not_vote'
             ]),
