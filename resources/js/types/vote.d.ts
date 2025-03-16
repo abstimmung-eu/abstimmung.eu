@@ -15,6 +15,7 @@ export interface UserVoteResults extends VoteResults {
 export interface Vote {
     id: number;
     title: string;
+    summary: string;
     description: string;
     vote_date: string;
     status: VoteStatus;

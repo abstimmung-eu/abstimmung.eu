@@ -5,6 +5,7 @@ import { SharedData, type BreadcrumbItem } from '@/types';
 import type { Vote } from '@/types/vote';
 import { Head, Link, usePage } from '@inertiajs/react';
 import { ChartPie, ChevronRight, Newspaper, Vote as VoteIcon } from 'lucide-react';
+import { useEffect } from 'react';
 
 // Update the interface for the page props
 interface PageProps {
@@ -25,7 +26,6 @@ export default function Index() {
 
     const page = usePage<SharedData>();
     const { auth } = page.props;
-
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
