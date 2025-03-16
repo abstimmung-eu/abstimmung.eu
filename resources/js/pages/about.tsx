@@ -2,14 +2,7 @@ import { PageHeader } from '@/components/page-header';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
-import type { Vote } from '@/types/vote';
 import { Head } from '@inertiajs/react';
-
-// Update the interface for the page props
-interface PageProps {
-    votes: Vote[];
-    [key: string]: any; // Add index signature
-}
 
 const breadcrumbs: BreadcrumbItem[] = [
     {

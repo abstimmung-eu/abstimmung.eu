@@ -200,3 +200,18 @@
         @apply bg-background text-foreground;
     }
 }
+
+/*
+Set the default cursor for buttons.
+*/
+button,
+[role='button'] {
+    cursor: pointer;
+}
+
+/*
+Disabled buttons don't get the pointer cursor.
+*/
+:disabled {
+    cursor: default;
+}
