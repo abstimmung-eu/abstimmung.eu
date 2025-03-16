@@ -8,6 +8,20 @@ import { useMemo, useState } from 'react';
 
 type SortField = 'name' | 'vote_position' | 'group' | 'state';
 type SortOrder = 'asc' | 'desc';
+type FilterState = {
+    name: string;
+    position: string;
+    group: string;
+    state: string;
+};
+
+// Vote position mapping between UI labels and data values
+const VOTE_POSITIONS = {
+    for: 'Ja',
+    against: 'Nein',
+    abstention: 'Enthaltung',
+    did_not_vote: 'Nicht abgestimmt',
+};
 
 export default function VoteResults({ vote }: { vote: Vote }) {
     // Sorting state
@@ -15,31 +29,30 @@ export default function VoteResults({ vote }: { vote: Vote }) {
     const [sortOrder, setSortOrder] = useState<SortOrder>('asc');
 
     // Filtering state
-    const [nameFilter, setNameFilter] = useState('');
-    const [positionFilter, setPositionFilter] = useState('all');
-    const [groupFilter, setGroupFilter] = useState('all');
-    const [stateFilter, setStateFilter] = useState('all');
+    const [filters, setFilters] = useState<FilterState>({
+        name: '',
+        position: 'all',
+        group: 'all',
+        state: 'all',
+    });
 
     // Pagination state
     const [currentPage, setCurrentPage] = useState(1);
     const [pageSize, setPageSize] = useState(10);
 
-    // Get unique groups for the filter dropdown
-    const uniqueGroups = useMemo(() => {
+    // Extract unique values for filter dropdowns
+    const { uniqueGroups, uniqueStates } = useMemo(() => {
         const groups = vote.member_votes
             .map((mv) => mv.group)
             .filter((group, index, self) => group && self.indexOf(group) === index)
             .sort();
-        return groups;
-    }, [vote.member_votes]);
 
-    // Add this after the uniqueGroups definition
-    const uniqueStates = useMemo(() => {
         const states = vote.member_votes
             .map((mv) => mv.state)
             .filter((state, index, self) => state && self.indexOf(state) === index)
             .sort();
-        return states;
+
+        return { uniqueGroups: groups, uniqueStates: states };
     }, [vote.member_votes]);
 
     // Toggle sort order or change sort field
@@ -52,20 +65,26 @@ export default function VoteResults({ vote }: { vote: Vote }) {
         }
     };
 
-    // Add a mapping function to convert between UI labels and data values
-    const getVotePositionValue = (uiPosition: string): string => {
-        switch (uiPosition) {
-            case 'for':
-                return 'Ja';
-            case 'against':
-                return 'Nein';
-            case 'abstention':
-                return 'Enthaltung';
-            case 'did_not_vote':
-                return 'Nicht abgestimmt';
-            default:
-                return uiPosition;
-        }
+    // Get vote position display value
+    const getVotePositionValue = (position: string): string => {
+        return VOTE_POSITIONS[position as keyof typeof VOTE_POSITIONS] || position;
+    };
+
+    // Handle filter changes
+    const updateFilter = (key: keyof FilterState, value: string) => {
+        setFilters((prev) => ({ ...prev, [key]: value }));
+        setCurrentPage(1); // Reset to first page on filter change
+    };
+
+    // Reset all filters
+    const resetFilters = () => {
+        setFilters({
+            name: '',
+            position: 'all',
+            group: 'all',
+            state: 'all',
+        });
+        setCurrentPage(1);
     };
 
     // Filtered and sorted member votes
@@ -73,48 +92,53 @@ export default function VoteResults({ vote }: { vote: Vote }) {
         let result = [...vote.member_votes];
 
         // Apply filters
-        if (nameFilter) {
-            const filterLower = nameFilter.toLowerCase();
+        if (filters.name) {
+            const filterLower = filters.name.toLowerCase();
             result = result.filter((mv) => `${mv.first_name} ${mv.last_name}`.toLowerCase().includes(filterLower));
         }
 
-        if (positionFilter && positionFilter !== 'all') {
-            const dataPosition = positionFilter; // This is now the data value
-            result = result.filter((mv) => {
-                // Compare against the actual data value in the member vote
-                return mv.vote_position === dataPosition;
-            });
+        if (filters.position !== 'all') {
+            result = result.filter((mv) => mv.vote_position === filters.position);
         }
 
-        if (groupFilter && groupFilter !== 'all') {
-            result = result.filter((mv) => mv.group === groupFilter);
+        if (filters.group !== 'all') {
+            result = result.filter((mv) => mv.group === filters.group);
+        }
+
+        if (filters.state !== 'all') {
+            result = result.filter((mv) => mv.state === filters.state);
         }
 
         // Apply sorting
         result.sort((a, b) => {
             let comparison = 0;
-            if (sortField === 'name') {
-                const nameA = `${a.first_name} ${a.last_name}`.toLowerCase();
-                const nameB = `${b.first_name} ${b.last_name}`.toLowerCase();
-                comparison = nameA.localeCompare(nameB);
-            } else if (sortField === 'vote_position') {
-                comparison = a.vote_position.localeCompare(b.vote_position);
-            } else if (sortField === 'group') {
-                // Sort by group name
-                const groupA = (a.group || '').toLowerCase();
-                const groupB = (b.group || '').toLowerCase();
-                comparison = groupA.localeCompare(groupB);
-            } else if (sortField === 'state') {
-                const stateA = (a.state || '').toLowerCase();
-                const stateB = (b.state || '').toLowerCase();
-                comparison = stateA.localeCompare(stateB);
+
+            switch (sortField) {
+                case 'name':
+                    const nameA = `${a.first_name} ${a.last_name}`.toLowerCase();
+                    const nameB = `${b.first_name} ${b.last_name}`.toLowerCase();
+                    comparison = nameA.localeCompare(nameB);
+                    break;
+                case 'vote_position':
+                    comparison = a.vote_position.localeCompare(b.vote_position);
+                    break;
+                case 'group':
+                    const groupA = (a.group || '').toLowerCase();
+                    const groupB = (b.group || '').toLowerCase();
+                    comparison = groupA.localeCompare(groupB);
+                    break;
+                case 'state':
+                    const stateA = (a.state || '').toLowerCase();
+                    const stateB = (b.state || '').toLowerCase();
+                    comparison = stateA.localeCompare(stateB);
+                    break;
             }
 
             return sortOrder === 'asc' ? comparison : -comparison;
         });
 
         return result;
-    }, [vote.member_votes, nameFilter, positionFilter, groupFilter, stateFilter, sortField, sortOrder]);
+    }, [vote.member_votes, filters, sortField, sortOrder]);
 
     // Calculate pagination values
     const totalItems = filteredAndSortedVotes.length;
@@ -144,37 +168,73 @@ export default function VoteResults({ vote }: { vote: Vote }) {
         return sortOrder === 'asc' ? ' ↑' : ' ↓';
     };
 
+    // Generate pagination buttons
+    const renderPaginationButtons = () => {
+        const buttons = [];
+        let startPage = 1;
+        let endPage = Math.min(5, totalPages);
+
+        if (totalPages > 5) {
+            if (currentPage <= 3) {
+                // Near start
+                endPage = 5;
+            } else if (currentPage >= totalPages - 2) {
+                // Near end
+                startPage = totalPages - 4;
+                endPage = totalPages;
+            } else {
+                // Middle
+                startPage = currentPage - 2;
+                endPage = currentPage + 2;
+            }
+        }
+
+        for (let i = startPage; i <= endPage; i++) {
+            buttons.push(
+                <Button key={i} variant={currentPage === i ? 'default' : 'outline'} size="sm" onClick={() => goToPage(i)} className="h-8 w-8 p-0">
+                    {i}
+                </Button>,
+            );
+        }
+
+        return buttons;
+    };
+
     // Check if any filters are active
-    const filtersActive = nameFilter || positionFilter !== 'all' || groupFilter !== 'all' || stateFilter !== 'all';
+    const filtersActive = filters.name || filters.position !== 'all' || filters.group !== 'all' || filters.state !== 'all';
+
+    // Render vote position with colored indicator
+    const renderVotePosition = (position: string) => (
+        <div className="flex items-center">
+            {position === 'for' && <span className="mr-2 h-3 w-3 rounded-full bg-green-500"></span>}
+            {position === 'against' && <span className="mr-2 h-3 w-3 rounded-full bg-red-500"></span>}
+            {position === 'abstention' && <span className="mr-2 h-3 w-3 rounded-full bg-gray-400"></span>}
+            {position === 'did_not_vote' && <span className="mr-2 h-3 w-3 rounded-full bg-gray-300 dark:bg-gray-600"></span>}
+            {getVotePositionValue(position)}
+        </div>
+    );
 
     return (
         <div>
             {/* Filters and pagination size selector */}
             <div className="mb-4 flex flex-wrap items-center justify-between gap-4">
                 <div className="flex flex-wrap items-center gap-4">
+                    {/* Name search */}
                     <div className="flex w-full items-center md:w-auto">
                         <div className="relative flex-1">
                             <Search className="absolute top-2.5 left-2.5 h-4 w-4 text-gray-400" />
                             <Input
                                 placeholder="Name suchen..."
                                 className="pl-9"
-                                value={nameFilter}
-                                onChange={(e) => {
-                                    setNameFilter(e.target.value);
-                                    setCurrentPage(1); // Reset to first page on filter change
-                                }}
+                                value={filters.name}
+                                onChange={(e) => updateFilter('name', e.target.value)}
                             />
                         </div>
                     </div>
 
+                    {/* Position filter */}
                     <div className="w-full md:w-auto">
-                        <Select
-                            value={positionFilter}
-                            onValueChange={(value) => {
-                                setPositionFilter(value);
-                                setCurrentPage(1); // Reset to first page on filter change
-                            }}
-                        >
+                        <Select value={filters.position} onValueChange={(value) => updateFilter('position', value)}>
                             <SelectTrigger className="w-full md:w-[180px]">
                                 <SelectValue placeholder="Abstimmung" />
                             </SelectTrigger>
@@ -188,14 +248,9 @@ export default function VoteResults({ vote }: { vote: Vote }) {
                         </Select>
                     </div>
 
+                    {/* Group filter */}
                     <div className="w-full md:w-auto">
-                        <Select
-                            value={groupFilter}
-                            onValueChange={(value) => {
-                                setGroupFilter(value);
-                                setCurrentPage(1); // Reset to first page on filter change
-                            }}
-                        >
+                        <Select value={filters.group} onValueChange={(value) => updateFilter('group', value)}>
                             <SelectTrigger className="w-full md:w-[180px]">
                                 <SelectValue placeholder="Fraktion" />
                             </SelectTrigger>
@@ -210,14 +265,9 @@ export default function VoteResults({ vote }: { vote: Vote }) {
                         </Select>
                     </div>
 
+                    {/* State filter */}
                     <div className="w-full md:w-auto">
-                        <Select
-                            value={stateFilter}
-                            onValueChange={(value) => {
-                                setStateFilter(value);
-                                setCurrentPage(1); // Reset to first page on filter change
-                            }}
-                        >
+                        <Select value={filters.state} onValueChange={(value) => updateFilter('state', value)}>
                             <SelectTrigger className="w-full md:w-[180px]">
                                 <SelectValue placeholder="Bundesland" />
                             </SelectTrigger>
@@ -232,30 +282,22 @@ export default function VoteResults({ vote }: { vote: Vote }) {
                         </Select>
                     </div>
 
+                    {/* Reset filters button */}
                     {filtersActive && (
-                        <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => {
-                                setNameFilter('');
-                                setPositionFilter('all');
-                                setGroupFilter('all');
-                                setStateFilter('all');
-                                setCurrentPage(1); // Reset to first page
-                            }}
-                        >
+                        <Button variant="outline" size="sm" onClick={resetFilters}>
                             Filter zurücksetzen
                         </Button>
                     )}
                 </div>
 
+                {/* Page size selector */}
                 <div className="flex items-center gap-2">
                     <span className="text-sm text-gray-500 dark:text-gray-400">Zeige</span>
                     <Select
                         value={pageSize.toString()}
                         onValueChange={(value) => {
                             setPageSize(parseInt(value));
-                            setCurrentPage(1); // Reset to first page on page size change
+                            setCurrentPage(1);
                         }}
                     >
                         <SelectTrigger className="w-[80px]">
@@ -272,6 +314,7 @@ export default function VoteResults({ vote }: { vote: Vote }) {
                 </div>
             </div>
 
+            {/* Results table */}
             <Table>
                 <TableHeader>
                     <TableRow>
@@ -304,17 +347,7 @@ export default function VoteResults({ vote }: { vote: Vote }) {
                                     </span>
                                 </TableCell>
                                 <TableCell>{memberVote.group || '–'}</TableCell>
-                                <TableCell>
-                                    <div className="flex items-center">
-                                        {memberVote.vote_position === 'for' && <span className="mr-2 h-3 w-3 rounded-full bg-green-500"></span>}
-                                        {memberVote.vote_position === 'against' && <span className="mr-2 h-3 w-3 rounded-full bg-red-500"></span>}
-                                        {memberVote.vote_position === 'abstention' && <span className="mr-2 h-3 w-3 rounded-full bg-gray-400"></span>}
-                                        {memberVote.vote_position === 'did_not_vote' && (
-                                            <span className="mr-2 h-3 w-3 rounded-full bg-gray-300 dark:bg-gray-600"></span>
-                                        )}
-                                        {getVotePositionValue(memberVote.vote_position)}
-                                    </div>
-                                </TableCell>
+                                <TableCell>{renderVotePosition(memberVote.vote_position)}</TableCell>
                                 <TableCell>{memberVote.state || '–'}</TableCell>
                             </TableRow>
                         ))
@@ -341,32 +374,7 @@ export default function VoteResults({ vote }: { vote: Vote }) {
                         <ChevronLeft className="h-4 w-4" />
                     </Button>
 
-                    {/* Page numbers */}
-                    {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-                        // Show pages around current page
-                        let pageNum;
-                        if (totalPages <= 5) {
-                            pageNum = i + 1;
-                        } else if (currentPage <= 3) {
-                            pageNum = i + 1;
-                        } else if (currentPage >= totalPages - 2) {
-                            pageNum = totalPages - 4 + i;
-                        } else {
-                            pageNum = currentPage - 2 + i;
-                        }
-
-                        return (
-                            <Button
-                                key={pageNum}
-                                variant={currentPage === pageNum ? 'default' : 'outline'}
-                                size="sm"
-                                onClick={() => goToPage(pageNum)}
-                                className="h-8 w-8 p-0"
-                            >
-                                {pageNum}
-                            </Button>
-                        );
-                    })}
+                    {renderPaginationButtons()}
 
                     <Button
                         variant="outline"
