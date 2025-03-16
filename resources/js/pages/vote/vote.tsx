@@ -109,7 +109,7 @@ function handleVote(e: React.FormEvent<HTMLFormElement>) {
 function DemographicDialog() {
     const [open, setOpen] = useState(false);
     const [birthYear, setBirthYear] = useState<string>('');
-    const [voteData, setVoteData] = useState<{voteUuid: string, votePosition: string} | null>(null);
+    const [voteData, setVoteData] = useState<{ voteUuid: string, votePosition: string } | null>(null);
 
     // Generate years for dropdown (from 1920 to current year)
     const currentYear = new Date().getFullYear();
@@ -198,20 +198,20 @@ function DemographicDialog() {
 
 // Add this hook for responsive design
 function useMediaQuery(query: string) {
-  const [matches, setMatches] = useState(false);
+    const [matches, setMatches] = useState(false);
 
-  useEffect(() => {
-    const media = window.matchMedia(query);
-    if (media.matches !== matches) {
-      setMatches(media.matches);
-    }
-    
-    const listener = () => setMatches(media.matches);
-    window.addEventListener("resize", listener);
-    return () => window.removeEventListener("resize", listener);
-  }, [matches, query]);
+    useEffect(() => {
+        const media = window.matchMedia(query);
+        if (media.matches !== matches) {
+            setMatches(media.matches);
+        }
 
-  return matches;
+        const listener = () => setMatches(media.matches);
+        window.addEventListener("resize", listener);
+        return () => window.removeEventListener("resize", listener);
+    }, [matches, query]);
+
+    return matches;
 }
 
 export default function Vote({ vote, user_vote_participation, user_votes_by_age_group, member_votes_by_group }: VoteProps) {
@@ -403,7 +403,7 @@ export default function Vote({ vote, user_vote_participation, user_votes_by_age_
                             <Card className="flex-1 md:basis-[calc(50%-12px)]">
                                 <CardHeader>
                                     <CardTitle className="text-xl font-bold">Abstimmung im Parlament</CardTitle>
-                                    <CardDescription className="text-sm">Wie Abgeordnete auf diese Richtlinie abgestimmt haben</CardDescription>
+                                    <CardDescription className="text-sm">Wie Abgeordnete abgestimmt haben</CardDescription>
                                 </CardHeader>
                                 <CardContent>
                                     <div className="space-y-4">
@@ -432,9 +432,9 @@ export default function Vote({ vote, user_vote_participation, user_votes_by_age_
                                     </div>
 
                                     {/* Button to open dialog/drawer */}
-                                    <Button 
-                                        variant="outline" 
-                                        className="mt-4" 
+                                    <Button
+                                        variant="outline"
+                                        className="mt-4"
                                         onClick={() => setPartyVotesOpen(true)}
                                     >
                                         <BarChart className="mr-2 h-4 w-4" />
@@ -445,15 +445,15 @@ export default function Vote({ vote, user_vote_participation, user_votes_by_age_
 
                             <Card className="flex-1 md:basis-[calc(50%-12px)]">
                                 <CardHeader>
-                                    <CardTitle className="text-xl font-bold">Öffentliche Meinung</CardTitle>
-                                    <CardDescription className="text-sm">Wie EU-Bürger auf diese Plattform gestimmt haben</CardDescription>
+                                    <CardTitle className="text-xl font-bold">Stimmen auf der Plattform</CardTitle>
+                                    <CardDescription className="text-sm">Wie Bürger auf diese Plattform gestimmt haben</CardDescription>
                                 </CardHeader>
                                 <CardContent>
                                     <div className="space-y-4">
                                         <div className="flex flex-col">
                                             <VoteBar
                                                 data={{
-                                                    label: 'Gesamtergebnis (nicht repräsentativ)',
+                                                    label: 'Gesamtergebnis',
                                                     total: vote.total_user_votes,
                                                     for: vote.total_user_yes_votes,
                                                     against: vote.total_user_no_votes,
@@ -472,9 +472,9 @@ export default function Vote({ vote, user_vote_participation, user_votes_by_age_
                                     </div>
 
                                     {/* Button to open demographics dialog/drawer */}
-                                    <Button 
-                                        variant="outline" 
-                                        className="mt-4" 
+                                    <Button
+                                        variant="outline"
+                                        className="mt-4"
                                         onClick={() => setDemographicsOpen(true)}
                                     >
                                         <BarChart className="mr-2 h-4 w-4" />
@@ -602,7 +602,7 @@ export default function Vote({ vote, user_vote_participation, user_votes_by_age_
                     </DrawerContent>
                 </Drawer>
             )}
-            
+
             {/* Responsive dialog/drawer for demographics */}
             {isDesktop ? (
                 <Dialog open={demographicsOpen} onOpenChange={setDemographicsOpen}>

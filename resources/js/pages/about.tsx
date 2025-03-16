@@ -52,17 +52,16 @@ export default function About() {
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Über uns" />
 
-            <div className="container mx-auto max-w-7xl px-4 py-8">
+            <div className="container mx-auto max-w-4xl px-4 py-8">
                 <PageHeader
                     title="Über uns"
-                    description="Wir sind ein kleines Team von Menschen, die sich dafür einsetzen, dass die Demokratie in Deutschland stärker wird."
                 />
 
                 <div className="mb-10">
                     <div className="mt-8 mb-12">
                         <p className="mb-6 text-lg">
                             Wir glauben, dass jede Stimme zählt. In einer Zeit, in der öffentliche Debatten oft von den lautesten Stimmen dominiert
-                            werden, haben wir eine Plattform geschaffen, die ein klares, unverfälschtes Bild der gesellschaftlichen Meinung
+                            werden, haben wir eine Plattform geschaffen, mit dem Ziel ein klares, unverfälschtes Bild der gesellschaftlichen Meinung
                             vermittelt.
                         </p>
 
