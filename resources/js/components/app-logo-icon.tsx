@@ -3,6 +3,6 @@ import { SVGAttributes } from 'react';
 
 export default function AppLogoIcon(props: SVGAttributes<SVGElement>) {
     return (
-        <CheckCircleIcon className="text-blue-900"></CheckCircleIcon>
+        <CheckCircleIcon className="text-blue-900 dark:text-blue-500"></CheckCircleIcon>
     );
 }

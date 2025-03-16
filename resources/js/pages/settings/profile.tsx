@@ -117,7 +117,7 @@ export default function Profile({ status }: { status?: string }) {
 
                         {status === 'email-verified' && (
                             <div className="mt-4 space-y-3">
-                                <div className="rounded-md border border-green-200 bg-green-50 p-3 text-sm font-medium text-green-600">
+                                <div className="rounded-md border border-green-200 bg-green-50 p-3 text-sm font-medium text-green-600 dark:border-green-200/10 dark:bg-green-700/10 dark:text-green-100">
                                     Ihre E-Mail-Adresse wurde erfolgreich verifiziert.
                                 </div>
                             </div>
@@ -125,15 +125,15 @@ export default function Profile({ status }: { status?: string }) {
 
                         {status === 'email-verification-failed' && (
                             <div className="mt-4 space-y-3">
-                                <div className="rounded-md border border-red-200 bg-red-50 p-3 text-sm font-medium text-red-600">
+                                <div className="rounded-md border border-red-200 bg-red-50 p-3 text-sm font-medium text-red-600 dark:border-red-200/10 dark:bg-red-700/10 dark:text-red-100">
                                     Ihre E-Mail-Adresse wurde nicht verifiziert.
                                 </div>
                             </div>
                         )}
 
                         {auth.user.email_verified_at === null && (
-                            <div className="rounded-lg border border-red-200 bg-red-50/50 p-4">
-                                <p className="text-sm text-red-600">
+                            <div className="rounded-lg border border-red-200 bg-red-50/50 p-4 dark:border-red-200/10 dark:bg-red-700/10">
+                                <p className="text-sm text-red-600 dark:text-red-100">
                                     Ihre E-Mail-Adresse ist nicht verifiziert.{' '}
                                     <Link
                                         href={route('verification.email.send')}
@@ -147,7 +147,7 @@ export default function Profile({ status }: { status?: string }) {
 
                                 {status === 'verification-email-sent' && (
                                     <div className="mt-4 space-y-3">
-                                        <div className="rounded-md border border-green-200 bg-green-50 p-3 text-sm font-medium text-green-600">
+                                        <div className="rounded-md border border-green-200 bg-green-50 p-3 text-sm font-medium text-green-600 dark:border-green-200/10 dark:bg-green-700/10 dark:text-green-100">
                                             Eine neue Bestätigungsmail wurde an Ihre E-Mail-Adresse gesendet.
                                         </div>
                                         <Label htmlFor="email-otp" className="font-medium">
@@ -200,8 +200,8 @@ export default function Profile({ status }: { status?: string }) {
                         </div>
 
                         {auth.user.phone_verified_at === null && (
-                            <div className="rounded-lg border border-red-200 bg-red-50/50 p-4">
-                                <p className="text-sm text-red-600">
+                            <div className="rounded-lg border border-red-200 bg-red-50/50 p-4 dark:border-red-200/10 dark:bg-red-700/10">
+                                <p className="text-sm text-red-600 dark:text-red-100">
                                     Ihre Telefonnummer ist nicht verifiziert.{' '}
                                     <Link
                                         href={route('verification.phone.send')}
@@ -215,7 +215,7 @@ export default function Profile({ status }: { status?: string }) {
 
                                 {status === 'verification-sms-sent' && (
                                     <div className="mt-4 space-y-3">
-                                        <div className="rounded-md border border-green-200 bg-green-50 p-3 text-sm font-medium text-green-600">
+                                        <div className="rounded-md border border-green-200 bg-green-50 p-3 text-sm font-medium text-green-600 dark:border-green-200/10 dark:bg-green-700/10 dark:text-green-100">
                                             Eine neue Bestätigungs-SMS wurde an Ihre Telefonnummer gesendet.
                                         </div>
                                         <form onSubmit={submitPhoneOtp} className="mt-2 space-y-3">

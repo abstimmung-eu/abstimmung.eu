@@ -148,239 +148,235 @@ export default function VoteResults({ vote }: { vote: Vote }) {
     const filtersActive = nameFilter || positionFilter !== 'all' || groupFilter !== 'all' || stateFilter !== 'all';
 
     return (
-        <div className="bg-white dark:border-gray-800 dark:bg-gray-800">
-            <div>
-                {/* Filters and pagination size selector */}
-                <div className="mb-4 flex flex-wrap items-center justify-between gap-4">
-                    <div className="flex flex-wrap items-center gap-4">
-                        <div className="flex w-full items-center md:w-auto">
-                            <div className="relative flex-1">
-                                <Search className="absolute top-2.5 left-2.5 h-4 w-4 text-gray-400" />
-                                <Input
-                                    placeholder="Name suchen..."
-                                    className="pl-9"
-                                    value={nameFilter}
-                                    onChange={(e) => {
-                                        setNameFilter(e.target.value);
-                                        setCurrentPage(1); // Reset to first page on filter change
-                                    }}
-                                />
-                            </div>
-                        </div>
-
-                        <div className="w-full md:w-auto">
-                            <Select
-                                value={positionFilter}
-                                onValueChange={(value) => {
-                                    setPositionFilter(value);
+        <div>
+            {/* Filters and pagination size selector */}
+            <div className="mb-4 flex flex-wrap items-center justify-between gap-4">
+                <div className="flex flex-wrap items-center gap-4">
+                    <div className="flex w-full items-center md:w-auto">
+                        <div className="relative flex-1">
+                            <Search className="absolute top-2.5 left-2.5 h-4 w-4 text-gray-400" />
+                            <Input
+                                placeholder="Name suchen..."
+                                className="pl-9"
+                                value={nameFilter}
+                                onChange={(e) => {
+                                    setNameFilter(e.target.value);
                                     setCurrentPage(1); // Reset to first page on filter change
                                 }}
-                            >
-                                <SelectTrigger className="w-full md:w-[180px]">
-                                    <SelectValue placeholder="Abstimmung" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="all">Alle Stimmen</SelectItem>
-                                    <SelectItem value="for">Dafür</SelectItem>
-                                    <SelectItem value="against">Gegen</SelectItem>
-                                    <SelectItem value="abstention">Enthaltung</SelectItem>
-                                    <SelectItem value="did_not_vote">Nicht abgestimmt</SelectItem>
-                                </SelectContent>
-                            </Select>
+                            />
                         </div>
-
-                        <div className="w-full md:w-auto">
-                            <Select
-                                value={groupFilter}
-                                onValueChange={(value) => {
-                                    setGroupFilter(value);
-                                    setCurrentPage(1); // Reset to first page on filter change
-                                }}
-                            >
-                                <SelectTrigger className="w-full md:w-[180px]">
-                                    <SelectValue placeholder="Fraktion" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="all">Alle Fraktionen</SelectItem>
-                                    {uniqueGroups.map((group) => (
-                                        <SelectItem key={group} value={group}>
-                                            {group}
-                                        </SelectItem>
-                                    ))}
-                                </SelectContent>
-                            </Select>
-                        </div>
-
-                        <div className="w-full md:w-auto">
-                            <Select
-                                value={stateFilter}
-                                onValueChange={(value) => {
-                                    setStateFilter(value);
-                                    setCurrentPage(1); // Reset to first page on filter change
-                                }}
-                            >
-                                <SelectTrigger className="w-full md:w-[180px]">
-                                    <SelectValue placeholder="Bundesland" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="all">Alle Bundesländer</SelectItem>
-                                    {uniqueStates.map((state) => (
-                                        <SelectItem key={state} value={state}>
-                                            {state}
-                                        </SelectItem>
-                                    ))}
-                                </SelectContent>
-                            </Select>
-                        </div>
-
-                        {filtersActive && (
-                            <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() => {
-                                    setNameFilter('');
-                                    setPositionFilter('all');
-                                    setGroupFilter('all');
-                                    setStateFilter('all');
-                                    setCurrentPage(1); // Reset to first page
-                                }}
-                            >
-                                Filter zurücksetzen
-                            </Button>
-                        )}
                     </div>
 
-                    <div className="flex items-center gap-2">
-                        <span className="text-sm text-gray-500 dark:text-gray-400">Zeige</span>
+                    <div className="w-full md:w-auto">
                         <Select
-                            value={pageSize.toString()}
+                            value={positionFilter}
                             onValueChange={(value) => {
-                                setPageSize(parseInt(value));
-                                setCurrentPage(1); // Reset to first page on page size change
+                                setPositionFilter(value);
+                                setCurrentPage(1); // Reset to first page on filter change
                             }}
                         >
-                            <SelectTrigger className="w-[80px]">
-                                <SelectValue />
+                            <SelectTrigger className="w-full md:w-[180px]">
+                                <SelectValue placeholder="Abstimmung" />
                             </SelectTrigger>
                             <SelectContent>
-                                <SelectItem value="10">10</SelectItem>
-                                <SelectItem value="25">25</SelectItem>
-                                <SelectItem value="50">50</SelectItem>
-                                <SelectItem value="100">100</SelectItem>
+                                <SelectItem value="all">Alle Stimmen</SelectItem>
+                                <SelectItem value="for">Dafür</SelectItem>
+                                <SelectItem value="against">Gegen</SelectItem>
+                                <SelectItem value="abstention">Enthaltung</SelectItem>
+                                <SelectItem value="did_not_vote">Nicht abgestimmt</SelectItem>
                             </SelectContent>
                         </Select>
-                        <span className="text-sm text-gray-500 dark:text-gray-400">pro Seite</span>
                     </div>
+
+                    <div className="w-full md:w-auto">
+                        <Select
+                            value={groupFilter}
+                            onValueChange={(value) => {
+                                setGroupFilter(value);
+                                setCurrentPage(1); // Reset to first page on filter change
+                            }}
+                        >
+                            <SelectTrigger className="w-full md:w-[180px]">
+                                <SelectValue placeholder="Fraktion" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="all">Alle Fraktionen</SelectItem>
+                                {uniqueGroups.map((group) => (
+                                    <SelectItem key={group} value={group}>
+                                        {group}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                    </div>
+
+                    <div className="w-full md:w-auto">
+                        <Select
+                            value={stateFilter}
+                            onValueChange={(value) => {
+                                setStateFilter(value);
+                                setCurrentPage(1); // Reset to first page on filter change
+                            }}
+                        >
+                            <SelectTrigger className="w-full md:w-[180px]">
+                                <SelectValue placeholder="Bundesland" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="all">Alle Bundesländer</SelectItem>
+                                {uniqueStates.map((state) => (
+                                    <SelectItem key={state} value={state}>
+                                        {state}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                    </div>
+
+                    {filtersActive && (
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => {
+                                setNameFilter('');
+                                setPositionFilter('all');
+                                setGroupFilter('all');
+                                setStateFilter('all');
+                                setCurrentPage(1); // Reset to first page
+                            }}
+                        >
+                            Filter zurücksetzen
+                        </Button>
+                    )}
                 </div>
 
-                <Table>
-                    <TableHeader>
-                        <TableRow>
-                            <TableHead className="cursor-pointer" onClick={() => handleSort('name')}>
-                                Name {getSortIndicator('name')}
-                            </TableHead>
-                            <TableHead className="cursor-pointer" onClick={() => handleSort('group')}>
-                                Fraktion {getSortIndicator('group')}
-                            </TableHead>
-                            <TableHead className="cursor-pointer" onClick={() => handleSort('vote_position')}>
-                                Abstimmung {getSortIndicator('vote_position')}
-                            </TableHead>
-                            <TableHead className="cursor-pointer" onClick={() => handleSort('state')}>
-                                Bundesland {getSortIndicator('state')}
-                            </TableHead>
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                        {paginatedVotes.length > 0 ? (
-                            paginatedVotes.map((memberVote) => (
-                                <TableRow key={memberVote.id}>
-                                    <TableCell className="font-medium">
-                                        <span className="flex items-center gap-1">
-                                            {memberVote.first_name} {memberVote.last_name}
-                                            {memberVote.url && (
-                                                <a href={memberVote.url} target="_blank" rel="noopener noreferrer">
-                                                    <Link2 className="h-4 w-4" />
-                                                </a>
-                                            )}
-                                        </span>
-                                    </TableCell>
-                                    <TableCell>{memberVote.group || '–'}</TableCell>
-                                    <TableCell>
-                                        <div className="flex items-center">
-                                            {memberVote.vote_position === 'for' && <span className="mr-2 h-3 w-3 rounded-full bg-green-500"></span>}
-                                            {memberVote.vote_position === 'against' && <span className="mr-2 h-3 w-3 rounded-full bg-red-500"></span>}
-                                            {memberVote.vote_position === 'abstention' && (
-                                                <span className="mr-2 h-3 w-3 rounded-full bg-gray-400"></span>
-                                            )}
-                                            {memberVote.vote_position === 'did_not_vote' && (
-                                                <span className="mr-2 h-3 w-3 rounded-full bg-gray-300 dark:bg-gray-600"></span>
-                                            )}
-                                            {getVotePositionValue(memberVote.vote_position)}
-                                        </div>
-                                    </TableCell>
-                                    <TableCell>{memberVote.state || '–'}</TableCell>
-                                </TableRow>
-                            ))
-                        ) : (
-                            <TableRow>
-                                <TableCell colSpan={4} className="h-24 text-center">
-                                    Keine Ergebnisse gefunden.
+                <div className="flex items-center gap-2">
+                    <span className="text-sm text-gray-500 dark:text-gray-400">Zeige</span>
+                    <Select
+                        value={pageSize.toString()}
+                        onValueChange={(value) => {
+                            setPageSize(parseInt(value));
+                            setCurrentPage(1); // Reset to first page on page size change
+                        }}
+                    >
+                        <SelectTrigger className="w-[80px]">
+                            <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="10">10</SelectItem>
+                            <SelectItem value="25">25</SelectItem>
+                            <SelectItem value="50">50</SelectItem>
+                            <SelectItem value="100">100</SelectItem>
+                        </SelectContent>
+                    </Select>
+                    <span className="text-sm text-gray-500 dark:text-gray-400">pro Seite</span>
+                </div>
+            </div>
+
+            <Table>
+                <TableHeader>
+                    <TableRow>
+                        <TableHead className="cursor-pointer" onClick={() => handleSort('name')}>
+                            Name {getSortIndicator('name')}
+                        </TableHead>
+                        <TableHead className="cursor-pointer" onClick={() => handleSort('group')}>
+                            Fraktion {getSortIndicator('group')}
+                        </TableHead>
+                        <TableHead className="cursor-pointer" onClick={() => handleSort('vote_position')}>
+                            Abstimmung {getSortIndicator('vote_position')}
+                        </TableHead>
+                        <TableHead className="cursor-pointer" onClick={() => handleSort('state')}>
+                            Bundesland {getSortIndicator('state')}
+                        </TableHead>
+                    </TableRow>
+                </TableHeader>
+                <TableBody>
+                    {paginatedVotes.length > 0 ? (
+                        paginatedVotes.map((memberVote) => (
+                            <TableRow key={memberVote.id}>
+                                <TableCell className="font-medium">
+                                    <span className="flex items-center gap-1">
+                                        {memberVote.first_name} {memberVote.last_name}
+                                        {memberVote.url && (
+                                            <a href={memberVote.url} target="_blank" rel="noopener noreferrer">
+                                                <Link2 className="h-4 w-4" />
+                                            </a>
+                                        )}
+                                    </span>
                                 </TableCell>
+                                <TableCell>{memberVote.group || '–'}</TableCell>
+                                <TableCell>
+                                    <div className="flex items-center">
+                                        {memberVote.vote_position === 'for' && <span className="mr-2 h-3 w-3 rounded-full bg-green-500"></span>}
+                                        {memberVote.vote_position === 'against' && <span className="mr-2 h-3 w-3 rounded-full bg-red-500"></span>}
+                                        {memberVote.vote_position === 'abstention' && <span className="mr-2 h-3 w-3 rounded-full bg-gray-400"></span>}
+                                        {memberVote.vote_position === 'did_not_vote' && (
+                                            <span className="mr-2 h-3 w-3 rounded-full bg-gray-300 dark:bg-gray-600"></span>
+                                        )}
+                                        {getVotePositionValue(memberVote.vote_position)}
+                                    </div>
+                                </TableCell>
+                                <TableCell>{memberVote.state || '–'}</TableCell>
                             </TableRow>
-                        )}
-                    </TableBody>
-                </Table>
+                        ))
+                    ) : (
+                        <TableRow>
+                            <TableCell colSpan={4} className="h-24 text-center">
+                                Keine Ergebnisse gefunden.
+                            </TableCell>
+                        </TableRow>
+                    )}
+                </TableBody>
+            </Table>
 
-                {/* Pagination controls */}
-                <div className="mt-4 flex items-center justify-between">
-                    <div className="flex items-center gap-1">
-                        <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => goToPage(currentPage - 1)}
-                            disabled={currentPage === 1}
-                            className="h-8 w-8 p-0"
-                        >
-                            <ChevronLeft className="h-4 w-4" />
-                        </Button>
+            {/* Pagination controls */}
+            <div className="mt-4 flex items-center justify-between">
+                <div className="flex items-center gap-1">
+                    <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => goToPage(currentPage - 1)}
+                        disabled={currentPage === 1}
+                        className="h-8 w-8 p-0"
+                    >
+                        <ChevronLeft className="h-4 w-4" />
+                    </Button>
 
-                        {/* Page numbers */}
-                        {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-                            // Show pages around current page
-                            let pageNum;
-                            if (totalPages <= 5) {
-                                pageNum = i + 1;
-                            } else if (currentPage <= 3) {
-                                pageNum = i + 1;
-                            } else if (currentPage >= totalPages - 2) {
-                                pageNum = totalPages - 4 + i;
-                            } else {
-                                pageNum = currentPage - 2 + i;
-                            }
+                    {/* Page numbers */}
+                    {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                        // Show pages around current page
+                        let pageNum;
+                        if (totalPages <= 5) {
+                            pageNum = i + 1;
+                        } else if (currentPage <= 3) {
+                            pageNum = i + 1;
+                        } else if (currentPage >= totalPages - 2) {
+                            pageNum = totalPages - 4 + i;
+                        } else {
+                            pageNum = currentPage - 2 + i;
+                        }
 
-                            return (
-                                <Button
-                                    key={pageNum}
-                                    variant={currentPage === pageNum ? 'default' : 'outline'}
-                                    size="sm"
-                                    onClick={() => goToPage(pageNum)}
-                                    className="h-8 w-8 p-0"
-                                >
-                                    {pageNum}
-                                </Button>
-                            );
-                        })}
+                        return (
+                            <Button
+                                key={pageNum}
+                                variant={currentPage === pageNum ? 'default' : 'outline'}
+                                size="sm"
+                                onClick={() => goToPage(pageNum)}
+                                className="h-8 w-8 p-0"
+                            >
+                                {pageNum}
+                            </Button>
+                        );
+                    })}
 
-                        <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => goToPage(currentPage + 1)}
-                            disabled={currentPage === totalPages}
-                            className="h-8 w-8 p-0"
-                        >
-                            <ChevronRight className="h-4 w-4" />
-                        </Button>
-                    </div>
+                    <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => goToPage(currentPage + 1)}
+                        disabled={currentPage === totalPages}
+                        className="h-8 w-8 p-0"
+                    >
+                        <ChevronRight className="h-4 w-4" />
+                    </Button>
                 </div>
             </div>
         </div>

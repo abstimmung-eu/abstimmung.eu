@@ -393,16 +393,20 @@ export default function Vote({ vote, user_vote_participation, user_votes_by_age_
                                         <>
                                             <div className="mt-2">
                                                 <div className="flex flex-col gap-1">
-                                                    <div className="grid grid-cols-3 gap-2">
+                                                    <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
                                                         <div className="w-full">
                                                             <form onSubmit={handleVote} className="w-full">
                                                                 <input type="hidden" name="vote_id" value={vote.id} />
                                                                 <input type="hidden" name="vote_position" value="for" />
                                                                 <Button
                                                                     variant="outline"
-                                                                    className="h-10 w-full cursor-pointer rounded-sm border-green-200 bg-green-50 text-green-700 hover:bg-green-50 hover:text-green-800"
+                                                                    className="h-10 w-full cursor-pointer rounded-sm border-green-200 bg-green-50 text-green-700 hover:bg-green-50 hover:text-green-800 dark:border-green-800 dark:bg-green-900/30 dark:text-green-400 dark:hover:bg-green-900/50 dark:hover:text-green-300"
                                                                 >
-                                                                    <ThumbsUp className="mr-1 h-4 w-4" /> Dafür stimmen
+                                                                    <ThumbsUp className="mr-1 h-4 w-4" />
+                                                                    <span>
+                                                                        Dafür
+                                                                        <span className="inline sm:inline md:hidden lg:inline"> stimmen</span>
+                                                                    </span>
                                                                 </Button>
                                                             </form>
                                                         </div>
@@ -412,9 +416,13 @@ export default function Vote({ vote, user_vote_participation, user_votes_by_age_
                                                                 <input type="hidden" name="vote_position" value="against" />
                                                                 <Button
                                                                     variant="outline"
-                                                                    className="h-10 w-full cursor-pointer rounded-sm border-red-200 bg-red-50 text-red-700 hover:bg-red-50 hover:text-red-800"
+                                                                    className="h-10 w-full cursor-pointer rounded-sm border-red-200 bg-red-50 text-red-700 hover:bg-red-50 hover:text-red-800 dark:border-red-800 dark:bg-red-900/30 dark:text-red-400 dark:hover:bg-red-900/50 dark:hover:text-red-300"
                                                                 >
-                                                                    <ThumbsDown className="mr-1 h-4 w-4" /> Dagegen stimmen
+                                                                    <ThumbsDown className="mr-1 h-4 w-4" />
+                                                                    <span>
+                                                                        Dagegen
+                                                                        <span className="inline sm:inline md:hidden lg:inline"> stimmen</span>
+                                                                    </span>
                                                                 </Button>
                                                             </form>
                                                         </div>
@@ -424,7 +432,7 @@ export default function Vote({ vote, user_vote_participation, user_votes_by_age_
                                                                 <input type="hidden" name="vote_position" value="abstention" />
                                                                 <Button
                                                                     variant="outline"
-                                                                    className="h-10 w-full cursor-pointer rounded-sm border-gray-200 bg-gray-50 text-gray-700 hover:bg-gray-50 hover:text-gray-800"
+                                                                    className="h-10 w-full cursor-pointer rounded-sm border-gray-200 bg-gray-50 text-gray-700 hover:bg-gray-50 hover:text-gray-800 dark:border-gray-700 dark:bg-gray-800/50 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-gray-200"
                                                                 >
                                                                     <Hand className="mr-1 h-4 w-4" /> Enthaltung
                                                                 </Button>
