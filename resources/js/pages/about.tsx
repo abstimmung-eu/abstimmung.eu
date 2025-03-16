@@ -66,26 +66,20 @@ export default function About() {
                         </p>
 
                         <p className="mb-6 text-lg">
-                            Unsere Vision ist einfach: Eine demokratische Plattform, auf der jeder Bürger seine Meinung zu wichtigen Themen äußern
-                            kann – transparent, inklusiv und ohne Verzerrung. Kein Rauschen, keine Filterblasen, nur das echte Meinungsbild der
-                            Gesellschaft.
+                            Unsere Vision ist einfach: Eine demokratische Plattform, auf der jeder Bürger seine Meinung zu wichtigen Themen äußern kann – transparent, inklusiv und ohne Verzerrung. Damit diese Vision Wirklichkeit wird, benötigen wir eine kritische Masse an Teilnehmern. Je mehr Menschen sich beteiligen, desto repräsentativer wird unser gemeinsames Meinungsbild.
                         </p>
 
                         <p className="mb-6 text-lg">
-                            Als Teilnehmer auf unserer Plattform werden Sie Teil einer wachsenden Community, die den demokratischen Diskurs
-                            bereichert. Ihre Stimme trägt dazu bei, ein repräsentatives Bild zu zeichnen und die Kluft zwischen Bürgern und
-                            politischen Entscheidungsträgern zu überbrücken.
+                            Als Teilnehmer auf unserer Plattform werden Sie nicht nur Teil einer wachsenden Community, die den demokratischen Diskurs bereichert – Sie helfen aktiv dabei, diese Community zu vergrößern. Jede Person, die Sie einladen, verstärkt die Aussagekraft unserer Ergebnisse und bringt uns näher an ein wahrhaft repräsentatives Bild der Gesellschaft.
                         </p>
 
                         <p className="mb-6 text-lg">
                             Warum sollten Sie mitmachen? Weil gemeinsam unsere Stimmen stärker sind. Weil Demokratie davon lebt, dass Menschen sich
-                            beteiligen. Und weil Ihre Meinung wirklich zählt – nicht nur als einzelne Stimme, sondern als Teil eines größeren Ganzen,
-                            das wir sichtbar machen wollen.
+                            beteiligen. Und weil Ihre Meinung wirklich zählt – nicht nur als einzelne Stimme, sondern als wichtiger Teil unserer Gesellschaft, das wir sichtbar machen wollen.
                         </p>
 
                         <p className="text-lg">
-                            Machen Sie mit. Stimmen Sie ab. Seien Sie Teil einer Bewegung, die Transparenz und echte Repräsentation in den Mittelpunkt
-                            stellt.
+                            Machen Sie mit. Stimmen Sie ab. Laden Sie Freunde, Familie und Kollegen ein. Teilen Sie unsere Plattform in Ihren Netzwerken. Nur gemeinsam können wir eine Bewegung schaffen, die groß genug ist, um Transparenz und echte Repräsentation in den Mittelpunkt zu stellen und Gehör zu finden.
                         </p>
                     </div>
 
