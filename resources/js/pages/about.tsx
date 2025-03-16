@@ -40,12 +40,12 @@ const faqItems = [
         question: 'Warum muss ich mich anmelden?',
         answer: 'Die Anmeldung dient dazu, eine gute Qualität der Abstimmungen zu gewährleisten und Mehrfachabstimmungen zu verhindern. Durch die Bestätigung Ihrer E-Mail-Adresse und Ihrer Telefon- oder Handynummer stellen wir sicher, dass es sich um einen echten Nutzer handelt. Betrug ist somit zwar nicht komplett ausgeschlossen, aber deutlich erschwert.',
     },
-    {
-        question: 'Welche Daten werden bei der Anmeldung gesammelt?',
-        answer: 'Bei der Anmeldung erfassen wir Ihre E-Mail-Adresse und Handynummer für die Kontoverifikation. Zusätzlich haben Sie die Möglichkeit, demografische Daten (wie Alter, Geschlecht oder Bundesland) lokal auf Ihrem Gerät zu speichern. Diese demographischen Daten werden nur anonym zusammen mit Ihrer Abstimmung übertragen, aber nicht mit Ihrem Konto verknüpft oder dauerhaft auf unseren Servern gespeichert.',
-    },
 
     // Datenschutz und Anonymität
+    {
+        question: 'Welche Daten werden in der App gesammelt?',
+        answer: 'Bei der Anmeldung erfassen wir Ihre E-Mail-Adresse und Handynummer für die Kontoverifikation. Zusätzlich haben Sie die Möglichkeit, demografische Daten (wie Alter, Geschlecht oder Bundesland) lokal auf Ihrem Gerät zu speichern. Diese demographischen Daten werden nur anonym zusammen mit Ihrer Abstimmung übertragen, aber nicht mit Ihrem Konto verknüpft oder dauerhaft auf unseren Servern gespeichert.',
+    },
     {
         question: 'Ist die Abstimmung wirklich anonym?',
         answer: 'Ja, die Abstimmung ist vollständig anonym. Abstimmungsergebnisse werden getrennt von persönlichen Daten gespeichert und aggregiert. Niemand – auch nicht unser Team – kann herausfinden, wie Sie bei einzelnen Themen abgestimmt haben.',
