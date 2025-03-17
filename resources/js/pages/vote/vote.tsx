@@ -8,10 +8,10 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Drawer, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import VoteBar from '@/components/vote-bar';
 import AppLayout from '@/layouts/app-layout';
-import { isDemographicDataEmpty, loadDemographicData } from '@/lib/demographics';
+import { loadDemographicData } from '@/lib/demographics';
 import { SharedData } from '@/types';
 import { type Vote } from '@/types/vote';
-import { Head, Link, router, usePage } from '@inertiajs/react';
+import { Head, Link, usePage } from '@inertiajs/react';
 import { AlertCircle, BarChart, CheckCircle, ChevronLeft, Hand, Link2, Paperclip, ThumbsDown, ThumbsUp } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import VoteComments from './comments';
@@ -79,30 +79,11 @@ function handleVote(e: React.FormEvent<HTMLFormElement>) {
     const voteId = (form.elements.namedItem('vote_id') as HTMLInputElement).value;
     const votePosition = (form.elements.namedItem('vote_position') as HTMLInputElement).value;
 
-    const demographicData = loadDemographicData();
-
-    if (isDemographicDataEmpty()) {
-        const demographicDialogEvent = new CustomEvent('open-demographic-dialog', {
-            detail: { voteId, votePosition },
-        });
-        document.dispatchEvent(demographicDialogEvent);
-        return;
-    }
-
-    router.post(
-        '/votes/cast',
-        {
-            vote_id: voteId,
-            vote_position: votePosition,
-            demographics: demographicData,
-        },
-        {
-            preserveScroll: true,
-            onSuccess: () => {
-                router.reload({ only: ['user_vote_participation'] });
-            },
-        },
-    );
+    const demographicDialogEvent = new CustomEvent('open-demographic-dialog', {
+        detail: { voteId, votePosition },
+    });
+    document.dispatchEvent(demographicDialogEvent);
+    return;
 }
 
 // Add this hook for responsive design
@@ -393,7 +374,7 @@ export default function Vote({ vote, user_vote_participation, user_votes_by_age_
                                     {/* User is not verified */}
                                     {auth.user && user_vote_participation === null && !user_is_verified && (
                                         <p className="text-muted-foreground mt-2 text-sm">
-                                            <Link href={route('profile.edit')} className="text-blue-800 dark:text-blue-400 hover:underline">
+                                            <Link href={route('profile.edit')} className="text-blue-800 hover:underline dark:text-blue-400">
                                                 Verifizieren Sie Ihre E-Mail-Adresse und Ihr Telefon
                                             </Link>
                                             , um Ihre Stimme abzugeben.
