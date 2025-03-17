@@ -7,9 +7,15 @@ use Illuminate\Database\Eloquent\Model;
 class UserVote extends Model
 {
     protected $fillable = [
-        'vote_id',
-        'user_id',
-        'vote_position',
-        'age_group',
+          'vote_id',
+          'vote_position',
+          'age_group',
+          'gender',
+          'marital_status',
+          'education',
+          'current_activity',
+          'household_size',
+          'income',
+          'political_affiliation'
     ];
 }
