@@ -20,8 +20,8 @@ return new class extends Migration
             $table->text('arguments_against')->nullable();
             $table->string('url')->nullable();
             $table->date('vote_date');
-            // $table->foreignId('member_vote_stats_id')->references('id')->on('member_vote_stats');
             $table->timestamps();
+
             $table->index('vote_date');
             $table->integer('airflow_vote_id');
         });
