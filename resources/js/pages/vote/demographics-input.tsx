@@ -1,16 +1,32 @@
 import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Form, FormControl, FormField, FormItem, FormLabel } from '@/components/ui/form';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { DemographicData, getDemographicFields, loadDemographicData, saveDemographicData } from '@/lib/demographics';
+import { DemographicData, getDemographicFields, loadDemographicData, mapYearToAgeGroup, saveDemographicData } from '@/lib/demographics';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { router } from '@inertiajs/react';
 import React, { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
 
 // Add new DemographicDialog component within the file
 export default function DemographicInputDialog() {
     const [open, setOpen] = useState(false);
     const [demographicData, setDemographicData] = useState<DemographicData>(loadDemographicData());
     const [voteData, setVoteData] = useState<{ voteId: number; votePosition: string } | null>(null);
+
+    const FormSchema = z.object({
+        saveDataLocally: z.boolean().default(true),
+    });
+
+    const form = useForm<z.infer<typeof FormSchema>>({
+        resolver: zodResolver(FormSchema),
+        defaultValues: {
+            saveDataLocally: true,
+        },
+    });
 
     React.useEffect(() => {
         const handleOpenDialog = (e: Event) => {
@@ -36,8 +52,16 @@ export default function DemographicInputDialog() {
         const hasData = Object.values(demographicData).some((value) => value !== '');
         if (!hasData) return;
 
-        // Save the demographic data
-        saveDemographicData(demographicData);
+        // Save the demographic data if the checkbox is checked
+        if (form.getValues().saveDataLocally) {
+            saveDemographicData(demographicData);
+        }
+
+        // Ensure age_group is set correctly
+        const dataToSubmit = { ...demographicData };
+        if (dataToSubmit.birthyear && !dataToSubmit.age_group) {
+            dataToSubmit.age_group = mapYearToAgeGroup(dataToSubmit.birthyear);
+        }
 
         // Submit the vote
         router.post(
@@ -45,7 +69,7 @@ export default function DemographicInputDialog() {
             {
                 vote_id: voteData.voteId,
                 vote_position: voteData.votePosition,
-                demographics: loadDemographicData(),
+                demographics: dataToSubmit,
             },
             {
                 preserveScroll: true,
@@ -65,7 +89,7 @@ export default function DemographicInputDialog() {
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>
-            <DialogContent className="sm:max-w-[425px]">
+            <DialogContent className="sm:max-w-[500px]">
                 <DialogHeader>
                     <DialogTitle>Demografische Daten benötigt</DialogTitle>
                     <DialogDescription>
@@ -96,12 +120,29 @@ export default function DemographicInputDialog() {
                     ))}
                 </div>
 
+                <Form {...form}>
+                    <FormField
+                        control={form.control}
+                        name="saveDataLocally"
+                        render={({ field }) => (
+                            <FormItem className="mb-4 flex flex-row items-start space-y-0 space-x-3 rounded-md border p-4">
+                                <FormControl>
+                                    <Checkbox id="save-data" checked={field.value} onCheckedChange={field.onChange} />
+                                </FormControl>
+                                <div className="space-y-1 leading-none">
+                                    <FormLabel htmlFor="save-data">Daten für zukünftige Abstimmungen lokal auf diesem Gerät speichern</FormLabel>
+                                </div>
+                            </FormItem>
+                        )}
+                    />
+                </Form>
+
                 <DialogFooter>
                     <Button onClick={() => setOpen(false)} variant="outline">
                         Abbrechen
                     </Button>
                     <Button onClick={handleSubmit} disabled={!isFormValid}>
-                        Speichern & Abstimmen
+                        Abstimmen
                     </Button>
                 </DialogFooter>
             </DialogContent>
