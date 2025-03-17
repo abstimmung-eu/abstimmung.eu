@@ -16,6 +16,14 @@ Route::get('/about', function () {
     return Inertia::render('about');
 })->name('about');
 
+Route::get('/impressum', function () {
+    return Inertia::render('impressum');
+})->name('impressum');
+
+Route::get('/datenschutz', function () {
+    return Inertia::render('datenschutz');
+})->name('datenschutz');
+
 require __DIR__ . '/comments.php';
 require __DIR__ . '/settings.php';
 require __DIR__ . '/auth.php';
