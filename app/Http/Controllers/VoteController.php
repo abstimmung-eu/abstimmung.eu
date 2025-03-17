@@ -58,7 +58,10 @@ class VoteController extends Controller
     public function show(Request $request, Vote $vote)
     {
         $user = $request->user();
-        $user_is_verified = $user->isVerified();
+        $user_is_verified = false;
+        if ($user) {
+            $user_is_verified = $user->isVerified();
+        }
 
         $user_vote_participation = null;
 

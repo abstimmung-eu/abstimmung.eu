@@ -23,6 +23,7 @@ return new class extends Migration
             // $table->foreignId('member_vote_stats_id')->references('id')->on('member_vote_stats');
             $table->timestamps();
             $table->index('vote_date');
+            $table->integer('airflow_vote_id');
         });
     }
 

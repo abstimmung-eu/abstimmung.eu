@@ -94,6 +94,7 @@ class VoteImportController extends Controller
             'votes.*.documents.*.url' => 'required|string',
             'votes.*.categories' => 'nullable|array',
             'votes.*.categories.*' => 'required|string',
+            'votes.*.airflow_vote_id' => 'required|integer',
         ]);
     }
 
@@ -107,6 +108,7 @@ class VoteImportController extends Controller
         $vote->description = $voteData['description'];
         $vote->url = $voteData['url'];
         $vote->vote_date = $voteData['vote_date'];
+        $vote->airflow_vote_id = $voteData['airflow_vote_id'];
 
         if (!empty($voteData['summary'])) {
             $vote->summary = $voteData['summary'];

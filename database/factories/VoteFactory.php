@@ -24,6 +24,7 @@ class VoteFactory extends Factory
             'arguments_against' => fake()->sentence(),
             'url' => fake()->url(),
             'vote_date' => fake()->dateTimeBetween('-1 month', '+1 month'),
+            'airflow_vote_id' => fake()->numberBetween(10000, 100000),
         ];
     }
 }
