@@ -36,6 +36,7 @@ interface UserVoteParticipation {
 export interface VoteProps {
     vote: ExtendedVote;
     user_vote_participation: UserVoteParticipation | null;
+    user_is_verified: boolean;
     user_votes_by_age_group: {
         [key: string]: {
             total: number;
@@ -122,7 +123,7 @@ function useMediaQuery(query: string) {
     return matches;
 }
 
-export default function Vote({ vote, user_vote_participation, user_votes_by_age_group, member_votes_by_group }: VoteProps) {
+export default function Vote({ vote, user_vote_participation, user_votes_by_age_group, member_votes_by_group, user_is_verified }: VoteProps) {
     const { auth } = usePage<SharedData>().props;
     const [partyVotesOpen, setPartyVotesOpen] = useState(false);
     const [demographicsOpen, setDemographicsOpen] = useState(false);
@@ -389,7 +390,17 @@ export default function Vote({ vote, user_vote_participation, user_votes_by_age_
                                         </p>
                                     )}
 
-                                    {auth.user && user_vote_participation === null && (
+                                    {/* User is not verified */}
+                                    {auth.user && user_vote_participation === null && !user_is_verified && (
+                                        <p className="text-muted-foreground mt-2 text-sm">
+                                            <Link href={route('profile.edit')} className="text-blue-800 dark:text-blue-400 hover:underline">
+                                                Verifizieren Sie Ihre E-Mail-Adresse und Ihr Telefon
+                                            </Link>
+                                            , um Ihre Stimme abzugeben.
+                                        </p>
+                                    )}
+
+                                    {auth.user && user_vote_participation === null && user_is_verified && (
                                         <>
                                             <div className="mt-2">
                                                 <div className="flex flex-col gap-1">

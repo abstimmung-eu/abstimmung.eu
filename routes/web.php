@@ -3,6 +3,7 @@
 use App\Http\Controllers\IndexController;
 use App\Http\Controllers\UserVoteController;
 use App\Http\Controllers\VoteController;
+use App\Http\Middleware\MailAndPhoneIsVerified;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -10,7 +11,10 @@ Route::get('/', [IndexController::class, 'index'])->name('index');
 
 Route::get('/votes', [VoteController::class, 'index'])->name('votes');
 Route::get('/votes/{vote}', [VoteController::class, 'show'])->name('vote.show');
-Route::post('/votes/cast', [UserVoteController::class, 'store'])->name('vote.cast');
+
+Route::middleware(['auth', MailAndPhoneIsVerified::class])->group(function () {
+    Route::post('/votes/cast', [UserVoteController::class, 'store'])->name('vote.cast');
+});
 
 Route::get('/about', function () {
     return Inertia::render('about');
