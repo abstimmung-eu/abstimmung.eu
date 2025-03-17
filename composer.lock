@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5cdef3310ece4bc784c56eedaa7bf2c4",
+    "content-hash": "16cb33556f8657b5167efa968c573bf6",
     "packages": [
         {
             "name": "beyondcode/laravel-comments",
@@ -1187,6 +1187,63 @@
                 }
             ],
             "time": "2025-02-18T19:00:36+00:00"
+        },
+        {
+            "name": "laravel-notification-channels/sms77",
+            "version": "v1.0.6",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/laravel-notification-channels/sms77.git",
+                "reference": "7dca7cc1b25cb4fa27fb4e970b38f971f153b1dc"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/laravel-notification-channels/sms77/zipball/7dca7cc1b25cb4fa27fb4e970b38f971f153b1dc",
+                "reference": "7dca7cc1b25cb4fa27fb4e970b38f971f153b1dc",
+                "shasum": ""
+            },
+            "require": {
+                "guzzlehttp/guzzle": "^7.1",
+                "illuminate/notifications": "^10.0 || ^11.0 || ^12.0",
+                "illuminate/support": "^10.0 || ^11.0 || ^12.0",
+                "php": "^8.2"
+            },
+            "require-dev": {
+                "mockery/mockery": "^1.5",
+                "phpunit/phpunit": "^10.5|^11.0|^12.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "NotificationChannels\\SMS77\\SMS77ServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "NotificationChannels\\SMS77\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Maximilian Schöll",
+                    "email": "mail@mxschll.com",
+                    "homepage": "https://mxschll.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "SMS77 Notifications Channel for Laravel",
+            "homepage": "https://github.com/laravel-notification-channels/sms77",
+            "support": {
+                "issues": "https://github.com/laravel-notification-channels/sms77/issues",
+                "source": "https://github.com/laravel-notification-channels/sms77/tree/v1.0.6"
+            },
+            "time": "2025-02-27T15:55:17+00:00"
         },
         {
             "name": "laravel/framework",

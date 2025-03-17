@@ -86,4 +86,17 @@ class User extends Authenticatable implements
     {
         return false;
     }
+
+    /**
+     * Get the contact's phone number (for SMS77 library)
+     */
+    public function getPhoneNumberAttribute(): string
+    {
+        return $this->phone;
+    }
+
+    public function isVerified(): bool
+    {
+        return $this->hasVerifiedPhone() && $this->hasVerifiedEmail();
+    }
 }

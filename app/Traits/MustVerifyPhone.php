@@ -2,6 +2,8 @@
 
 namespace App\Traits;
 
+use App\Notifications\VerifyPhoneNotification;
+use App\Services\VerificationService;
 use Illuminate\Support\Carbon;
 
 trait MustVerifyPhone
@@ -25,6 +27,8 @@ trait MustVerifyPhone
 
     public function sendPhoneVerificationNotification(): void
     {
-        // Send a notification or SMS
+        $verificationService = new VerificationService();
+        $token = $verificationService->generateToken($this->getPhoneForVerification());
+        $this->notify(new VerifyPhoneNotification($token));
     }
 }

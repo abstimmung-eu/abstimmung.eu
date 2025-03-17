@@ -1,7 +1,7 @@
 import { type BreadcrumbItem, type SharedData } from '@/types';
 import { Transition } from '@headlessui/react';
 import { Head, Link, useForm, usePage } from '@inertiajs/react';
-import { FormEventHandler, useState } from 'react';
+import { FormEventHandler } from 'react';
 
 import DeleteUser from '@/components/delete-user';
 import HeadingSmall from '@/components/heading-small';
@@ -12,6 +12,7 @@ import { InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot } from '@/comp
 import { Label } from '@/components/ui/label';
 import AppLayout from '@/layouts/app-layout';
 import SettingsLayout from '@/layouts/settings/layout';
+import { REGEXP_ONLY_DIGITS_AND_CHARS } from 'input-otp';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -32,7 +33,6 @@ interface TokenForm {
 
 export default function Profile({ status }: { status?: string }) {
     const { auth } = usePage<SharedData>().props;
-    const [phoneOtp, setPhoneOtp] = useState('');
 
     const { data, setData, patch, errors, processing, recentlySuccessful } = useForm<Required<ProfileForm>>({
         username: auth.user.username,
@@ -69,7 +69,7 @@ export default function Profile({ status }: { status?: string }) {
         e.preventDefault();
 
         // Submit the phone OTP verification
-        patch(route('verification.phone.verify', tokenData), {
+        post(route('verification.phone.verify', tokenData), {
             preserveScroll: true,
         });
     };
@@ -157,10 +157,9 @@ export default function Profile({ status }: { status?: string }) {
                                             id="email-otp"
                                             maxLength={8}
                                             value={tokenData.token}
-                                            onChange={(e) => setTokenData('token', e)}
+                                            onChange={(e) => setTokenData('token', e.toUpperCase())}
                                             className="mb-2 justify-center"
-                                            pattern="[0-9]*"
-                                            inputMode="numeric"
+                                            pattern={REGEXP_ONLY_DIGITS_AND_CHARS}
                                         >
                                             <InputOTPGroup>
                                                 <InputOTPSlot index={0} />
@@ -199,6 +198,22 @@ export default function Profile({ status }: { status?: string }) {
                             />
                         </div>
 
+                        {status === 'phone-verified' && (
+                            <div className="mt-4 space-y-3">
+                                <div className="rounded-md border border-green-200 bg-green-50 p-3 text-sm font-medium text-green-600 dark:border-green-200/10 dark:bg-green-700/10 dark:text-green-100">
+                                    Ihre Telefonnummer wurde erfolgreich verifiziert.
+                                </div>
+                            </div>
+                        )}
+
+                        {status === 'phone-verification-failed' && (
+                            <div className="mt-4 space-y-3">
+                                <div className="rounded-md border border-red-200 bg-red-50 p-3 text-sm font-medium text-red-600 dark:border-red-200/10 dark:bg-red-700/10 dark:text-red-100">
+                                    Ihre Telefonnummer wurde nicht verifiziert.
+                                </div>
+                            </div>
+                        )}
+
                         {auth.user.phone_verified_at === null && (
                             <div className="rounded-lg border border-red-200 bg-red-50/50 p-4 dark:border-red-200/10 dark:bg-red-700/10">
                                 <p className="text-sm text-red-600 dark:text-red-100">
@@ -218,37 +233,34 @@ export default function Profile({ status }: { status?: string }) {
                                         <div className="rounded-md border border-green-200 bg-green-50 p-3 text-sm font-medium text-green-600 dark:border-green-200/10 dark:bg-green-700/10 dark:text-green-100">
                                             Eine neue Bestätigungs-SMS wurde an Ihre Telefonnummer gesendet.
                                         </div>
-                                        <form onSubmit={submitPhoneOtp} className="mt-2 space-y-3">
-                                            <Label htmlFor="phone-otp" className="font-medium">
-                                                Bestätigungscode eingeben (8 Ziffern)
-                                            </Label>
-                                            <InputOTP
-                                                id="phone-otp"
-                                                maxLength={8}
-                                                value={phoneOtp}
-                                                onChange={setPhoneOtp}
-                                                className="mb-2 justify-center"
-                                                pattern="[0-9]*"
-                                                inputMode="numeric"
-                                            >
-                                                <InputOTPGroup>
-                                                    <InputOTPSlot index={0} />
-                                                    <InputOTPSlot index={1} />
-                                                    <InputOTPSlot index={2} />
-                                                    <InputOTPSlot index={3} />
-                                                </InputOTPGroup>
-                                                <InputOTPSeparator />
-                                                <InputOTPGroup>
-                                                    <InputOTPSlot index={4} />
-                                                    <InputOTPSlot index={5} />
-                                                    <InputOTPSlot index={6} />
-                                                    <InputOTPSlot index={7} />
-                                                </InputOTPGroup>
-                                            </InputOTP>
-                                            <Button type="submit" disabled={phoneOtp.length < 8} className="w-full sm:w-auto">
-                                                Telefonnummer verifizieren
-                                            </Button>
-                                        </form>
+                                        <Label htmlFor="phone-otp" className="font-medium">
+                                            Bestätigungscode eingeben (8 Ziffern)
+                                        </Label>
+                                        <InputOTP
+                                            id="phone-otp"
+                                            maxLength={8}
+                                            value={tokenData.token}
+                                            onChange={(e) => setTokenData('token', e.toUpperCase())}
+                                            className="mb-2 justify-center"
+                                            pattern={REGEXP_ONLY_DIGITS_AND_CHARS}
+                                        >
+                                            <InputOTPGroup>
+                                                <InputOTPSlot index={0} />
+                                                <InputOTPSlot index={1} />
+                                                <InputOTPSlot index={2} />
+                                                <InputOTPSlot index={3} />
+                                            </InputOTPGroup>
+                                            <InputOTPSeparator />
+                                            <InputOTPGroup>
+                                                <InputOTPSlot index={4} />
+                                                <InputOTPSlot index={5} />
+                                                <InputOTPSlot index={6} />
+                                                <InputOTPSlot index={7} />
+                                            </InputOTPGroup>
+                                        </InputOTP>
+                                        <Button onClick={submitPhoneOtp} disabled={tokenData.token.length < 8} className="w-full sm:w-auto">
+                                            Telefonnummer verifizieren
+                                        </Button>
                                     </div>
                                 )}
                             </div>

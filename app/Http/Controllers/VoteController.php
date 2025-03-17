@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Vote;
 use App\Pagination\CustomPaginator;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class VoteController extends Controller
@@ -55,9 +55,11 @@ class VoteController extends Controller
         ]);
     }
 
-    public function show(Vote $vote)
+    public function show(Request $request, Vote $vote)
     {
-        $user = Auth::user();
+        $user = $request->user();
+        $user_is_verified = $user->isVerified();
+
         $user_vote_participation = null;
 
         if ($user) {
@@ -84,7 +86,8 @@ class VoteController extends Controller
             'vote' => $vote,
             'user_vote_participation' => $user_vote_participation,
             'member_votes_by_group' => $member_votes_by_group,
-            'user_votes_by_age_group' => $user_votes_by_age_group
+            'user_votes_by_age_group' => $user_votes_by_age_group,
+            'user_is_verified' => $user_is_verified,
         ]);
     }
 
