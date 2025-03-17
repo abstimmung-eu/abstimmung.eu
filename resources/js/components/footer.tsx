@@ -65,7 +65,7 @@ const props = usePage<SharedData>();
                 <div className="flex flex-col md:flex-row md:justify-between md:items-center">
                     <div>
                         <p>© {new Date().getFullYear()} {name}. Alle Rechte vorbehalten.</p>
-                        <p className="mt-2">Diese Website ist nicht mit dem Bundestag verbunden.</p>
+                        <p className="mt-2">Diese Website ist nicht mit dem Bundestag assoziiert.</p>
                     </div>
                     <div className="mt-4 md:mt-0 space-x-4">
                         <Link 
