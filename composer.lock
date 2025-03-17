@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "16cb33556f8657b5167efa968c573bf6",
+    "content-hash": "f49b515310e9f2d7678f2e0ea32d72dc",
     "packages": [
         {
             "name": "beyondcode/laravel-comments",
@@ -3540,6 +3540,151 @@
                 }
             ],
             "time": "2024-04-27T21:32:50+00:00"
+        },
+        {
+            "name": "spatie/laravel-csp",
+            "version": "3.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/spatie/laravel-csp.git",
+                "reference": "cbc02064794f6a02080e790fcaf35c44fabe1432"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/spatie/laravel-csp/zipball/cbc02064794f6a02080e790fcaf35c44fabe1432",
+                "reference": "cbc02064794f6a02080e790fcaf35c44fabe1432",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/http": "^11.36.1|^12.0",
+                "illuminate/support": "^11.36.1|^12.0",
+                "php": "^8.3",
+                "spatie/laravel-package-tools": "^1.17"
+            },
+            "require-dev": {
+                "mockery/mockery": "^1.6",
+                "orchestra/testbench": "^9.9|^10.0",
+                "pestphp/pest": "^3.0",
+                "roave/security-advisories": "dev-master"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Spatie\\Csp\\CspServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Spatie\\Csp\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Thomas Verhelst",
+                    "email": "tvke91@gmail.com",
+                    "homepage": "https://spatie.be",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Freek Van der Herten",
+                    "email": "freek@spatie.be",
+                    "homepage": "https://spatie.be",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Sebastian De Deyne",
+                    "email": "sebastian@spatie.be",
+                    "homepage": "https://spatie.be",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Add CSP headers to the responses of a Laravel app",
+            "homepage": "https://github.com/spatie/laravel-csp",
+            "keywords": [
+                "content-security-policy",
+                "csp",
+                "headers",
+                "laravel",
+                "laravel-csp",
+                "security",
+                "spatie"
+            ],
+            "support": {
+                "source": "https://github.com/spatie/laravel-csp/tree/3.0.0"
+            },
+            "funding": [
+                {
+                    "url": "https://spatie.be/open-source/support-us",
+                    "type": "custom"
+                }
+            ],
+            "time": "2025-03-11T16:14:46+00:00"
+        },
+        {
+            "name": "spatie/laravel-package-tools",
+            "version": "1.19.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/spatie/laravel-package-tools.git",
+                "reference": "1c9c30ac6a6576b8d15c6c37b6cf23d748df2faa"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/spatie/laravel-package-tools/zipball/1c9c30ac6a6576b8d15c6c37b6cf23d748df2faa",
+                "reference": "1c9c30ac6a6576b8d15c6c37b6cf23d748df2faa",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/contracts": "^9.28|^10.0|^11.0|^12.0",
+                "php": "^8.0"
+            },
+            "require-dev": {
+                "mockery/mockery": "^1.5",
+                "orchestra/testbench": "^7.7|^8.0|^9.0|^10.0",
+                "pestphp/pest": "^1.23|^2.1|^3.1",
+                "phpunit/phpunit": "^9.5.24|^10.5|^11.5",
+                "spatie/pest-plugin-test-time": "^1.1|^2.2"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Spatie\\LaravelPackageTools\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Freek Van der Herten",
+                    "email": "freek@spatie.be",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Tools for creating Laravel packages",
+            "homepage": "https://github.com/spatie/laravel-package-tools",
+            "keywords": [
+                "laravel-package-tools",
+                "spatie"
+            ],
+            "support": {
+                "issues": "https://github.com/spatie/laravel-package-tools/issues",
+                "source": "https://github.com/spatie/laravel-package-tools/tree/1.19.0"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/spatie",
+                    "type": "github"
+                }
+            ],
+            "time": "2025-02-06T14:58:20+00:00"
         },
         {
             "name": "symfony/clock",
