@@ -15,6 +15,7 @@ class UserVote extends Model
           'education',
           'current_activity',
           'household_size',
+          'federal_state',
           'income',
           'political_affiliation'
     ];

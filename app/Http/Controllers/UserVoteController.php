@@ -26,6 +26,13 @@ class UserVoteController extends Controller
             'retired', 'unemployed', 'permanently_unfit', 'household_management', 'other'
         ];
         $validHouseholdSize = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10_or_more'];
+        $validFederalState = [
+            'baden_wuerttemberg', 'bayern', 'berlin', 'brandenburg',
+            'bremen', 'hamburg', 'hessen', 'mecklenburg_vorpommern',
+            'niedersachsen', 'nordrhein_westfalen', 'rheinland_pfalz',
+            'saarland', 'sachsen', 'sachsen_anhalt', 'schleswig_holstein',
+            'thueringen'
+        ];
         $validIncome = [
             'under_500', '500_749', '750_999', '1000_1249',
             '1250_1499', '1500_1749', '1750_1999', '2000_2249',
@@ -45,6 +52,7 @@ class UserVoteController extends Controller
               'demographics.education' => ['required', Rule::in($validEducation)],
               'demographics.current_activity' => ['required', Rule::in($validCurrentActivity)],
               'demographics.household_size' => ['required', Rule::in($validHouseholdSize)],
+              'demographics.federal_state' => ['required', Rule::in($validFederalState)],
               'demographics.income' => ['required', Rule::in($validIncome)],
               'demographics.political_affiliation' => ['required', Rule::in($validPoliticalAffiliations)],
         ]);
@@ -71,6 +79,7 @@ class UserVoteController extends Controller
             'education' => $request->demographics['education'],
             'current_activity' => $request->demographics['current_activity'],
             'household_size' => $request->demographics['household_size'],
+            'federal_state' => $request->demographics['federal_state'],
             'income' => $request->demographics['income'],
             'political_affiliation' => $request->demographics['political_affiliation'],
         ]);

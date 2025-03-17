@@ -23,6 +23,7 @@ return new class extends Migration
             $table->string('education');
             $table->string('current_activity');
             $table->string('household_size');
+            $table->string('federal_state');
             $table->string('income');
             $table->string('political_affiliation');
             $table->timestamps();
