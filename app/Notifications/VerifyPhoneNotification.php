@@ -31,10 +31,10 @@ class VerifyPhoneNotification extends Notification
         return [SMS77Channel::class];
     }
 
-    public function toSms77()
+    public function toSms77($notifiable)
     {
         return (new SMS77Message($this->otp))
-            ->to('01606587125')
+            ->to($notifiable->phone)
             ->from('ABSTIMMUNG');
     }
 }

@@ -36,11 +36,12 @@ class VerifyEmailNotification extends Notification
      */
     public function toMail(object $notifiable): MailMessage
     {
-        return (new MailMessage)
-            ->line('Ihre Bestätigungscodes für die E-Mail-Adresse ' . $notifiable->email . ' lauten:')
+        return (new MailMessage())
+            ->subject('Bestätigungscodes für ' . config('app.name'))
+            ->greeting('Hallo!')
+            ->line('Ihre Bestätigungscodes für die E-Mail-Adresse ' . $notifiable->email . ' lautet:')
             ->line($this->otp)
-            ->line('Bitte geben Sie diese Codes in der Anwendung ein, um Ihre E-Mail-Adresse zu bestätigen.')
-            ->line('Vielen Dank für Ihre Nutzung von ' . config('app.name') . '!');
+            ->salutation('Mit freundlichen Grüßen, ' . config('app.name') . '!');
     }
 
     /**
@@ -51,7 +52,7 @@ class VerifyEmailNotification extends Notification
     public function toArray(object $notifiable): array
     {
         return [
-            //
-        ];
+                //
+            ];
     }
 }
