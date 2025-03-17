@@ -10,7 +10,11 @@ const applyTheme = (appearance: Appearance) => {
     document.documentElement.classList.toggle('dark', isDark);
 };
 
-const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+let mediaQuery: MediaQueryList | null = null;
+
+if (typeof window !== 'undefined') {
+    mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+}
 
 const handleSystemThemeChange = () => {
     const currentAppearance = localStorage.getItem('appearance') as Appearance;
@@ -23,7 +27,9 @@ export function initializeTheme() {
     applyTheme(savedAppearance);
 
     // Add the event listener for system theme changes...
-    mediaQuery.addEventListener('change', handleSystemThemeChange);
+    if (mediaQuery) {
+        mediaQuery.addEventListener('change', handleSystemThemeChange);
+    }
 }
 
 export function useAppearance() {
@@ -39,7 +45,9 @@ export function useAppearance() {
         const savedAppearance = localStorage.getItem('appearance') as Appearance | null;
         updateAppearance(savedAppearance || 'system');
 
-        return () => mediaQuery.removeEventListener('change', handleSystemThemeChange);
+        if (mediaQuery) {
+            mediaQuery.addEventListener('change', handleSystemThemeChange);
+        }
     }, [updateAppearance]);
 
     return { appearance, updateAppearance } as const;

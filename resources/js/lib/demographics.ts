@@ -210,6 +210,8 @@ const decodeData = (encoded: string): any => {
  * Check if any demographic data is stored is empty
  */
 export const isDemographicDataEmpty = (): boolean => {
+    if (typeof window === 'undefined') return true;
+
     const stored = localStorage.getItem(STORAGE_KEY);
     if (!stored) return true;
 
@@ -231,13 +233,17 @@ export const saveDemographicData = (data: Partial<DemographicData>): void => {
         mergedData.age_group = mapYearToAgeGroup(mergedData.birthyear);
     }
 
-    localStorage.setItem(STORAGE_KEY, encodeData(mergedData));
+    if (typeof window !== 'undefined') {
+        localStorage.setItem(STORAGE_KEY, encodeData(mergedData));
+    }
 };
 
 /**
  * Load demographic data from localStorage
  */
 export const loadDemographicData = (): DemographicData => {
+    if (typeof window === 'undefined') return emptyDemographicData;
+
     const stored = localStorage.getItem(STORAGE_KEY);
     if (!stored) return emptyDemographicData;
 
@@ -254,6 +260,11 @@ export const updateDemographicField = (field: keyof DemographicData, value: stri
     saveDemographicData(currentData);
 };
 
+/**
+ * Delete demographic data from localStorage
+ */
 export const deleteDemographicData = (): void => {
-    localStorage.removeItem(STORAGE_KEY);
+    if (typeof window !== 'undefined') {
+        localStorage.removeItem(STORAGE_KEY);
+    }
 };
