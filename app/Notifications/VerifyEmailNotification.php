@@ -39,7 +39,7 @@ class VerifyEmailNotification extends Notification
         return (new MailMessage())
             ->subject('Bestätigungscodes für ' . config('app.name'))
             ->greeting('Hallo!')
-            ->line('Ihre Bestätigungscodes für die E-Mail-Adresse ' . $notifiable->email . ' lautet:')
+            ->line('Der Bestätigungscode für ' . $notifiable->email . ' lautet:')
             ->line($this->otp)
             ->salutation('Mit freundlichen Grüßen, ' . config('app.name') . '!');
     }

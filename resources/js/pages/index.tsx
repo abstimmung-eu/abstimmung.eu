@@ -75,7 +75,7 @@ export default function Index() {
                         <div className="space-y-2">
                             <h2 className="md:text:3xl text-3xl font-bold tracking-tighter">Wie es funktioniert</h2>
                             <p className="max-w-[900px] md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                                Hier können Sie Abstimmungen verfolgen und Ihre Meinung anonym sichbar machen.
+                                Hier können Sie Abstimmungen verfolgen und Ihre Meinung anonym sichtbar machen.
                             </p>
                         </div>
                     </div>
