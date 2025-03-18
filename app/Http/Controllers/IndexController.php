@@ -11,7 +11,7 @@ class IndexController extends Controller
     {
 
         // Latest 3 votes
-        $votes = Vote::latest()
+        $votes = Vote::orderBy('vote_date', 'desc')
             ->with('memberVotes')
             ->withCount('memberVotes')
             ->limit(3)
