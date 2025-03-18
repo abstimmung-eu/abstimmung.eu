@@ -141,7 +141,7 @@ export default function Profile({ status }: { status?: string }) {
                                         as="button"
                                         className="text-foreground underline decoration-neutral-300 underline-offset-4 transition-colors duration-300 ease-out hover:decoration-current! dark:decoration-neutral-500"
                                     >
-                                        Klicken Sie hier, um die Bestätigungsmail erneut zu senden.
+                                        Klicken Sie hier, um die Bestätigungsmail zu senden.
                                     </Link>
                                 </p>
 
@@ -160,6 +160,7 @@ export default function Profile({ status }: { status?: string }) {
                                             onChange={(e) => setTokenData('token', e.toUpperCase())}
                                             className="mb-2 justify-center"
                                             pattern={REGEXP_ONLY_DIGITS_AND_CHARS}
+                                            inputMode="text"
                                         >
                                             <InputOTPGroup>
                                                 <InputOTPSlot index={0} />
@@ -224,7 +225,7 @@ export default function Profile({ status }: { status?: string }) {
                                         as="button"
                                         className="text-foreground underline decoration-neutral-300 underline-offset-4 transition-colors duration-300 ease-out hover:decoration-current! dark:decoration-neutral-500"
                                     >
-                                        Klicken Sie hier, um die Bestätigungs-SMS erneut zu senden.
+                                        Klicken Sie hier, um die Bestätigungs-SMS zu senden.
                                     </Link>
                                 </p>
 
@@ -243,6 +244,7 @@ export default function Profile({ status }: { status?: string }) {
                                             onChange={(e) => setTokenData('token', e.toUpperCase())}
                                             className="mb-2 justify-center"
                                             pattern={REGEXP_ONLY_DIGITS_AND_CHARS}
+                                            inputMode="text"
                                         >
                                             <InputOTPGroup>
                                                 <InputOTPSlot index={0} />
