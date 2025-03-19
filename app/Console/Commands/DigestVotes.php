@@ -28,19 +28,19 @@ class DigestVotes extends Command
      */
     public function handle()
     {
-        // get today's date
         $today = now()->format('Y-m-d');
-        // get all votes from today
         $votes = Vote::where('vote_date', '=', $today)->get();
 
-        // users 
-        $users = User::all();
-        foreach ($users as $user) {
-            $this->info('Processing user ' . $user->id);
-            $user->notify(new DigestVotesNotification($votes));
+        if ($votes->isEmpty()) { // Don't send notifications if no votes were found
+            $this->info('No votes found for ' . $today);
+            return;
         }
 
-
         $this->info('Found ' . $votes->count() . ' votes for ' . $today);
+
+        $users = User::all();
+        foreach ($users as $user) {
+            $user->notify(new DigestVotesNotification($votes));
+        }
     }
 }
