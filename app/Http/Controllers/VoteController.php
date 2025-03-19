@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Vote;
 use App\Pagination\CustomPaginator;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -13,27 +14,28 @@ class VoteController extends Controller
     {
         $search = request()->input('search');
         $category = request()->input('category');
-        $categories = [];
 
-        if ($category) {
-            $categories = array_map('trim', explode(',', $category));
-        }
+        $categories = $category ? array_map('trim', explode(',', $category)) : [];
+
+        // TODO: Replace with manual query and pagination
 
         $query = Vote::query();
 
-        if ($search) {
-            $query->where('title', 'like', '%' . $search . '%');
-        }
-
-        if (!empty($categories)) {
-            $query->whereHas('categories', function ($query) use ($categories) {
-                $query->whereIn('name', $categories);
-            });
-        }
+        // Filter by search and categories
+        if ($search) $query->where('title', 'like', '%' . $search . '%');
+        if (!empty($categories)) $query->whereHas('categories', function ($query) use ($categories) {
+            $query->whereIn('name', $categories);
+        });
 
         $votes = $query->orderBy('vote_date', 'desc')->paginate(30);
         $votes->load('memberVoteStats');
         $votes->load('categories');
+
+        $votes->setCollection($votes->groupBy(function ($vote) {
+            return Carbon::parse($vote->vote_date)->format('Y-m-d');
+        }));
+
+        $votes->sortKeys();
 
         $customPaginator = new CustomPaginator(
             $votes->items(),
