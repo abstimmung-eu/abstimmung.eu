@@ -15,7 +15,10 @@ export function VoteCard({ vote }: VoteCardProps) {
                 <div className="flex flex-col md:flex-row">
                     {/* Left section - Main vote info */}
                     <div className="flex-1 p-4 md:p-8">
-                        <h3 className="mb-2 text-xl font-semibold text-[#004494] transition-colors duration-200 group-hover:text-[#003472] md:text-2xl dark:text-blue-300 dark:group-hover:text-blue-200">
+                        <h3
+                            className="mb-2 text-xl font-semibold break-words hyphens-auto text-[#004494] transition-colors duration-200 group-hover:text-[#003472] md:text-2xl dark:text-blue-300 dark:group-hover:text-blue-200"
+                            lang="de"
+                        >
                             {vote.title}
                         </h3>
 
