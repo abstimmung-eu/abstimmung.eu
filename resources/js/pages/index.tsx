@@ -36,12 +36,11 @@ export default function Index() {
                     <div className="grid items-center gap-6 rounded-lg bg-gradient-to-b from-blue-500 to-blue-800 p-6 shadow-lg shadow-blue-500/20 md:p-12 md:py-12 lg:grid-cols-3 lg:gap-12">
                         <div className="flex flex-col justify-center space-y-4 lg:col-span-2">
                             <div className="space-y-2">
-                                <h1 className="text-3xl font-bold tracking-tighter text-white sm:text-4xl md:text-3xl">
-                                    Zusammen für eine lebendige Demokratie
+                                <h1 className="text-3xl font-bold tracking-tighter text-white">
+                                    Bundestag zum Mitmachen
                                 </h1>
                                 <p className="mb-6 max-w-[600px] text-white/90 md:text-xl">
-                                    {/* Ihre Stimme im Bundestag – Vergleichen Sie Ihre Meinung mit Abstimmungen der Politiker */}
-                                    Machen Sie Ihre Stimme sichtbar – werden Sie Teil des demokratischen Dialogs
+                                    Ihr Bürgerforum für politische Teilhabe - Informieren, Abstimmen, Mitreden
                                 </p>
 
                                 <div className="flex w-full flex-col gap-3 sm:flex-row sm:gap-2">
