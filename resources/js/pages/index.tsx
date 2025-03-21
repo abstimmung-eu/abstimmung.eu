@@ -5,7 +5,6 @@ import { SharedData, type BreadcrumbItem } from '@/types';
 import type { Vote } from '@/types/vote';
 import { Head, Link, usePage } from '@inertiajs/react';
 import { ChartPie, ChevronRight, Newspaper, Vote as VoteIcon } from 'lucide-react';
-import { useEffect } from 'react';
 
 // Update the interface for the page props
 interface PageProps {
@@ -25,20 +24,27 @@ export default function Index() {
     const { votes } = usePage<PageProps>().props;
 
     const page = usePage<SharedData>();
-    const { auth } = page.props;
+    const { auth, url } = page.props;
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Home" />
+            <Head>
+                <title>Bundestag zum Mitmachen</title>
+                <meta name="description" content="Ihr Bürgerforum für politische Teilhabe - Informieren, Abstimmen, Mitreden" />
+                <link rel="canonical" href={`${url}/`} />
+                <meta property="og:title" content="Bundestag zum Mitmachen" />
+                <meta property="og:description" content="Ihr Bürgerforum für politische Teilhabe - Informieren, Abstimmen, Mitreden" />
+                <meta property="og:image" content={`${url}/og-image.png`} />
+                <meta property="og:type" content="website" />
+                <meta property="og:url" content={`${url}/`} />
+            </Head>
 
             <section className="mt-6 flex w-full max-w-7xl items-center justify-center">
                 <div className="container px-4 md:px-8">
                     <div className="grid items-center gap-6 rounded-lg bg-gradient-to-b from-blue-500 to-blue-800 p-6 shadow-lg shadow-blue-500/20 md:p-12 md:py-12 lg:grid-cols-3 lg:gap-12">
                         <div className="flex flex-col justify-center space-y-4 lg:col-span-2">
                             <div className="space-y-2">
-                                <h1 className="text-3xl font-bold tracking-tighter text-white">
-                                    Bundestag zum Mitmachen
-                                </h1>
+                                <h1 className="text-3xl font-bold tracking-tighter text-white">Bundestag zum Mitmachen</h1>
                                 <p className="mb-6 max-w-[600px] text-white/90 md:text-xl">
                                     Ihr Bürgerforum für politische Teilhabe - Informieren, Abstimmen, Mitreden
                                 </p>
@@ -134,7 +140,7 @@ export default function Index() {
 
             {/* Recent Votes Section */}
 
-            <section className="flex w-full items-cienter justify-center bg-gray-100 py-4 md:py-12 lg:py-16 bg-background dark:bg-background">
+            <section className="items-cienter bg-background dark:bg-background flex w-full justify-center bg-gray-100 py-4 md:py-12 lg:py-16">
                 <div className="container max-w-7xl px-4 md:px-6">
                     <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-3xl">Aktuelle Abstimmungen</h2>
                     <div className="mx-auto mt-8">

@@ -8,7 +8,6 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Drawer, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import VoteBar from '@/components/vote-bar';
 import AppLayout from '@/layouts/app-layout';
-import { loadDemographicData } from '@/lib/demographics';
 import { SharedData } from '@/types';
 import { type Vote } from '@/types/vote';
 import { Head, Link, usePage } from '@inertiajs/react';
@@ -105,7 +104,8 @@ function useMediaQuery(query: string) {
 }
 
 export default function Vote({ vote, user_vote_participation, user_votes_by_age_group, member_votes_by_group, user_is_verified }: VoteProps) {
-    const { auth } = usePage<SharedData>().props;
+    const { auth, url } = usePage<SharedData>().props;
+
     const [partyVotesOpen, setPartyVotesOpen] = useState(false);
     const [demographicsOpen, setDemographicsOpen] = useState(false);
     const isDesktop = useMediaQuery('(min-width: 768px)');
@@ -193,7 +193,18 @@ export default function Vote({ vote, user_vote_participation, user_votes_by_age_
 
     return (
         <AppLayout>
-            <Head title={vote.title} />
+            <Head>
+                <title>{vote.title}</title>
+                <meta name="description" content={vote.summary.slice(0, 167) + '...'} />
+                <link rel="canonical" href={`${url}/votes/${vote.id}`} />
+                <meta property="og:title" content={vote.title} />
+                <meta property="og:description" content={vote.summary.slice(0, 167) + '...'} />
+                <meta property="og:image" content={`${url}/og-image.png`} />
+                <meta property="og:type" content="website" />
+                <meta property="og:url" content={`${url}/votes/${vote.id}`} />
+            </Head>
+
+            <DemographicInputDialog />
             <DemographicInputDialog />
             <div className="container mx-auto max-w-7xl px-4 py-8">
                 <div className="flex flex-col space-y-8">

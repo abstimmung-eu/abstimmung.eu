@@ -55,7 +55,10 @@ export default function Votes({ votes, filters = {} }: VotesProps) {
 
     return (
         <AppLayout>
-            <Head title="Abstimmungen" />
+            <Head>
+                <title>Abstimmungen</title>
+                <meta name="description" content="Verfolge aktuelle Abstimmungen im Bundestag." />
+            </Head>
 
             <div className="container mx-auto max-w-7xl px-4 py-8">
                 <PageHeader title="Abstimmungen" description="Verfolge aktuelle Abstimmungen im Bundestag." />
