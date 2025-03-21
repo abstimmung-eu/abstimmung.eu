@@ -205,7 +205,6 @@ export default function Vote({ vote, user_vote_participation, user_votes_by_age_
             </Head>
 
             <DemographicInputDialog />
-            <DemographicInputDialog />
             <div className="container mx-auto max-w-7xl px-4 py-8">
                 <div className="flex flex-col space-y-8">
                     <Link href="/votes" className="text-muted-foreground hover:text-foreground flex items-center">
@@ -364,11 +363,6 @@ export default function Vote({ vote, user_vote_participation, user_votes_by_age_
                                         </div>
                                     </div>
 
-                                    <div className="text-muted-foreground mt-2 flex items-center gap-2 text-sm">
-                                        <AlertCircle className="h-3 w-3" />
-                                        <span>Abgegebene Stimmen: {vote.total_user_votes}</span>
-                                    </div>
-
                                     {/* Button to open demographics dialog/drawer */}
                                     {user_votes_by_age_group !== null ? (
                                         <Button variant="outline" className="mt-4" onClick={() => setDemographicsOpen(true)}>
@@ -378,21 +372,11 @@ export default function Vote({ vote, user_vote_participation, user_votes_by_age_
                                     ) : (
                                         <p className="text-muted-foreground mt-2 text-sm">
                                             Es sind zu wenig Stimmen abgegeben worden, um eine demografische Aufteilung anzuzeigen. Sobald mehr
-                                            Stimmen abgegeben worden sind, wird diese Information hier angezeigt.
+                                            Stimmen abgegeben worden sind, wird diese Information angezeigt.
                                         </p>
                                     )}
 
-                                    {/* User is not verified */}
-                                    {auth.user && user_vote_participation === null && !user_is_verified && (
-                                        <p className="text-muted-foreground mt-2 text-sm">
-                                            <Link href={route('profile.edit')} className="text-blue-800 hover:underline dark:text-blue-400">
-                                                Verifizieren Sie Ihre E-Mail-Adresse und Ihr Telefon
-                                            </Link>
-                                            , um Ihre Stimme abzugeben.
-                                        </p>
-                                    )}
-
-                                    {auth.user && user_vote_participation === null && user_is_verified && (
+                                    {user_vote_participation === null && (
                                         <>
                                             <div className="mt-2">
                                                 <div className="flex flex-col gap-1">
@@ -402,6 +386,8 @@ export default function Vote({ vote, user_vote_participation, user_votes_by_age_
                                                                 <input type="hidden" name="vote_id" value={vote.id} />
                                                                 <input type="hidden" name="vote_position" value="for" />
                                                                 <Button
+                                                                    disabled={auth.user == null || user_is_verified === false}
+                                                                    type="submit"
                                                                     variant="outline"
                                                                     className="h-10 w-full cursor-pointer rounded-sm border-green-200 bg-green-50 text-green-700 hover:bg-green-50 hover:text-green-800 dark:border-green-800 dark:bg-green-900/30 dark:text-green-400 dark:hover:bg-green-900/50 dark:hover:text-green-300"
                                                                 >
@@ -418,6 +404,8 @@ export default function Vote({ vote, user_vote_participation, user_votes_by_age_
                                                                 <input type="hidden" name="vote_id" value={vote.id} />
                                                                 <input type="hidden" name="vote_position" value="against" />
                                                                 <Button
+                                                                    disabled={auth.user == null || user_is_verified === false}
+                                                                    type="submit"
                                                                     variant="outline"
                                                                     className="h-10 w-full cursor-pointer rounded-sm border-red-200 bg-red-50 text-red-700 hover:bg-red-50 hover:text-red-800 dark:border-red-800 dark:bg-red-900/30 dark:text-red-400 dark:hover:bg-red-900/50 dark:hover:text-red-300"
                                                                 >
@@ -434,6 +422,8 @@ export default function Vote({ vote, user_vote_participation, user_votes_by_age_
                                                                 <input type="hidden" name="vote_id" value={vote.id} />
                                                                 <input type="hidden" name="vote_position" value="abstention" />
                                                                 <Button
+                                                                    disabled={auth.user == null || user_is_verified === false}
+                                                                    type="submit"
                                                                     variant="outline"
                                                                     className="h-10 w-full cursor-pointer rounded-sm border-gray-200 bg-gray-50 text-gray-700 hover:bg-gray-50 hover:text-gray-800 dark:border-gray-700 dark:bg-gray-800/50 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-gray-200"
                                                                 >
@@ -447,6 +437,7 @@ export default function Vote({ vote, user_vote_participation, user_votes_by_age_
                                         </>
                                     )}
 
+                                    {/* User is not logged in */}
                                     {auth.user == null && (
                                         <div className="text-muted-foreground mt-2 flex items-center gap-2 text-sm">
                                             <AlertCircle className="h-3 w-3" />
@@ -457,6 +448,16 @@ export default function Vote({ vote, user_vote_participation, user_votes_by_age_
                                                 an, um Ihre Stimme abzugeben.
                                             </span>
                                         </div>
+                                    )}
+
+                                    {/* User is not verified */}
+                                    {auth.user && user_vote_participation === null && !user_is_verified && (
+                                        <p className="text-muted-foreground mt-2 text-sm">
+                                            <Link href={route('profile.edit')} className="text-blue-800 hover:underline dark:text-blue-400">
+                                                Verifizieren Sie Ihre E-Mail-Adresse und Ihr Telefon
+                                            </Link>
+                                            , um Ihre Stimme abzugeben.
+                                        </p>
                                     )}
 
                                     {user_vote_participation && (

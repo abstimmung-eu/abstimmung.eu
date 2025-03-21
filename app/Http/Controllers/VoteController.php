@@ -81,7 +81,7 @@ class VoteController extends Controller
 
         $member_votes_by_group = $this->getMemberVotesByGroup($vote);
 
-        if ($vote->userVotes->count() > 10) {
+        if ($vote->userVotes->count() > 100) {
             $user_votes_by_age_group = $this->getUserVotesByAgeGroup($vote);
         } else {
             $user_votes_by_age_group = null;
