@@ -17,28 +17,28 @@ class UserVoteController extends Controller
 
         $validVotePosition = ['for', 'against', 'abstention'];
         $validAgeGroups = ['17_and_under', '18_to_24', '25_to_34', '35_to_44', '45_to_54', '55_to_64', '65_plus'];
-        $validGenders = ['male', 'female', 'other'];
-        $validMaritalStatus = ['single', 'married_or_civil_union', 'separated', 'divorced', 'widowed'];
-        $validEducation = ['no_degree', 'primary', 'secondary', 'vocational', 'abitur', 'bachelor', 'master', 'doctorate'];
+        $validGenders = ['male', 'female', 'other', 'prefer_not_to_say'];
+        $validMaritalStatus = ['single', 'married_or_civil_union', 'separated', 'divorced', 'widowed', 'prefer_not_to_say'];
+        $validEducation = ['no_degree', 'primary', 'secondary', 'vocational', 'abitur', 'bachelor', 'master', 'doctorate', 'prefer_not_to_say'];
         $validCurrentActivity = [
             'attending_school', 'studying', 'vocational_training', 'retraining',
             'voluntary_military_service', 'bfd_fsj_fej', 'career_break', 'employed',
-            'retired', 'unemployed', 'permanently_unfit', 'household_management', 'other'
+            'retired', 'unemployed', 'permanently_unfit', 'household_management', 'other', 'prefer_not_to_say'
         ];
-        $validHouseholdSize = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10_or_more'];
+        $validHouseholdSize = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10_or_more', 'prefer_not_to_say'];
         $validFederalState = [
             'baden_wuerttemberg', 'bayern', 'berlin', 'brandenburg',
             'bremen', 'hamburg', 'hessen', 'mecklenburg_vorpommern',
             'niedersachsen', 'nordrhein_westfalen', 'rheinland_pfalz',
             'saarland', 'sachsen', 'sachsen_anhalt', 'schleswig_holstein',
-            'thueringen'
+            'thueringen', 'prefer_not_to_say'
         ];
         $validIncome = [
             'under_1000', '1000_1999', '2000_2999', '3000_3999',
             '4000_4999', '5000_5999', '6000_6999', '7000_7999',
-            '8000_8999', '9000_9999', '10000_plus'
+            '8000_8999', '9000_9999', '10000_plus', 'prefer_not_to_say'
         ];
-        $validPoliticalAffiliations = ['very_conservative', 'conservative', 'middle', 'liberal', 'very_liberal', 'no_opinion'];
+        $validPoliticalAffiliations = ['very_conservative', 'conservative', 'middle', 'liberal', 'very_liberal', 'no_opinion', 'prefer_not_to_say'];
 
         $validated = $request->validate([
               'vote_id' => 'required|exists:votes,id',
