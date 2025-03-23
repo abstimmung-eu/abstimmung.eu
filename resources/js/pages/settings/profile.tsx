@@ -58,7 +58,6 @@ export default function Profile({ status }: { status?: string }) {
 
     const submitEmailOtp: FormEventHandler = (e) => {
         e.preventDefault();
-        console.log('submitEmailOtp', tokenData);
 
         post(route('verification.email.verify'), {
             preserveScroll: true,
@@ -68,10 +67,13 @@ export default function Profile({ status }: { status?: string }) {
     const submitPhoneOtp: FormEventHandler = (e) => {
         e.preventDefault();
 
-        // Submit the phone OTP verification
         post(route('verification.phone.verify', tokenData), {
             preserveScroll: true,
         });
+    };
+
+    const handleVerificationSuccess = () => {
+        setTokenData('token', '');
     };
 
     return (
@@ -138,6 +140,7 @@ export default function Profile({ status }: { status?: string }) {
                                     <Link
                                         href={route('verification.email.send')}
                                         method="post"
+                                        onSuccess={handleVerificationSuccess}
                                         as="button"
                                         className="text-foreground underline decoration-neutral-300 underline-offset-4 transition-colors duration-300 ease-out hover:decoration-current! dark:decoration-neutral-500"
                                     >
@@ -222,6 +225,7 @@ export default function Profile({ status }: { status?: string }) {
                                     <Link
                                         href={route('verification.phone.send')}
                                         method="post"
+                                        onSuccess={handleVerificationSuccess}
                                         as="button"
                                         className="text-foreground underline decoration-neutral-300 underline-offset-4 transition-colors duration-300 ease-out hover:decoration-current! dark:decoration-neutral-500"
                                     >
