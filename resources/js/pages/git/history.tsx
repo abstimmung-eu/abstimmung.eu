@@ -1,7 +1,7 @@
 // compoennt that renders the git commit history
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Link } from '@inertiajs/react';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 
 type GitHistoryProps = {
     year: string;
@@ -147,66 +147,145 @@ export default function GitHistory({ year, month, day, heatmap }: GitHistoryProp
         const calendarWidth = weeks.length * cellWidth;
 
         return { weeks, months, calendarWidth };
-    }, [year, month, day, heatmap, cellWidth]);
+    }, [year, heatmap, cellWidth]);
 
     // Color mapping for commit counts
     const getCellColor = (count: number) => {
-        if (count === 0) return '#ebedf0';
+        if (count === 0) return '#e2e4e7';
         if (count <= 2) return '#9be9a8';
         if (count <= 3) return '#40c463';
         if (count <= 4) return '#30a14e';
         if (count <= 5) return '#216e39';
         if (count <= 6) return '#216e39';
-        return '#216e39';
+        return '#1a5a2e';
     };
 
-    // Format date for tooltip
-    const formatDate = (dateStr: string) => {
-        const date = new Date(dateStr);
-        return date.toLocaleDateString('de-DE', {
-            weekday: 'long',
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-        });
-    };
+    // Format date for tooltip - memoize this function to avoid recreating on every render
+    const formatDate = useMemo(() => {
+        return (dateStr: string) => {
+            const date = new Date(dateStr);
+            return date.toLocaleDateString('de-DE', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+            });
+        };
+    }, []);
 
-    // Responsive layout detection
+    // Debounced window resize handler
     useEffect(() => {
+        let timeoutId: ReturnType<typeof setTimeout>;
+        let lastWidth = containerRef.current?.clientWidth || 0;
+
         const checkSize = () => {
             if (containerRef.current) {
-                setIsWideScreen(containerRef.current.clientWidth > calendarWidth + labelWidth);
+                const currentWidth = containerRef.current.clientWidth;
+
+                // Only update state if the width changes significantly or crosses the threshold
+                const isCurrentlyWide = currentWidth > calendarWidth + labelWidth;
+                if (isCurrentlyWide !== isWideScreen || Math.abs(currentWidth - lastWidth) > 50) {
+                    setIsWideScreen(isCurrentlyWide);
+                    lastWidth = currentWidth;
+                }
             }
         };
 
-        checkSize();
-        window.addEventListener('resize', checkSize);
-        return () => window.removeEventListener('resize', checkSize);
-    }, [calendarWidth]);
+        const debouncedResize = () => {
+            clearTimeout(timeoutId);
+            timeoutId = setTimeout(checkSize, 150); // 150ms debounce
+        };
 
-    // Grid template columns based on screen size
-    const gridCols = isWideScreen ? `repeat(${weeks.length}, 1fr)` : `repeat(${weeks.length}, ${cellWidth}px)`;
+        // Initial check
+        checkSize();
+
+        window.addEventListener('resize', debouncedResize);
+        return () => {
+            window.removeEventListener('resize', debouncedResize);
+            clearTimeout(timeoutId);
+        };
+    }, [calendarWidth, isWideScreen]);
+
+    // Memoize grid columns style to prevent recalculation
+    const gridCols = useMemo(
+        () => (isWideScreen ? `repeat(${weeks.length}, 1fr)` : `repeat(${weeks.length}, ${cellWidth}px)`),
+        [isWideScreen, weeks.length, cellWidth],
+    );
+
+    // Memoize container style
+    const containerStyle = useMemo(
+        () => ({
+            minWidth: `${calendarWidth + labelWidth}px`,
+            width: isWideScreen ? '100%' : 'auto',
+        }),
+        [calendarWidth, labelWidth, isWideScreen],
+    );
+
+    // Memoize grid style
+    const gridStyle = useMemo(
+        () => ({
+            gridTemplateColumns: gridCols,
+            width: isWideScreen ? `calc(100% - ${labelWidth}px)` : 'auto',
+        }),
+        [gridCols, isWideScreen, labelWidth],
+    );
+
+    // Memoize month labels grid style
+    const monthLabelsStyle = useMemo(
+        () => ({
+            gridTemplateColumns: gridCols,
+            width: isWideScreen ? `calc(100% - ${labelWidth}px)` : 'auto',
+            height: '20px',
+        }),
+        [gridCols, isWideScreen, labelWidth],
+    );
+
+    // Create a memoized cell component to reduce re-renders
+    const DayCell = useMemo(() => {
+        return ({ day, weekIndex, dayIndex }: { day: DayInfo; weekIndex: number; dayIndex: number }) => {
+            const selected = isSelectedDate(day.dateStr);
+            return (
+                <Link
+                    href={
+                        selected
+                            ? `/git/${day.dateStr.split('-')[0]}`
+                            : `/git/${day.dateStr.split('-')[0]}/${day.dateStr.split('-')[1]}/${day.dateStr.split('-')[2]}`
+                    }
+                    key={`${weekIndex}-${dayIndex}`}
+                    className={`relative ${!day.inYear ? 'opacity-50' : ''}`}
+                    style={{ paddingBottom: '100%' }}
+                >
+                    <Tooltip>
+                        <TooltipTrigger asChild>
+                            <div
+                                className={`absolute inset-0 cursor-pointer border border-gray-200 transition-all duration-200 ${
+                                    selected
+                                        ? 'm-0 scale-90 border-2 border-blue-500!'
+                                        : 'm-0.5 hover:m-0 hover:scale-90 hover:border-2 hover:border-blue-500 md:m-0.75 xl:m-1'
+                                }`}
+                                style={{ backgroundColor: day.inYear ? getCellColor(day.count) : '#ebedf0' }}
+                            />
+                        </TooltipTrigger>
+                        <TooltipContent side="top" className="rounded-md border-none bg-zinc-800 px-3 py-2 text-white">
+                            <div className="flex flex-col gap-1">
+                                <span className="font-medium">{formatDate(day.dateStr)}</span>
+                                <span>{day.count === 0 ? 'Keine Abstimmungen' : `${day.count} Abstimmung${day.count !== 1 ? 'en' : ''}`}</span>
+                            </div>
+                        </TooltipContent>
+                    </Tooltip>
+                </Link>
+            );
+        };
+    }, [isSelectedDate, formatDate, getCellColor]);
 
     return (
         <div className="w-full font-sans" ref={containerRef}>
             <div className="mt-5 w-full overflow-x-auto">
-                <div
-                    style={{
-                        minWidth: `${calendarWidth + labelWidth}px`,
-                        width: isWideScreen ? '100%' : 'auto',
-                    }}
-                >
+                <div style={containerStyle}>
                     {/* Month labels */}
                     <div className="mb-2 flex">
                         <div style={{ width: `${labelWidth - 10}px` }} />
-                        <div
-                            className="relative grid text-xs text-gray-600"
-                            style={{
-                                gridTemplateColumns: gridCols,
-                                width: isWideScreen ? `calc(100% - ${labelWidth}px)` : 'auto',
-                                height: '20px',
-                            }}
-                        >
+                        <div className="relative grid text-xs text-gray-600" style={monthLabelsStyle}>
                             {months.map((month, i) => (
                                 <div
                                     key={i}
@@ -235,61 +314,17 @@ export default function GitHistory({ year, month, day, heatmap }: GitHistoryProp
                         </div>
 
                         {/* Calendar cells */}
-                        <div
-                            className="grid gap-0"
-                            style={{
-                                gridTemplateColumns: gridCols,
-                                width: isWideScreen ? `calc(100% - ${labelWidth}px)` : 'auto',
-                            }}
-                        >
+                        <div className="grid gap-0" style={gridStyle}>
                             <TooltipProvider>
                                 {weekdays.map((_, dayIndex) => (
-                                    <>
+                                    <React.Fragment key={dayIndex}>
                                         {weeks.map((week, weekIndex) => {
                                             const day = week[dayIndex];
                                             if (!day) return null;
 
-                                            const selected = isSelectedDate(day.dateStr);
-                                            return (
-                                                <Link
-                                                    href={
-                                                        selected
-                                                            ? `/git/${day.dateStr.split('-')[0]}`
-                                                            : `/git/${day.dateStr.split('-')[0]}/${day.dateStr.split('-')[1]}/${day.dateStr.split('-')[2]}`
-                                                    }
-                                                    key={`${weekIndex}-${dayIndex}`}
-                                                    className={`relative ${!day.inYear ? 'opacity-50' : ''}`}
-                                                    style={{ paddingBottom: '100%' }}
-                                                >
-                                                    <Tooltip>
-                                                        <TooltipTrigger asChild>
-                                                            <div
-                                                                className={`absolute inset-0 cursor-pointer border border-gray-200 transition-all duration-200 ${
-                                                                    selected
-                                                                        ? 'm-0 scale-90 border-2 border-blue-500!'
-                                                                        : 'm-0.5 hover:m-0 hover:scale-90 hover:border-2 hover:border-blue-500 md:m-0.75 xl:m-1'
-                                                                }`}
-                                                                style={{ backgroundColor: day.inYear ? getCellColor(day.count) : '#ebedf0' }}
-                                                            />
-                                                        </TooltipTrigger>
-                                                        <TooltipContent
-                                                            side="top"
-                                                            className="rounded-md border-none bg-zinc-800 px-3 py-2 text-white"
-                                                        >
-                                                            <div className="flex flex-col gap-1">
-                                                                <span className="font-medium">{formatDate(day.dateStr)}</span>
-                                                                <span>
-                                                                    {day.count === 0
-                                                                        ? 'Keine Abstimmungen'
-                                                                        : `${day.count} Abstimmung${day.count !== 1 ? 'en' : ''}`}
-                                                                </span>
-                                                            </div>
-                                                        </TooltipContent>
-                                                    </Tooltip>
-                                                </Link>
-                                            );
+                                            return <DayCell key={`${weekIndex}-${dayIndex}`} day={day} weekIndex={weekIndex} dayIndex={dayIndex} />;
                                         })}
-                                    </>
+                                    </React.Fragment>
                                 ))}
                             </TooltipProvider>
                         </div>
