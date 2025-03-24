@@ -49,16 +49,32 @@ export default function GitHistory({ year, month, day, heatmap }: GitHistoryProp
 
     // Generate calendar data
     const { weeks, months, calendarWidth } = useMemo(() => {
-        // Generate dates for the year
+        // Helper function to format date consistently
+        const formatDateString = (date: Date): string => {
+            return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+        };
+
+        // Helper function to create month key for tracking positions
+        const getMonthKey = (date: Date): string => {
+            return `${date.getFullYear()}-${date.getMonth()}`;
+        };
+
+        // Helper function to determine if a date is in the target year
+        const isInTargetYear = (date: Date): boolean => {
+            return date.getFullYear().toString() === year;
+        };
+
+        // Generate dates for the year with proper week alignment
         const generateCalendarData = () => {
+            // Initialize calendar boundaries
             const startDate = new Date(`${year}-01-01`);
             const endDate = new Date(`${year}-12-31`);
 
-            // Adjust to start from Sunday
+            // Adjust to start from Sunday (beginning of the week)
             const firstDay = new Date(startDate);
             firstDay.setDate(firstDay.getDate() - firstDay.getDay());
 
-            // Adjust to end on Saturday
+            // Adjust to end on Saturday (end of the week)
             const lastDay = new Date(endDate);
             lastDay.setDate(lastDay.getDate() + (6 - lastDay.getDay()));
 
@@ -70,43 +86,43 @@ export default function GitHistory({ year, month, day, heatmap }: GitHistoryProp
             while (currentDay <= lastDay) {
                 const week: DayInfo[] = [];
 
+                // Generate days for the current week
                 for (let i = 0; i < 7; i++) {
-                    // Fix the dateStr calculation to avoid timezone issues
-                    const dateStr = `${currentDay.getFullYear()}-${String(currentDay.getMonth() + 1).padStart(2, '0')}-${String(currentDay.getDate()).padStart(2, '0')}`;
+                    const dateStr = formatDateString(currentDay);
 
-                    // Track first day of each month
+                    // Track first day of each month for positioning month labels
                     if (currentDay.getDate() === 1) {
-                        const monthKey = `${currentDay.getFullYear()}-${currentDay.getMonth()}`;
+                        const monthKey = getMonthKey(currentDay);
                         if (!monthPositions[monthKey]) {
                             monthPositions[monthKey] = weeks.length;
                         }
                     }
 
+                    // Create the day info object
                     week.push({
                         date: new Date(currentDay),
                         dateStr,
                         count: heatmap[dateStr] || 0,
-                        inYear: currentDay.getFullYear().toString() === year,
+                        inYear: isInTargetYear(currentDay),
                     });
 
+                    // Move to next day
                     currentDay.setDate(currentDay.getDate() + 1);
                 }
 
                 weeks.push(week);
             }
 
-            console.log(weeks);
-
             return { weeks, monthPositions };
         };
 
         // Generate month labels with proper positioning
-        const generateMonthLabels = (monthPositions: Record<string, number>, weeksCount: number) => {
+        const generateMonthLabels = (monthPositions: Record<string, number>) => {
             const months: MonthInfo[] = [];
 
             for (let month = 0; month < 12; month++) {
                 const date = new Date(parseInt(year), month, 1);
-                const monthKey = `${year}-${month}`;
+                const monthKey = getMonthKey(date);
                 const startPosition = monthPositions[monthKey] || 0;
 
                 // Calculate span between this month and next
@@ -125,12 +141,13 @@ export default function GitHistory({ year, month, day, heatmap }: GitHistoryProp
             return months;
         };
 
+        // Generate the calendar data
         const { weeks, monthPositions } = generateCalendarData();
-        const months = generateMonthLabels(monthPositions, weeks.length);
+        const months = generateMonthLabels(monthPositions);
         const calendarWidth = weeks.length * cellWidth;
 
         return { weeks, months, calendarWidth };
-    }, [year, month, day, heatmap]);
+    }, [year, month, day, heatmap, cellWidth]);
 
     // Color mapping for commit counts
     const getCellColor = (count: number) => {
@@ -237,7 +254,7 @@ export default function GitHistory({ year, month, day, heatmap }: GitHistoryProp
                                                 <Link
                                                     href={
                                                         selected
-                                                            ? `/git/${year}`
+                                                            ? `/git/${day.dateStr.split('-')[0]}`
                                                             : `/git/${day.dateStr.split('-')[0]}/${day.dateStr.split('-')[1]}/${day.dateStr.split('-')[2]}`
                                                     }
                                                     key={`${weekIndex}-${dayIndex}`}

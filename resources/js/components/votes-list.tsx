@@ -29,7 +29,7 @@ const VotesList: React.FC<VotesListProps> = ({ votes }) => {
                     ))
                 ) : (
                     <div className="rounded-lg border border-dashed p-10 text-center">
-                        <p className="text-muted-foreground mb-3">Keine Abstimmungen gefunden.</p>
+                        <p className="text-muted-foreground">Keine Abstimmungen gefunden.</p>
                     </div>
                 )}
             </div>

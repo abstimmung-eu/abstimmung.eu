@@ -45,7 +45,6 @@ class GitController extends Controller
             return count($votes);
         });
 
-
         if ($month !== null) $query->whereMonth('vote_date', $month);
         if ($day !== null) $query->whereDay('vote_date', $day);
 

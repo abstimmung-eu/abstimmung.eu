@@ -32,8 +32,8 @@ export default function Git(props: GitProps) {
             <Head title="Git" />
 
             <section className="container mx-auto flex flex-col items-center justify-center gap-8 px-4 py-8">
-                <div className="max-w-7xl w-full mt-8 text-center">
-                    <PageHeader title={`Namentliche Abstimmungen ${year}`} />
+                <div className="max-w-7xl w-full text-center">
+                    <PageHeader className="my-10" title={`Namentliche Abstimmungen ${year}`} />
                 </div>
 
                 <GitHistory year={year} month={month} day={day} heatmap={heatmap} />
