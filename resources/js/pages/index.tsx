@@ -74,17 +74,17 @@ export default function Index() {
 
             {/* Feature Section */}
 
-            <section className="w-full max-w-7xl py-4 lg:py-16">
+            <section className="flex w-full max-w-7xl justify-center py-8 lg:py-16">
                 <div className="container px-4 md:px-6">
                     <div className="flex flex-col items-center justify-center space-y-4 text-center">
                         <div className="space-y-2">
-                            <h2 className="md:text:3xl text-3xl font-bold tracking-tighter">Wie es funktioniert</h2>
+                            <h2 className="text-3xl font-bold tracking-tighter">Wie es funktioniert</h2>
                             <p className="max-w-[900px] md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
                                 Hier können Sie Abstimmungen verfolgen und Ihre Meinung anonym sichtbar machen.
                             </p>
                         </div>
                     </div>
-                    <div className="mx-auto mt-8 grid max-w-5xl grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+                    <div className="mx-auto mt-8 grid max-w-5xl grid-cols-1 gap-6 lg:grid-cols-3">
                         <Card className="gap-4">
                             <CardHeader className="flex flex-row items-center gap-4">
                                 <div className="grid gap-1">
@@ -140,9 +140,9 @@ export default function Index() {
 
             {/* Recent Votes Section */}
 
-            <section className="items-cienter bg-background dark:bg-background flex w-full justify-center bg-gray-100 py-4 md:py-12 lg:py-16">
+            <section className="items-cienter bg-background dark:bg-background flex w-full justify-center bg-gray-100 py-12 lg:py-16">
                 <div className="container max-w-7xl px-4 md:px-6">
-                    <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-3xl">Aktuelle Abstimmungen</h2>
+                    <h2 className="text-center text-3xl font-bold tracking-tighter md:text-left">Aktuelle Abstimmungen</h2>
                     <div className="mx-auto mt-8">
                         <div className="grid gap-6">
                             {votes.map((vote) => (
