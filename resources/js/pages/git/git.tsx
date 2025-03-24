@@ -31,9 +31,9 @@ export default function Git(props: GitProps) {
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Git" />
 
-            <section className="container mx-auto flex flex-col items-center justify-center gap-8 px-4 py-8">
+            <section className="container mx-auto flex flex-col items-center justify-center gap-0 md:gap-8 px-4 py-8">
                 <div className="max-w-7xl w-full text-center">
-                    <PageHeader className="my-10" title={`Namentliche Abstimmungen ${year}`} />
+                    <PageHeader className="my-10" title={`Abstimmungen ${year}`} description="Namentliche Abstimmungen im Bundestag" />
                 </div>
 
                 <GitHistory year={year} month={month} day={day} heatmap={heatmap} />

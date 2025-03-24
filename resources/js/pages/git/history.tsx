@@ -266,7 +266,7 @@ export default function GitHistory({ year, month, day, heatmap }: GitHistoryProp
                                                             <div
                                                                 className={`absolute inset-0 cursor-pointer border border-gray-200 transition-all duration-200 ${
                                                                     selected
-                                                                        ? 'm-0 scale-90 border-2 border-blue-500'
+                                                                        ? 'm-0 scale-90 border-2 border-blue-500!'
                                                                         : 'm-0.5 hover:m-0 hover:scale-90 hover:border-2 hover:border-blue-500 md:m-0.75 xl:m-1'
                                                                 }`}
                                                                 style={{ backgroundColor: day.inYear ? getCellColor(day.count) : '#ebedf0' }}
