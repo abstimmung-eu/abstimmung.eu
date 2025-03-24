@@ -1,18 +1,7 @@
-// Components
-import { Head, Link, useForm } from '@inertiajs/react';
-import { FormEventHandler } from 'react';
-
 import AuthLayout from '@/layouts/auth-layout';
+import { Head, Link } from '@inertiajs/react';
 
-export default function VerifyEmail({ status }: { status?: string }) {
-    const { post, processing } = useForm({});
-
-    const submit: FormEventHandler = (e) => {
-        e.preventDefault();
-
-        post(route('verification.email.send'));
-    };
-
+export default function VerifyEmail() {
     return (
         <AuthLayout title="Bitte verifizieren" description="Bitte verifizieren Sie Ihre E-Mail-Adresse und Handynummer, um diese Aktion auszuführen.">
             <Head title="E-Mail-Adresse und Handynummer verifizieren" />

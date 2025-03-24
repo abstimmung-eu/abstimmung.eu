@@ -9,7 +9,7 @@ import { ChartPie, ChevronRight, Newspaper, Vote as VoteIcon } from 'lucide-reac
 // Update the interface for the page props
 interface PageProps {
     votes: Vote[];
-    [key: string]: any; // Add index signature
+    [key: string]: unknown; 
 }
 
 const breadcrumbs: BreadcrumbItem[] = [

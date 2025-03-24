@@ -124,7 +124,7 @@ export default function Votes({ votes, filters = {} }: VotesProps) {
                                         </PaginationItem>
                                     )}
 
-                                    {votes.links.map((link, index) => {
+                                    {votes.links.map((link) => {
                                         if (link.label === '&laquo; Previous' || link.label === 'Next &raquo;') {
                                             return null;
                                         }

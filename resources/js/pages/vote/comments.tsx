@@ -27,20 +27,6 @@ interface Comment {
     content: string;
 }
 
-interface VoteComment {
-    id: number;
-    comment: string;
-    created_at: string;
-    user?: {
-        name?: string;
-        avatar?: string;
-    };
-    commentator?: {
-        id: number;
-        username: string;
-    };
-}
-
 interface VoteCommentsProps {
     vote: Vote;
 }
@@ -75,10 +61,6 @@ export default function VoteComments({ vote }: VoteCommentsProps) {
         if (confirm('Sind Sie sicher, dass Sie diesen Kommentar löschen möchten?')) {
             deleteForm.delete(route('comments.destroy', { comment: commentId }), {
                 preserveScroll: true,
-                onSuccess: () => {
-                    // No need to reload the page, Inertia will handle the update
-                    // You could add a notification here if needed
-                },
             });
         }
     };

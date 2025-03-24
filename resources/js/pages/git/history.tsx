@@ -1,7 +1,7 @@
 // compoennt that renders the git commit history
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Link } from '@inertiajs/react';
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 type GitHistoryProps = {
     year: string;
@@ -35,17 +35,30 @@ export default function GitHistory({ year, month, day, heatmap }: GitHistoryProp
     const labelWidth = 40;
     const weekdays = ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'];
 
-    // Function to check if a date matches the selected date
-    const isSelectedDate = (dateStr: string) => {
-        if (!month || !day) return false;
+    // Instead of regular function declarations, use useCallback
+    const isSelectedDate = useCallback(
+        (dateStr: string) => {
+            if (!month || !day) return false;
 
-        const dateParts = dateStr.split('-');
-        const cellYear = dateParts[0];
-        const cellMonth = dateParts[1];
-        const cellDay = dateParts[2];
+            const dateParts = dateStr.split('-');
+            const cellYear = dateParts[0];
+            const cellMonth = dateParts[1];
+            const cellDay = dateParts[2];
 
-        return cellYear === year && cellMonth === month && cellDay === day;
-    };
+            return cellYear === year && cellMonth === month && cellDay === day;
+        },
+        [year, month, day],
+    );
+
+    const getCellColor = useCallback((count: number) => {
+        if (count === 0) return '#e2e4e7';
+        if (count <= 2) return '#9be9a8';
+        if (count <= 3) return '#40c463';
+        if (count <= 4) return '#30a14e';
+        if (count <= 5) return '#216e39';
+        if (count <= 6) return '#216e39';
+        return '#1a5a2e';
+    }, []); // No dependencies since it only uses the count parameter
 
     // Generate calendar data
     const { weeks, months, calendarWidth } = useMemo(() => {
@@ -80,7 +93,7 @@ export default function GitHistory({ year, month, day, heatmap }: GitHistoryProp
 
             const weeks: DayInfo[][] = [];
             const monthPositions: Record<string, number> = {};
-            let currentDay = new Date(firstDay);
+            const currentDay = new Date(firstDay);
 
             // Build weeks array and track month positions
             while (currentDay <= lastDay) {
@@ -148,17 +161,6 @@ export default function GitHistory({ year, month, day, heatmap }: GitHistoryProp
 
         return { weeks, months, calendarWidth };
     }, [year, heatmap, cellWidth]);
-
-    // Color mapping for commit counts
-    const getCellColor = (count: number) => {
-        if (count === 0) return '#e2e4e7';
-        if (count <= 2) return '#9be9a8';
-        if (count <= 3) return '#40c463';
-        if (count <= 4) return '#30a14e';
-        if (count <= 5) return '#216e39';
-        if (count <= 6) return '#216e39';
-        return '#1a5a2e';
-    };
 
     // Format date for tooltip - memoize this function to avoid recreating on every render
     const formatDate = useMemo(() => {
@@ -276,7 +278,7 @@ export default function GitHistory({ year, month, day, heatmap }: GitHistoryProp
                 </Link>
             );
         };
-    }, [isSelectedDate, formatDate, getCellColor]);
+    }, [isSelectedDate, getCellColor, formatDate]); // Only include external dependencies
 
     return (
         <div className="w-full font-sans" ref={containerRef}>
