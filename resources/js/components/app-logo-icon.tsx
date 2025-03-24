@@ -1,8 +1,5 @@
 import { CheckCircleIcon } from 'lucide-react';
-import { SVGAttributes } from 'react';
 
-export default function AppLogoIcon(props: SVGAttributes<SVGElement>) {
-    return (
-        <CheckCircleIcon className="text-blue-900 dark:text-blue-500"></CheckCircleIcon>
-    );
+export default function AppLogoIcon() {
+    return <CheckCircleIcon className="text-blue-899 dark:text-blue-500"></CheckCircleIcon>;
 }

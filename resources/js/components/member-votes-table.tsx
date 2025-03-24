@@ -114,24 +114,28 @@ export default function VoteResults({ vote }: { vote: Vote }) {
             let comparison = 0;
 
             switch (sortField) {
-                case 'name':
+                case 'name': {
                     const nameA = `${a.first_name} ${a.last_name}`.toLowerCase();
                     const nameB = `${b.first_name} ${b.last_name}`.toLowerCase();
                     comparison = nameA.localeCompare(nameB);
                     break;
-                case 'vote_position':
+                }
+                case 'vote_position': {
                     comparison = a.vote_position.localeCompare(b.vote_position);
                     break;
-                case 'group':
+                }
+                case 'group': {
                     const groupA = (a.group || '').toLowerCase();
                     const groupB = (b.group || '').toLowerCase();
                     comparison = groupA.localeCompare(groupB);
                     break;
-                case 'state':
+                }
+                case 'state': {
                     const stateA = (a.state || '').toLowerCase();
                     const stateB = (b.state || '').toLowerCase();
                     comparison = stateA.localeCompare(stateB);
                     break;
+                }
             }
 
             return sortOrder === 'asc' ? comparison : -comparison;

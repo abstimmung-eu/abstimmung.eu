@@ -1,8 +1,3 @@
-import { Head, useForm } from '@inertiajs/react';
-import { LoaderCircle } from 'lucide-react';
-import { FormEventHandler } from 'react';
-
-import AppLogoIcon from '@/components/app-logo-icon';
 import InputError from '@/components/input-error';
 import TextLink from '@/components/text-link';
 import { Button } from '@/components/ui/button';
@@ -10,7 +5,9 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import AuthLayout from '@/layouts/auth-layout';
-import { Link } from '@inertiajs/react';
+import { Head, useForm } from '@inertiajs/react';
+import { LoaderCircle } from 'lucide-react';
+import { FormEventHandler } from 'react';
 
 type LoginForm = {
     email: string;
@@ -19,11 +16,10 @@ type LoginForm = {
 };
 
 interface LoginProps {
-    status?: string;
     canResetPassword: boolean;
 }
 
-export default function Login({ status, canResetPassword }: LoginProps) {
+export default function Login({ canResetPassword }: LoginProps) {
     const { data, setData, post, processing, errors, reset } = useForm<Required<LoginForm>>({
         email: '',
         password: '',
@@ -38,10 +34,7 @@ export default function Login({ status, canResetPassword }: LoginProps) {
     };
 
     return (
-        <AuthLayout 
-            title="Mit Ihrem Account anmelden" 
-            description="Geben Sie Ihre E-Mail-Adresse und ihr Passwort unten ein, um sich anzumelden"
-        >
+        <AuthLayout title="Mit Ihrem Account anmelden" description="Geben Sie Ihre E-Mail-Adresse und ihr Passwort unten ein, um sich anzumelden">
             <Head title="Anmelden" />
 
             <div className="space-y-6">
@@ -86,7 +79,13 @@ export default function Login({ status, canResetPassword }: LoginProps) {
                         </div>
 
                         <div className="flex items-center space-x-3">
-                            <Checkbox id="remember" name="remember" checked={data.remember} onClick={() => setData('remember', !data.remember)} tabIndex={3} />
+                            <Checkbox
+                                id="remember"
+                                name="remember"
+                                checked={data.remember}
+                                onClick={() => setData('remember', !data.remember)}
+                                tabIndex={3}
+                            />
                             <Label htmlFor="remember">Angemeldet bleiben</Label>
                         </div>
 

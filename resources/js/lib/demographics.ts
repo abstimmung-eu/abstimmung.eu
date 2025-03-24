@@ -442,14 +442,14 @@ export const emptyDemographicData: DemographicData = {
 /**
  * Encode data before storing in localStorage
  */
-const encodeData = (data: any): string => {
+const encodeData = (data: DemographicData): string => {
     return btoa(JSON.stringify(data));
 };
 
 /**
  * Decode data after retrieving from localStorage
  */
-const decodeData = (encoded: string): any => {
+const decodeData = (encoded: string): DemographicData | null => {
     try {
         return JSON.parse(atob(encoded));
     } catch (error) {

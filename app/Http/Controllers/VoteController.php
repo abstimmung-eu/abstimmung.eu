@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Vote;
 use App\Pagination\CustomPaginator;
-use Carbon\Carbon;
+use Illuminate\Support\Carbon;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 

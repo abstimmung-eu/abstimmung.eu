@@ -2,12 +2,12 @@ import { PageHeader } from '@/components/page-header';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '@/components/ui/pagination';
-import { VoteCard } from '@/components/vote-card';
+import VotesList from '@/components/votes-list';
 import AppLayout from '@/layouts/app-layout';
 import { type Vote } from '@/types/vote';
 import { Head, router } from '@inertiajs/react';
 import { Search } from 'lucide-react';
-import React, { FormEvent, useState } from 'react';
+import { FormEvent, useState } from 'react';
 
 interface VotesProps {
     votes: {
@@ -112,32 +112,7 @@ export default function Votes({ votes, filters = {} }: VotesProps) {
                 </div>
 
                 <div className="space-y-8">
-                    <div className="grid gap-4">
-                        {Object.keys(votes.data).length > 0 ? (
-                            Object.keys(votes.data).map((date) => (
-                                <React.Fragment key={date}>
-                                    <div className="my-4 flex items-center gap-4">
-                                        <h2 className="text-lg font-semibold whitespace-nowrap">
-                                            {new Date(date).toLocaleDateString('de-DE', { day: '2-digit', month: 'long', year: 'numeric' })}
-                                        </h2>
-                                        <hr className="flex-grow border-t border-gray-200" />
-                                    </div>
-                                    {votes.data[date].map((vote) => (
-                                        <VoteCard key={vote.id} vote={vote} />
-                                    ))}
-                                </React.Fragment>
-                            ))
-                        ) : (
-                            <div className="rounded-lg border border-dashed p-10 text-center">
-                                <p className="text-muted-foreground mb-3">Keine Abstimmungen gefunden.</p>
-                                {filters.search && (
-                                    <Button variant="outline" size="sm" onClick={clearSearch} className="mt-2">
-                                        Alle Abstimmungen anzeigen
-                                    </Button>
-                                )}
-                            </div>
-                        )}
-                    </div>
+                    <VotesList votes={votes.data} />
 
                     {showPagination && (
                         <div className="mt-8">
@@ -149,7 +124,7 @@ export default function Votes({ votes, filters = {} }: VotesProps) {
                                         </PaginationItem>
                                     )}
 
-                                    {votes.links.map((link, index) => {
+                                    {votes.links.map((link) => {
                                         if (link.label === '&laquo; Previous' || link.label === 'Next &raquo;') {
                                             return null;
                                         }
