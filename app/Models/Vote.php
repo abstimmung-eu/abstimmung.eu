@@ -30,6 +30,10 @@ class Vote extends Model
         'total_user_abstain_votes_percentage',
     ];
 
+    protected $casts = [
+        'vote_date' => 'date',
+    ];
+
     public function memberVoteStats()
     {
         return $this->hasOne(MemberVoteStats::class);

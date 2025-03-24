@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\GitController;
 use App\Http\Controllers\IndexController;
 use App\Http\Controllers\UserVoteController;
 use App\Http\Controllers\VoteController;
@@ -8,6 +9,8 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 Route::get('/', [IndexController::class, 'index'])->name('index');
+
+Route::get('/git/{year?}/{month?}/{day?}', [GitController::class, 'index'])->name('git');
 
 Route::get('/votes', [VoteController::class, 'index'])->name('votes');
 Route::get('/votes/{vote}', [VoteController::class, 'show'])->name('vote.show');
