@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\MemberVotePosition;
 use App\Models\Vote;
 use App\Pagination\CustomPaginator;
 use Illuminate\Support\Carbon;
@@ -101,9 +102,9 @@ class VoteController extends Controller
         return $vote->memberVotes
             ->groupBy('group')
             ->map(function ($groupVotes) {
-                $forCount = $groupVotes->where('vote_position', 'for')->count();
-                $againstCount = $groupVotes->where('vote_position', 'against')->count();
-                $abstentionCount = $groupVotes->where('vote_position', 'abstention')->count();
+                $forCount = $groupVotes->where('vote_position', MemberVotePosition::FOR->value)->count();
+                $againstCount = $groupVotes->where('vote_position', MemberVotePosition::AGAINST->value)->count();
+                $abstentionCount = $groupVotes->where('vote_position', MemberVotePosition::ABSTENTION->value)->count();
                 $total = $forCount + $againstCount + $abstentionCount;
 
                 return [
@@ -123,9 +124,9 @@ class VoteController extends Controller
         $userVotesByAgeGroup = $vote->userVotes
             ->groupBy('age_group')
             ->map(function ($groupVotes) {
-                $forCount = $groupVotes->where('vote_position', 'for')->count();
-                $againstCount = $groupVotes->where('vote_position', 'against')->count();
-                $abstentionCount = $groupVotes->where('vote_position', 'abstention')->count();
+                $forCount = $groupVotes->where('vote_position', MemberVotePosition::FOR->value)->count();
+                $againstCount = $groupVotes->where('vote_position', MemberVotePosition::AGAINST->value)->count();
+                $abstentionCount = $groupVotes->where('vote_position', MemberVotePosition::ABSTENTION->value)->count();
                 $total = $forCount + $againstCount + $abstentionCount;
 
                 return [

@@ -34,3 +34,4 @@ Route::get('/datenschutz', function () {
 require __DIR__ . '/comments.php';
 require __DIR__ . '/settings.php';
 require __DIR__ . '/auth.php';
+require __DIR__ . '/rss.php';
