@@ -10,9 +10,8 @@ use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Contracts\Routing\UrlGenerator;
 use Illuminate\Contracts\View\Factory as ViewFactory;
 use Illuminate\Support\Collection;
-use Inertia\ServiceProvider;
 
-class RssController
+final readonly class RssController
 {
     public function __construct(
         private ConfigRepository $config,
@@ -108,16 +107,12 @@ class RssController
 
                 $item->setTitle($vote->title);
                 $item->setLink($itemUrl = $this->url->route('vote.show', $vote->id));
+                $item->setId($itemUrl, true);
 
                 $item->setDescription($description);
 
                 $item->setDate($vote->vote_date->format('Y-m-d H:i:s'));
-
-                // $item->addEnclosure($image->url, $image->meta('size'), $image->meta('mime_type'));
-
                 $item->setAuthor($this->config->get('app.name'));
-
-                $item->setId($itemUrl, true);
 
                 $feed->addItem($item);
             }, count: 200);

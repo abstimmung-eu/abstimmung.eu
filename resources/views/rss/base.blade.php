@@ -1,7 +1,3 @@
-{{ $vote->description }}
-
-<br><br>
-
 <code>
     {{ implode(
         '',
@@ -11,6 +7,10 @@
         )
     ) }}
 </code>
+
+<br><br>
+
+{{ $vote->description }}
 
 <br><br>
 
