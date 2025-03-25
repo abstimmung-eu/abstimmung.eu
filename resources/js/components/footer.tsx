@@ -74,6 +74,15 @@ export default function Footer() {
                                     GitHub Repository
                                 </a>
                             </li>
+                            <li>
+                                <a
+                                    href={route('rss.index')}
+                                    target="_blank"
+                                    className="border-b border-transparent text-blue-200 transition-colors duration-200 hover:border-white hover:text-white"
+                                >
+                                    RSS Feed
+                                </a>
+                            </li>
                         </ul>
                     </div>
 
