@@ -7,6 +7,8 @@
     <link rel="icon" href="/favicon.ico" sizes="32x32">
     <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 
+    <link rel="alternate" hreflang="de" type="application/rss+xml" title="RSS Feed" href="{{ route('rss.index') }}">
+
     <title inertia>{{ config('app.name', 'Laravel') }}</title>
 
     @routes
