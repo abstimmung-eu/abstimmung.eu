@@ -102,7 +102,7 @@ export default function Register() {
 
                 <div className="relative flex flex-col gap-6">
                     <Link href={route('index')} className="flex items-center space-x-2">
-                        <AppLogoIcon className="text-sidebar-primary-foreground h-8 w-8 items-center justify-center" />
+                        <AppLogoIcon className="h-8 w-8 text-sidebar-primary-foreground" />
                         <span className="text-lg font-medium">{name}</span>
                     </Link>
 
@@ -221,7 +221,7 @@ export default function Register() {
             <div className="bg-background flex h-full w-full flex-col justify-center p-6 lg:p-12">
                 <div className="mx-auto flex w-full flex-col justify-center space-y-5 sm:w-[400px]">
                     <Link href={route('index')} className="relative mb-3 flex items-center justify-center">
-                        <AppLogoIcon className="h-8 w-8 fill-current text-blue-600 dark:text-blue-400" />
+                        <AppLogoIcon className="h-8 w-8 text-blue-900 dark:text-blue-500" />
                     </Link>
 
                     <div className="flex flex-col items-center justify-center gap-2 text-center">
