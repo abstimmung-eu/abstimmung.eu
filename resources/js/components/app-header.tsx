@@ -70,16 +70,14 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
 
                                         <div className="flex flex-col space-y-4">
                                             {rightNavItems.map((item) => (
-                                                <a
+                                                <Link
                                                     key={item.title}
                                                     href={item.url}
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
                                                     className="flex items-center space-x-2 font-medium"
                                                 >
                                                     {item.icon && <Icon iconNode={item.icon} className="h-5 w-5" />}
                                                     <span>{item.title}</span>
-                                                </a>
+                                                </Link>
                                             ))}
                                         </div>
                                     </div>
