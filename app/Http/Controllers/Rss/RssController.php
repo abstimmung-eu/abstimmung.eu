@@ -47,6 +47,8 @@ final readonly class RssController
                 'memberVotes',
                 'documents',
             ])
+            ->orderByDesc('vote_date')
+            ->limit(50)
             ->each(function (Vote $vote) use (&$feed, $positions) {
                 if ($vote->status !== 'completed') {
                     return;
@@ -115,7 +117,7 @@ final readonly class RssController
                 $item->setAuthor($this->config->get('app.name'));
 
                 $feed->addItem($item);
-            }, count: 200);
+            });
 
         $feedContent = $feed->generateFeed();
 
