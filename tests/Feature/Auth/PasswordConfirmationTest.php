@@ -19,7 +19,7 @@ test('password can be confirmed', function () {
         'password' => 'password',
     ]);
 
-    $response->assertRedirect();
+    $response->assertRedirect(route('profile.edit'));
     $response->assertSessionHasNoErrors();
 });
 
